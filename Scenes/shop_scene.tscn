@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dp4rt235lwsyy"]
+
+[ext_resource type="Script" uid="uid://dvjvb8pn4gyhf" path="res://reset_button.gd" id="1_4li1v"]
+[ext_resource type="Script" uid="uid://brqihe2fmj4ac" path="res://Scenes/shop_scene.gd" id="1_njw01"]
+[ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="2_35huh"]
+
+[node name="ShopScene" type="Control" unique_id=1505458115 node_paths=PackedStringArray("button1", "button2", "button6", "label1", "label2", "resource_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_njw01")
+button1 = NodePath("VBoxContainer/HBoxContainer2/Button")
+button2 = NodePath("VBoxContainer/HBoxContainer2/Button2")
+button6 = NodePath("VBoxContainer/HBoxContainer3/Button")
+label1 = NodePath("VBoxContainer/HBoxContainer2/Label")
+label2 = NodePath("VBoxContainer/HBoxContainer3/Label")
+resource_label = NodePath("Label2")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1212185782]
+layout_mode = 0
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 1156.0
+offset_bottom = 657.0
+color = Color(0.2417247, 0.1819703, 0.115634, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1528807232]
+layout_mode = 0
+offset_left = 261.0
+offset_top = 118.0
+offset_right = 666.0
+offset_bottom = 379.0
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1092257974]
+layout_mode = 2
+text = "Shop"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1305537116]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=56838688]
+layout_mode = 2
+text = "Starting Money Increase: "
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=8997205]
+layout_mode = 2
+text = "1"
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1164228906]
+layout_mode = 2
+text = "2"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=186239156]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=44995433]
+layout_mode = 2
+text = "Better Alive Count At Beginning: "
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=2065112473]
+layout_mode = 2
+text = "1
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2007005946]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1220792809]
+layout_mode = 2
+text = "Starter Slots: "
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1364137521]
+layout_mode = 2
+text = "Button 3
+"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=980215822]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1307513859]
+layout_mode = 2
+text = "Button 4
+"
+
+[node name="ResetButton" type="Button" parent="." unique_id=79857208 node_paths=PackedStringArray("button")]
+layout_mode = 0
+offset_left = 516.0
+offset_top = 418.0
+offset_right = 567.0
+offset_bottom = 449.0
+text = "Back"
+script = ExtResource("1_4li1v")
+button = NodePath(".")
+
+[node name="Label2" type="Label" parent="." unique_id=1640541896 node_paths=PackedStringArray("resource_text")]
+layout_mode = 0
+offset_left = 1013.0
+offset_top = 25.0
+offset_right = 1158.0
+offset_bottom = 53.0
+script = ExtResource("2_35huh")
+resource_text = NodePath(".")
+
+[node name="ColorRect" type="ColorRect" parent="Label2" unique_id=1413857910]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2294173, 0.36854005, 0.23573908, 1)

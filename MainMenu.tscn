@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://b6t37ll7ta5cc"]
+
+[ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_i26rj"]
+[ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="2_eiy7p"]
+[ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="3_h7a2f"]
+[ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="3_qoqlk"]
+[ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="4_iwfq2"]
+
+[node name="MainMenu" type="Node2D" unique_id=1386560934]
+
+[node name="Control" type="Control" parent="." unique_id=642514607]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=293867857]
+layout_mode = 0
+offset_right = 1158.0
+offset_bottom = 653.0
+color = Color(0.2417247, 0.1819703, 0.115634, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=630811595]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 113.0
+offset_right = 479.0
+offset_bottom = 356.0
+
+[node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=922234526]
+layout_mode = 2
+text = "Game Of Life Ripoff"
+
+[node name="Button" type="Button" parent="Control/VBoxContainer" unique_id=1179979683 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Play
+"
+script = ExtResource("1_i26rj")
+button = NodePath(".")
+
+[node name="Button2" type="Button" parent="Control/VBoxContainer" unique_id=869280503 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Upgrades
+"
+script = ExtResource("2_eiy7p")
+button = NodePath(".")
+
+[node name="Button3" type="Button" parent="Control/VBoxContainer" unique_id=1240730738 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Save"
+script = ExtResource("3_qoqlk")
+button = NodePath(".")
+
+[node name="Button4" type="Button" parent="Control/VBoxContainer" unique_id=1397613081 node_paths=PackedStringArray("button", "label")]
+layout_mode = 2
+text = "Load From Save"
+script = ExtResource("4_iwfq2")
+button = NodePath(".")
+label = NodePath("../../Label2")
+
+[node name="Label2" type="Label" parent="Control" unique_id=2089145711 node_paths=PackedStringArray("resource_text")]
+layout_mode = 0
+offset_left = 1013.0
+offset_top = 25.0
+offset_right = 1158.0
+offset_bottom = 53.0
+script = ExtResource("3_h7a2f")
+resource_text = NodePath(".")
+
+[node name="ColorRect" type="ColorRect" parent="Control/Label2" unique_id=304896543]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2294173, 0.36854005, 0.23573908, 1)

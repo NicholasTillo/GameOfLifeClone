@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bx1rn7k25hu8m"]
+
+[ext_resource type="Script" uid="uid://drdvtna531cmt" path="res://PlayArea/gridRenderer.gd" id="1_dcg76"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mmn8k"]
+size = Vector2(1153.75, 643.25)
+
+[node name="Area2D" type="Area2D" unique_id=633177129]
+script = ExtResource("1_dcg76")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1488597218]
+position = Vector2(578.125, 320.375)
+shape = SubResource("RectangleShape2D_mmn8k")
