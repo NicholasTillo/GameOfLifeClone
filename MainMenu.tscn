@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b6t37ll7ta5cc"]
 
 [ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_i26rj"]
+[ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_7r1g0"]
 [ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="2_eiy7p"]
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="3_h7a2f"]
 [ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="3_qoqlk"]
@@ -31,12 +32,23 @@ offset_bottom = 356.0
 layout_mode = 2
 text = "Game Of Life Ripoff"
 
-[node name="Button" type="Button" parent="Control/VBoxContainer" unique_id=1179979683 node_paths=PackedStringArray("button")]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer" unique_id=99836440]
 layout_mode = 2
-text = "Play
+
+[node name="Button" type="Button" parent="Control/VBoxContainer/HBoxContainer" unique_id=1179979683 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Play    
 "
 script = ExtResource("1_i26rj")
 button = NodePath(".")
+
+[node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer" unique_id=1526744314]
+layout_mode = 2
+text = "Starter Slots"
+
+[node name="SlotContainer" type="HBoxContainer" parent="Control/VBoxContainer/HBoxContainer" unique_id=1583294046]
+layout_mode = 2
+script = ExtResource("2_7r1g0")
 
 [node name="Button2" type="Button" parent="Control/VBoxContainer" unique_id=869280503 node_paths=PackedStringArray("button")]
 layout_mode = 2

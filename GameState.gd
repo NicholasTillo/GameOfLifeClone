@@ -29,6 +29,18 @@ func initialize_grid():
 		cells[i].id = i
 		cells[i].contains.cell = cells[i]
 		
+	#Deal with specific slots: 
+	var chosen_ids = []
+	for i in range(GameManager.starting_slots):
+		
+		var id = randi_range(0, (gridSize*gridSize)  - 1)
+		while id in chosen_ids:
+			id = randi_range(0,  (gridSize*gridSize) - 1)
+		cells[id].contains = GameManager.slots[i]
+		cells[id].contains.cell = cells[id]
+		chosen_ids.append(id)
+	
+	
 	#Set up the neighbours. 
 	for i in range(gridSize*gridSize):
 		var x = i % gridSize

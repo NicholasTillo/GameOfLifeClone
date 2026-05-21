@@ -21,11 +21,14 @@ var autoplay_enabled: bool = false
 #Upgrade Stuff. 
 var starting_money_increase: int = 0
 var starting_alive_chance: float = 0.5
+var starting_slots: float = 3
+var slots: Array = [Dead.new(),Dead.new(),Dead.new()]
+
 
 var in_gameplay: bool
 
-
-var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[]}
+#Upgrade Here
+var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades": []}
 
 
 
@@ -108,14 +111,18 @@ func save_game():
 	
 	var new_1 = []
 	var new_2 = []
+	var new_3 = []
 	
+	#Upgrade Here
 	for i in chosen_upgrades["money_upgrades"]: 
 		new_1.append(i.id)
 	for i in chosen_upgrades["chance_upgrades"]: 
 		new_2.append(i.id)
+	for i in chosen_upgrades["starter_upgrades"]: 
+		new_3.append(i.id)
 			
 	var new_dict = {}
-	json_string = JSON.stringify({"upgrades": {"money_upgrades": new_1, "chance_upgrades":new_2}})
+	json_string = JSON.stringify({"upgrades": {"money_upgrades": new_1, "chance_upgrades":new_2, "starter_upgrades":new_3}})
 	save_file.store_line(json_string)
 	
 	
@@ -123,7 +130,7 @@ func load_game():
 	if not FileAccess.file_exists("user://savegame.save"):
 		return # Error! We don't have a save to load.E)
 		
-	chosen_upgrades = {"money_upgrades": [], "chance_upgrades":[]}
+	chosen_upgrades = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades":[]}
 	reset_stats()
 	
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
@@ -166,5 +173,13 @@ func load_game():
 						if k.id == j:
 							PlayerController.purchase_start_alive_count(k)
 							chosen_upgrades["chance_upgrades"].append(k)
-					
-					
+			elif i == "starter_upgrades":
+				for j in copy_chosen_upgrades["starter_upgrades"]:
+					for k in PlayerController.all_upgrades:
+						
+						if k.id == j:
+							PlayerController.purchase_start_starter_count(k)
+							chosen_upgrades["starter_upgrades"].append(k)
+							
+							
+												

@@ -142,23 +142,8 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1307513859]
 layout_mode = 2
-text = "Unlock 1"
-
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1153693810]
-layout_mode = 2
-text = "Unlock 2"
-
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=416823594]
-layout_mode = 2
-text = "Unlock 3"
-
-[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=28500454]
-layout_mode = 2
-text = "Unlock 4"
-
-[node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=615735384]
-layout_mode = 2
-text = "Unlock 5"
+text = "Button 4
+"
 
 [node name="ResetButton" type="Button" parent="." unique_id=79857208 node_paths=PackedStringArray("button")]
 layout_mode = 0
