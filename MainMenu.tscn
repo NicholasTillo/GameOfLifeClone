@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="3_h7a2f"]
 [ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="3_qoqlk"]
 [ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="4_iwfq2"]
+[ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_cqjrg"]
 
 [node name="MainMenu" type="Node2D" unique_id=1386560934]
 
@@ -21,49 +22,49 @@ offset_right = 1158.0
 offset_bottom = 653.0
 color = Color(0.2417247, 0.1819703, 0.115634, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=630811595]
+[node name="Total Menu" type="VBoxContainer" parent="Control" unique_id=630811595]
 layout_mode = 0
 offset_left = 280.0
 offset_top = 113.0
 offset_right = 479.0
 offset_bottom = 356.0
 
-[node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=922234526]
+[node name="Title" type="Label" parent="Control/Total Menu" unique_id=922234526]
 layout_mode = 2
 text = "Game Of Life Ripoff"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer" unique_id=99836440]
+[node name="Play HBox" type="HBoxContainer" parent="Control/Total Menu" unique_id=99836440]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="Control/VBoxContainer/HBoxContainer" unique_id=1179979683 node_paths=PackedStringArray("button")]
+[node name="Button" type="Button" parent="Control/Total Menu/Play HBox" unique_id=1179979683 node_paths=PackedStringArray("button")]
 layout_mode = 2
 text = "Play    
 "
 script = ExtResource("1_i26rj")
 button = NodePath(".")
 
-[node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer" unique_id=1526744314]
+[node name="Label" type="Label" parent="Control/Total Menu/Play HBox" unique_id=1526744314]
 layout_mode = 2
 text = "Starter Slots"
 
-[node name="SlotContainer" type="HBoxContainer" parent="Control/VBoxContainer/HBoxContainer" unique_id=1583294046]
+[node name="SlotContainer" type="HBoxContainer" parent="Control/Total Menu/Play HBox" unique_id=1583294046]
 layout_mode = 2
 script = ExtResource("2_7r1g0")
 
-[node name="Button2" type="Button" parent="Control/VBoxContainer" unique_id=869280503 node_paths=PackedStringArray("button")]
+[node name="Upgrade Button" type="Button" parent="Control/Total Menu" unique_id=869280503 node_paths=PackedStringArray("button")]
 layout_mode = 2
 text = "Upgrades
 "
 script = ExtResource("2_eiy7p")
 button = NodePath(".")
 
-[node name="Button3" type="Button" parent="Control/VBoxContainer" unique_id=1240730738 node_paths=PackedStringArray("button")]
+[node name="Save Button" type="Button" parent="Control/Total Menu" unique_id=1240730738 node_paths=PackedStringArray("button")]
 layout_mode = 2
 text = "Save"
 script = ExtResource("3_qoqlk")
 button = NodePath(".")
 
-[node name="Button4" type="Button" parent="Control/VBoxContainer" unique_id=1397613081 node_paths=PackedStringArray("button", "label")]
+[node name="Load Button" type="Button" parent="Control/Total Menu" unique_id=1397613081 node_paths=PackedStringArray("button", "label")]
 layout_mode = 2
 text = "Load From Save"
 script = ExtResource("4_iwfq2")
@@ -85,6 +86,29 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2294173, 0.36854005, 0.23573908, 1)
+
+[node name="Label3" type="Label" parent="Control" unique_id=254590167 node_paths=PackedStringArray("resource_text")]
+layout_mode = 0
+offset_left = 1021.0
+offset_top = 73.0
+offset_right = 1166.0
+offset_bottom = 101.0
+script = ExtResource("7_cqjrg")
+resource_text = NodePath(".")
+
+[node name="ColorRect" type="ColorRect" parent="Control/Label3" unique_id=1017895009]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 966.0
+offset_top = 82.0
+offset_right = 966.0
+offset_bottom = 82.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)

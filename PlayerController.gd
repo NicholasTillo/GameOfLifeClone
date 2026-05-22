@@ -2,9 +2,9 @@ extends Node
 
 @onready var start_money_upgrade1: Upgrade = load("res://Upgrades/StartingMoneyUpgrade.tres")
 @onready var start_money_upgrade2: Upgrade = load("res://Upgrades/StartingMoneyUpgrade2.tres")
-@onready var start_money_upgrade3: Upgrade = load("res://Upgrades/StartingChanceUpgrade3.tres")
-@onready var start_money_upgrade4: Upgrade = load("res://Upgrades/StartingChanceUpgrade4.tres")
-@onready var start_money_upgrade5: Upgrade = load("res://Upgrades/StartingChanceUpgrade5.tres")
+@onready var start_money_upgrade3: Upgrade = load("res://Upgrades/StartingMoneyUpgrade3.tres")
+@onready var start_money_upgrade4: Upgrade = load("res://Upgrades/StartingMoneyUpgrade4.tres")
+@onready var start_money_upgrade5: Upgrade = load("res://Upgrades/StartingMoneyUpgrade5.tres")
 
 
 @onready var start_alive_count1: Upgrade = load("res://Upgrades/StartingChanceUpgrade.tres")
@@ -21,7 +21,7 @@ extends Node
 @onready var starting_cell_5: Upgrade = load("res://Upgrades/StartingCellUpgrade5.tres")
 
 
-@onready var all_upgrades:Array = [start_money_upgrade1,start_money_upgrade2,start_alive_count1]
+@onready var all_upgrades:Array = [start_money_upgrade1,start_money_upgrade2,start_money_upgrade3,start_money_upgrade4,start_money_upgrade5,start_alive_count1,start_alive_count2,start_alive_count3,start_alive_count4,start_alive_count5,starting_cell_1,starting_cell_2,starting_cell_3,starting_cell_4,starting_cell_5]
 
 var chosen_upgrades:Array
 
@@ -46,11 +46,13 @@ func purchase_start_money_upgrade(upgrade:Upgrade):
 
 	
 func purchase_start_alive_count(upgrade:Upgrade):
+	print(upgrade)
 	GameManager.chosen_upgrades["chance_upgrades"].append(upgrade)
 	GameManager.starting_alive_chance += 0.1
 
 func purchase_start_count(upgrade:Upgrade):
 	GameManager.chosen_upgrades["starter_upgrades"].append(upgrade)
 	GameManager.starting_slots += 1
+	GameManager.slots.append(Dead.new())
 	
 	

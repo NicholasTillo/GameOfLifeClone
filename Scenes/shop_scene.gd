@@ -23,12 +23,7 @@ extends Control
 @export var label2:Label
 @export var label3:Label
 
-
-
 @export var resource_label:Label
-
-
-
 
 
 # Called when the node enters the scene tree for the first time.
@@ -54,11 +49,11 @@ func update_ui_shopeeeeee():
 	update_button(PlayerController.start_alive_count3, button8, "chance_upgrades")
 	update_button(PlayerController.start_alive_count4, button9, "chance_upgrades")
 	update_button(PlayerController.start_alive_count5, button10, "chance_upgrades")
-	update_button(PlayerController.starting_cell_1, button11, "chance_upgrades")
-	update_button(PlayerController.starting_cell_2, button12, "chance_upgrades")
-	update_button(PlayerController.starting_cell_3, button13, "chance_upgrades")
-	update_button(PlayerController.starting_cell_4, button14, "chance_upgrades")
-	update_button(PlayerController.starting_cell_5, button15, "chance_upgrades")
+	update_button(PlayerController.starting_cell_1, button11, "starter_upgrades")
+	update_button(PlayerController.starting_cell_2, button12, "starter_upgrades")
+	update_button(PlayerController.starting_cell_3, button13, "starter_upgrades")
+	update_button(PlayerController.starting_cell_4, button14, "starter_upgrades")
+	update_button(PlayerController.starting_cell_5, button15, "starter_upgrades")
 		
 		
 	
@@ -93,7 +88,6 @@ func purchase_upgrade(upgrade, button: Button):
 	update_ui_shop()
 
 
-	
 func purchase_alive_count(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_start_alive_count(upgrade)

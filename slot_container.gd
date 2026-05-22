@@ -7,7 +7,7 @@ func _ready() -> void:
 	for i in range(GameManager.starting_slots): # Replace with function body.
 		var obects = Button.new()
 		obects.text = "i: " +str(i)
-		obects.pressed.connect(_on_button_pressed.bind( i))
+		obects.pressed.connect(_on_button_pressed.bind(i))
 		add_child(obects)
 		
 func _on_button_pressed(value):

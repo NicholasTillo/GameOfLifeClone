@@ -11,6 +11,7 @@ func process_next_round():
 	var dead_count = 0
 	var alive_count = 0
 	
+	
 	for i in cell.neighbours:
 		if i.contains.id == "Dead":
 			dead_count += 1
@@ -20,6 +21,7 @@ func process_next_round():
 			if i.contains.threatening(): 
 				return Zombie.new()
 			
+	
 	
 	if alive_count < 2 or alive_count > 3:
 		return Dead.new()

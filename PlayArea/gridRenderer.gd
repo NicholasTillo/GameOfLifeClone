@@ -32,10 +32,7 @@ func _draw() -> void:
 	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
 	#draw_texture_rect(wing_texture, dest_rect, false)
 	draw_left_wing(state, CELL_SIZE, offset)
-
 	draw_right_wing(state, CELL_SIZE, offset)
-		
-
 	draw_top_wing(state, CELL_SIZE, offset)
 	#Draw Bottom 
 	draw_bottom_wing(state, CELL_SIZE, offset)

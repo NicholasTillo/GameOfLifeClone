@@ -1,7 +1,6 @@
 extends Class
 
 class_name Mechanic
-#Rename To Parasite! 
 
 func _init():
 	visual = 1

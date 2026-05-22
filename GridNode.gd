@@ -21,8 +21,8 @@ var autoplay_enabled: bool = false
 #Upgrade Stuff. 
 var starting_money_increase: int = 0
 var starting_alive_chance: float = 0.5
-var starting_slots: float = 3
-var slots: Array = [Dead.new(),Dead.new(),Dead.new()]
+var starting_slots: float = 0
+var slots: Array = []
 
 
 var in_gameplay: bool
@@ -30,12 +30,16 @@ var in_gameplay: bool
 #Upgrade Here
 var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades": []}
 
+var best_score: int
+
 
 
 
 func reset_stats():
 	starting_money_increase = 0
 	starting_alive_chance = 0.5
+	starting_slots = 0
+	slots = []
 	
 func _ready() -> void:
 	state = GameState.new()
@@ -71,6 +75,7 @@ func do_next_round():
 		
 	if check_stable_state(state.cells):
 		autoplay_enabled = false
+		best_score = round_count
 		get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
 		in_gameplay = false
 		
@@ -108,6 +113,8 @@ func save_game():
 	var json_string = JSON.stringify({"resource": resourceAmount})
 	save_file.store_line(json_string)
 	
+	json_string = JSON.stringify({"best_score": best_score})
+	save_file.store_line(json_string)
 	
 	var new_1 = []
 	var new_2 = []
@@ -145,7 +152,15 @@ func load_game():
 		var data = json.data
 		resourceAmount = int(data["resource"])	
 		
-		
+	json_string = save_file.get_line()
+	json = JSON.new()
+	parse_result = json.parse(json_string)
+	if not parse_result == OK:
+		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+	else:
+		var data = json.data
+		best_score = int(data["best_score"])	
+	
 	#Load Upgrades
 	json_string = save_file.get_line()
 	json = JSON.new()
@@ -153,9 +168,7 @@ func load_game():
 	if not parse_result == OK:
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 	else:
-		
 		var data = json.data
-		
 		var copy_chosen_upgrades = data["upgrades"]
 		#Loop through data here, and set the correct upgrades.
 		for i in copy_chosen_upgrades.keys():
@@ -169,16 +182,14 @@ func load_game():
 			elif i == "chance_upgrades":
 				for j in copy_chosen_upgrades["chance_upgrades"]:
 					for k in PlayerController.all_upgrades:
-						
 						if k.id == j:
 							PlayerController.purchase_start_alive_count(k)
 							chosen_upgrades["chance_upgrades"].append(k)
 			elif i == "starter_upgrades":
 				for j in copy_chosen_upgrades["starter_upgrades"]:
 					for k in PlayerController.all_upgrades:
-						
 						if k.id == j:
-							PlayerController.purchase_start_starter_count(k)
+							PlayerController.purchase_start_count(k)
 							chosen_upgrades["starter_upgrades"].append(k)
 							
 							
