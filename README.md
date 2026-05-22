@@ -9,7 +9,7 @@
 ### Gameplay and Mechanics
 - Build the Chef cell logic
 - Add new in-game upgrades:
-    - Second ship upgrade
+    - Second ship upgrade - Current
     - Rewind upgrade
 
 ### Visuals and UI
@@ -20,6 +20,9 @@
     - The end screen
     - Unique cell types
 - Add cutscenes that trigger when you hit specific round counts
+    - Cutscene 1 
+    - Cutscene 2
+
 
 ### Audio
 - Put in sound effects for the actual gameplay section

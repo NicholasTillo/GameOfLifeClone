@@ -11,8 +11,11 @@ func process_next_round():
 	var dead_count = 0
 	var alive_count = 0
 	
+	var chef_nearby: bool = false
 	
 	for i in cell.neighbours:
+		if i.contains.id == "Chef":
+			chef_nearby = true
 		if i.contains.id == "Dead":
 			dead_count += 1
 		elif i.contains.id == "Alive":

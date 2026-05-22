@@ -4,10 +4,12 @@ extends Node
 
 
 var state: GameState
-var ui: UIController
-var result: Class
-
 var renderer = preload("res://Scenes/PlayARea.tscn").instantiate()
+var ui: UIController
+
+var sub_ships: Array
+
+var result: Class
 
 var prev_states: Array
 
@@ -32,7 +34,8 @@ var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[], "s
 
 var best_score: int
 
-
+#List Of Cutscenes They Have Seen. 
+var current_cutscene_index:int = 0
 
 
 func reset_stats():
@@ -76,6 +79,9 @@ func do_next_round():
 	if check_stable_state(state.cells):
 		autoplay_enabled = false
 		best_score = round_count
+		if round_count >= current_cutscene_index * 20:
+			get_tree().change_scene_to_file("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
+			
 		get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
 		in_gameplay = false
 		
@@ -83,6 +89,9 @@ func do_next_round():
 	state.change_money(1)
 	change_resource(2)
 	round_count += 1
+	
+	for i in sub_ships:
+		pass
 	
 func check_stable_state(param):
 	var hashed = hash_state(param)
@@ -110,11 +119,10 @@ func how_much_resource():
 	
 func save_game():
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
-	var json_string = JSON.stringify({"resource": resourceAmount})
+	var json_string = JSON.stringify({"resource": resourceAmount,"best_score": best_score, "current_cutscene_index": current_cutscene_index})
 	save_file.store_line(json_string)
 	
-	json_string = JSON.stringify({"best_score": best_score})
-	save_file.store_line(json_string)
+
 	
 	var new_1 = []
 	var new_2 = []
@@ -135,14 +143,13 @@ func save_game():
 	
 func load_game():
 	if not FileAccess.file_exists("user://savegame.save"):
-		return # Error! We don't have a save to load.E)
+		return # Error! We don't have a save to load.
 		
 	chosen_upgrades = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades":[]}
 	reset_stats()
 	
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
 	
-	#while save_file.get_position() < save_file.get_length():
 	var json_string = save_file.get_line()
 	var json = JSON.new()
 	var parse_result = json.parse(json_string)
@@ -150,16 +157,12 @@ func load_game():
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 	else:
 		var data = json.data
+		print(data)
 		resourceAmount = int(data["resource"])	
+		best_score = int(data["best_score"])
+		current_cutscene_index = int(data["current_cutscene_index"])
 		
-	json_string = save_file.get_line()
-	json = JSON.new()
-	parse_result = json.parse(json_string)
-	if not parse_result == OK:
-		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
-	else:
-		var data = json.data
-		best_score = int(data["best_score"])	
+
 	
 	#Load Upgrades
 	json_string = save_file.get_line()
