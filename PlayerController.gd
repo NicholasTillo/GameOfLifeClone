@@ -25,6 +25,7 @@ extends Node
 
 var chosen_upgrades:Array
 
+
 func choose_upgrade(param_upgrade: Upgrade):
 	chosen_upgrades.append(param_upgrade)
 
@@ -32,19 +33,23 @@ func choose_upgrade(param_upgrade: Upgrade):
 func purchase_grid_upgrade():
 	var grid_upgrade: Upgrade = load("res://Upgrades/GridSizeUpgrade1.tres")
 	if GameManager.state.how_much_money() > grid_upgrade.cost:
-		chosen_upgrades.append(grid_upgrade)
 		GameManager.state.resize_grid(1)
 		GameManager.state.change_money(-grid_upgrade.cost)
-		
 
-
+func purchase_ship_upgrade(sub_ship_upgrade_cost):
+	if GameManager.state.how_much_money() > sub_ship_upgrade_cost:
+		GameManager.state.add_ship(5)
+		GameManager.state.change_money(-sub_ship_upgrade_cost)
+		return 1
+	else:
+		return 0
+		#Play Sound
 
 #Outside Of Game Upgrades
 func purchase_start_money_upgrade(upgrade:Upgrade):
 		GameManager.chosen_upgrades["money_upgrades"].append(upgrade)
 		GameManager.starting_money_increase += 10
 
-	
 func purchase_start_alive_count(upgrade:Upgrade):
 	print(upgrade)
 	GameManager.chosen_upgrades["chance_upgrades"].append(upgrade)

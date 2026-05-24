@@ -42,6 +42,15 @@ func _draw() -> void:
 	draw_top_wing(state, CELL_SIZE, offset)
 	#Draw Bottom 
 	draw_bottom_wing(state, CELL_SIZE, offset)
+	
+	offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(grid_pixel_size, grid_pixel_size)) * Vector2(0.75,0.25)
+	#Draw Subships
+	for i in range(len(state.subgrids)):
+		for y in range(state.subgrid_sizes[i]):
+			for x in range(state.subgrid_sizes[i]):
+				var color = state.get_subship_cell(x, y, i).contains.color
+				var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
+				draw_rect(rect, color)
 
 
 func draw_left_wing(state, size, offset):

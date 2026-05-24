@@ -26,7 +26,6 @@ var starting_alive_chance: float = 0.5
 var starting_slots: float = 0
 var slots: Array = []
 
-
 var in_gameplay: bool
 
 #Upgrade Here
@@ -38,11 +37,13 @@ var best_score: int
 var current_cutscene_index:int = 0
 
 
+
+
+
 func reset_stats():
 	starting_money_increase = 0
 	starting_alive_chance = 0.5
 	starting_slots = 0
-	slots = []
 	
 func _ready() -> void:
 	state = GameState.new()
@@ -85,12 +86,25 @@ func do_next_round():
 		get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
 		in_gameplay = false
 		
+	for i in range(len(state.subgrids)):
+		var copy_array_1 = []
+	
+		for j in range(len(state.subgrids[i])):
+			result = state.subgrids[i][j].contains.process_next_round()
+			print(result.id)
+			copy_array_1.append(result)
+			
+		for j in range(len(state.subgrids[i])):
+			state.subgrids[i][j].contains = copy_array_1[j]
+			state.subgrids[i][j].contains.cell = state.subgrids[i][j]
+			print(state.subgrids[i][j].contains.id)
+
 	renderer.redraw()
 	state.change_money(1)
 	change_resource(2)
 	round_count += 1
 	
-	for i in sub_ships:
+	for i in state.subgrids:
 		pass
 	
 func check_stable_state(param):
@@ -196,4 +210,3 @@ func load_game():
 							chosen_upgrades["starter_upgrades"].append(k)
 							
 							
-												

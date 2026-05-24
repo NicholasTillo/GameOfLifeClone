@@ -11,7 +11,9 @@ var cells: Array = []
 
 var moneyAmount = 5 + GameManager.starting_money_increase
 
-
+var subgrids: Array = []
+var subgrid_sizes: Array = []
+var sub_ship_index = 0
 func _init() -> void:
 	initialize_grid()
 	
@@ -107,7 +109,11 @@ func get_cell(x:int, y:int):
 	if not( x >= 0 and x < gridSize and y >= 0 and y < gridSize):
 		return null; 
 	return cells[y * gridSize + x]
-
+	
+func get_subship_cell(x:int, y:int, ship:int):
+	if not( x >= 0 and x < subgrid_sizes[ship] and y >= 0 and y < subgrid_sizes[ship]):
+		return null; 
+	return subgrids[ship][y * subgrid_sizes[ship] + x]
 
 func change_money(x: int):
 	moneyAmount += x
@@ -117,3 +123,36 @@ func how_much_money():
 	return moneyAmount
 	
 	
+func add_ship(sub_ship_size):
+	#Set up each subgrid in the same way we set up the original.
+	subgrids.append([])
+	subgrid_sizes.append(sub_ship_size)
+	subgrids[sub_ship_index].resize(sub_ship_size * sub_ship_size)
+	
+	
+	for i in range(sub_ship_size*sub_ship_size):
+		subgrids[sub_ship_index][i] = Cell.new()
+		if randf() < GameManager.starting_alive_chance:
+			subgrids[sub_ship_index][i].contains = Alive.new()
+		else:
+			subgrids[sub_ship_index][i].contains = Dead.new()
+		subgrids[sub_ship_index][i].id = i
+		subgrids[sub_ship_index][i].contains.cell = subgrids[sub_ship_index][i]
+
+	#Set up the neighbours. 
+	for i in range(sub_ship_size*sub_ship_size):
+		var x = i % sub_ship_size
+		var y = i / sub_ship_size
+			
+		for dy in [-1, 0, 1]:
+			for dx in [-1, 0, 1]:
+				if dx == 0 and dy == 0:
+					continue
+				var nx = x + dx
+				var ny = y + dy
+				if nx < 0 or nx >= sub_ship_size:
+					continue
+				if ny < 0 or ny >= sub_ship_size:
+					continue
+				subgrids[sub_ship_index][i].neighbours.append(subgrids[sub_ship_index][ny * sub_ship_size + nx])
+	sub_ship_index += 1

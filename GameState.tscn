@@ -22,12 +22,16 @@ shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
 
 [node name="Root" type="Node2D" unique_id=858420152]
 
-[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text")]
+[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_two_button", "vbox_ship_one", "vbox_ship_two")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_mmopi")
 texty = NodePath("Label")
 resource_text = NodePath("Label2")
+buy_supship_one_button = NodePath("HBoxContainer2/Button")
+buy_supship_two_button = NodePath("HBoxContainer2/Button2")
+vbox_ship_one = NodePath("HBoxContainer2/VBoxContainer2")
+vbox_ship_two = NodePath("HBoxContainer2/VBoxContainer3")
 
 [node name="Background" type="TextureRect" parent="UI" unique_id=15351764]
 light_mask = 0
@@ -111,58 +115,100 @@ script = ExtResource("3_8bu60")
 button = NodePath(".")
 ui_Controller = NodePath("..")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=1743948213]
+[node name="Label3" type="Label" parent="UI" unique_id=1790248283]
 layout_mode = 0
 offset_left = 765.0
-offset_top = 223.0
-offset_right = 1259.0
-offset_bottom = 486.0
-
-[node name="Label" type="Label" parent="UI/VBoxContainer" unique_id=1790248283]
-layout_mode = 2
+offset_top = 289.0
+offset_right = 804.0
+offset_bottom = 312.0
 text = "Shop"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/VBoxContainer" unique_id=1994313040]
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI" unique_id=1994313040]
+layout_mode = 0
+offset_left = 761.0
+offset_top = 324.0
+offset_right = 1255.0
+offset_bottom = 425.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/HBoxContainer2" unique_id=1743948213]
 layout_mode = 2
 
-[node name="ShopButton" type="Button" parent="UI/VBoxContainer/HBoxContainer2" unique_id=1155390065 node_paths=PackedStringArray("button")]
+[node name="MainShip" type="Label" parent="UI/HBoxContainer2/VBoxContainer" unique_id=1857983118]
 layout_mode = 2
-text = "Button 1 (Real Upgrade)"
+text = "Main Ship"
+
+[node name="ShopButton" type="Button" parent="UI/HBoxContainer2/VBoxContainer" unique_id=1155390065 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Size Upgrade"
 script = ExtResource("4_8bu60")
 button = NodePath(".")
 
-[node name="Button" type="Button" parent="UI/VBoxContainer/HBoxContainer2" unique_id=1622863660]
+[node name="Button" type="Button" parent="UI/HBoxContainer2/VBoxContainer" unique_id=1622863660]
 layout_mode = 2
 text = "Button 6"
 
-[node name="Button2" type="Button" parent="UI/VBoxContainer/HBoxContainer2" unique_id=1928874220]
+[node name="Button2" type="Button" parent="UI/HBoxContainer2/VBoxContainer" unique_id=1928874220]
 layout_mode = 2
 text = "Button 5
 "
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="UI/VBoxContainer" unique_id=1688391096]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/HBoxContainer2" unique_id=295693066]
+visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="UI/VBoxContainer/HBoxContainer3" unique_id=340848560]
+[node name="MainShip" type="Label" parent="UI/HBoxContainer2/VBoxContainer2" unique_id=1331390976]
 layout_mode = 2
-text = "Button 2
+text = "Subship 1"
+
+[node name="ShopButton" type="Button" parent="UI/HBoxContainer2/VBoxContainer2" unique_id=410048042 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Size Upgrade"
+script = ExtResource("4_8bu60")
+button = NodePath(".")
+
+[node name="Button" type="Button" parent="UI/HBoxContainer2/VBoxContainer2" unique_id=717229047]
+layout_mode = 2
+text = "Button 6"
+
+[node name="Button2" type="Button" parent="UI/HBoxContainer2/VBoxContainer2" unique_id=1980703277]
+layout_mode = 2
+text = "Button 5
 "
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/VBoxContainer" unique_id=2064343827]
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/HBoxContainer2" unique_id=1462857819]
+visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="UI/VBoxContainer/HBoxContainer" unique_id=551662307]
+[node name="MainShip" type="Label" parent="UI/HBoxContainer2/VBoxContainer3" unique_id=19734371]
 layout_mode = 2
-text = "Button 3
+text = "Subship 2"
+
+[node name="ShopButton" type="Button" parent="UI/HBoxContainer2/VBoxContainer3" unique_id=489133282 node_paths=PackedStringArray("button")]
+layout_mode = 2
+text = "Size Upgrade"
+script = ExtResource("4_8bu60")
+button = NodePath(".")
+
+[node name="Button" type="Button" parent="UI/HBoxContainer2/VBoxContainer3" unique_id=83668782]
+layout_mode = 2
+text = "Button 6"
+
+[node name="Button2" type="Button" parent="UI/HBoxContainer2/VBoxContainer3" unique_id=227514106]
+layout_mode = 2
+text = "Button 5
 "
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="UI/VBoxContainer" unique_id=780897210]
+[node name="Button" type="Button" parent="UI/HBoxContainer2" unique_id=2064119185]
 layout_mode = 2
+text = " Purchase 
+Subship: 
+500"
 
-[node name="Button" type="Button" parent="UI/VBoxContainer/HBoxContainer4" unique_id=203968187]
+[node name="Button2" type="Button" parent="UI/HBoxContainer2" unique_id=1140838289]
 layout_mode = 2
-text = "Button 4
-"
+text = " Purchase 
+Subship 2:
+1000"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=105109344]
 stream = ExtResource("8_ti75m")

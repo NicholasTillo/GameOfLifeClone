@@ -10,6 +10,9 @@
 - Build the Chef cell logic
 - Add new in-game upgrades:
     - Second ship upgrade - Current
+		This is designed seperatly to the original grid, as this is optional, so I will loop 
+		Logic for creatging a ship is done, just have to add additional money and score and also add it to the hasing 05/24
+		
     - Rewind upgrade
 
 ### Visuals and UI
@@ -26,4 +29,3 @@
 
 ### Audio
 - Put in sound effects for the actual gameplay section
-
