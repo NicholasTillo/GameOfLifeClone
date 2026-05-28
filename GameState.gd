@@ -37,8 +37,6 @@ func initialize_grid():
 		var id = randi_range(0, (gridSize*gridSize)  - 1)
 		while id in chosen_ids:
 			id = randi_range(0,  (gridSize*gridSize) - 1)
-		print(cells)
-		print(GameManager.slots)
 		cells[id].contains = GameManager.slots[i]
 		cells[id].contains.cell = cells[id]
 		chosen_ids.append(id)
@@ -62,46 +60,46 @@ func initialize_grid():
 			
 
 
-func resize_grid(amount:int):
-	#Columns
+func resize_grid(amount: int, input_grid: Array, grid_size: int) -> Array:
 	var new_cells = []
-	new_cells.resize((gridSize + amount) *(gridSize+ amount))
-	var offset = 0
 	
-	for i in range((gridSize + amount) * (gridSize+ amount)):
-		new_cells[i] = Cell.new()
-		
-		var x = i % (gridSize + amount)
-		var y = i / (gridSize + amount)
-		if x >= gridSize or y >= gridSize:
-			new_cells[i].contains = Dead.new()
+	new_cells.resize((grid_size + amount) * (grid_size + amount))
 
+	for i in range((grid_size + amount) * (grid_size + amount)):
+		new_cells[i] = Cell.new()
+
+		var x = i % (grid_size + amount)
+		var y = i / (grid_size + amount)
+		if x >= grid_size or y >= grid_size:
+			new_cells[i].contains = Dead.new()
 		else:
-			new_cells[i].contains = cells[y * gridSize + x].contains
+			new_cells[i].contains = input_grid[y * grid_size + x].contains
 		new_cells[i].id = i
 		new_cells[i].contains.cell = new_cells[i]
-		
-	#Set up the neighbours. 
-	for i in range((gridSize + amount) *(gridSize+ amount)):
-		var x = i % (gridSize + amount)
-		var y = i / (gridSize+ amount)
-			
+
+	# Set up the neighbours.
+	for i in range((grid_size + amount) * (grid_size + amount)):
+		var x = i % (grid_size + amount)
+		var y = i / (grid_size + amount)
+
 		for dy in [-1, 0, 1]:
 			for dx in [-1, 0, 1]:
 				if dx == 0 and dy == 0:
 					continue
 				var nx = x + dx
 				var ny = y + dy
-				if nx < 0 or nx >= (gridSize+ amount):
+				if nx < 0 or nx >= (grid_size + amount):
 					continue
-				if ny < 0 or ny >= (gridSize+ amount):
+				if ny < 0 or ny >= (grid_size + amount):
 					continue
-				new_cells[i].neighbours.append(new_cells[ny * (gridSize + amount) + nx])
+				new_cells[i].neighbours.append(new_cells[ny * (grid_size + amount) + nx])
+	GameManager.renderer.redraw()
+	return new_cells
 
 	
-	gridSize += amount
-	cells = new_cells
-	GameManager.renderer.redraw()
+	
+	
+	
 	
 	
 

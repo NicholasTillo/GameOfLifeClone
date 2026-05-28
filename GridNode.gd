@@ -36,8 +36,8 @@ var best_score: int
 #List Of Cutscenes They Have Seen. 
 var current_cutscene_index:int = 0
 
-
-
+#Event Variables
+var event_popup_precon_scene = preload("res://Scenes/event_pop_up.tscn")
 
 
 func reset_stats():
@@ -52,7 +52,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if autoplay_enabled:
-		if culm_time > 1.0: 
+		if culm_time > 0.25: 
 			do_next_round()
 			culm_time = 0.0
 		else:
@@ -77,13 +77,14 @@ func do_next_round():
 		state.cells[i].contains = copy_array[i]
 		state.cells[i].contains.cell = state.cells[i]
 		
-	if check_stable_state(state.cells):
+	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
 		best_score = round_count
 		if round_count >= current_cutscene_index * 20:
+			renderer.clear()
 			get_tree().change_scene_to_file("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
-			
-		get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
+		else:
+			get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
 		in_gameplay = false
 		
 	for i in range(len(state.subgrids)):
@@ -91,24 +92,64 @@ func do_next_round():
 	
 		for j in range(len(state.subgrids[i])):
 			result = state.subgrids[i][j].contains.process_next_round()
-			print(result.id)
 			copy_array_1.append(result)
 			
 		for j in range(len(state.subgrids[i])):
 			state.subgrids[i][j].contains = copy_array_1[j]
 			state.subgrids[i][j].contains.cell = state.subgrids[i][j]
-			print(state.subgrids[i][j].contains.id)
 
 	renderer.redraw()
-	state.change_money(1)
 	change_resource(2)
 	round_count += 1
+	if round_count % 25 == 0:
+		do_random_event()
 	
-	for i in state.subgrids:
-		pass
+
+func load_resources_from_folder(path: String) -> Array[Resource]:
+	var resources: Array[Resource] = []
+	var file_names = DirAccess.get_files_at(path)
 	
-func check_stable_state(param):
-	var hashed = hash_state(param)
+	for file_name in file_names:
+		# Construct the full path
+		var full_path = path + "/" + file_name
+		
+		# Load the resource and add it to the array
+		var res = load(full_path)
+		if res:
+			resources.append(res)
+			
+	return resources
+
+func do_random_event():
+	var list_of_events:Array = load_resources_from_folder("res://RandomEvents")
+	var chosen_event: random_event = list_of_events.pick_random()
+	while chosen_event.enabled == false:
+		chosen_event = list_of_events.pick_random()
+	
+	
+	var event_popup = event_popup_precon_scene.instantiate()
+	get_tree().root.add_child(event_popup)
+	event_popup.change_name(chosen_event.name)
+	event_popup.change_text(chosen_event.text)
+	
+	#Actually Do The Thing
+	
+	match chosen_event.id:
+		0: #Springtrap
+			var chosen_cell = state.cells.pick_random()
+			chosen_cell.contains = Springtrap.new()
+			chosen_cell.contains.cell = chosen_cell
+		1: #Zombie Invasion
+			var num_of_zombies = 5
+			for i in range(num_of_zombies):
+				var chosen_cell = state.cells.pick_random()
+				chosen_cell.contains = Zombie.new()
+				chosen_cell.contains.cell = chosen_cell
+	
+	
+func check_stable_state(param, subgrids):
+	var hashed = hash_state(param, subgrids)
+	
 	for i in prev_states:
 		if i == hashed:
 			return true
@@ -116,10 +157,14 @@ func check_stable_state(param):
 	return false
 
 
-func hash_state(grid: Array) -> String:
+func hash_state(grid: Array, subgrids:Array) -> String:
 	var new_array = []
 	for i in grid:
 		new_array.append(i.contains.id)
+	for i in subgrids:
+		for j in i:
+			new_array.append(j.contains.id)
+		
 	return str(new_array)
 	
 func change_resource(x: int):
@@ -171,7 +216,6 @@ func load_game():
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
 	else:
 		var data = json.data
-		print(data)
 		resourceAmount = int(data["resource"])	
 		best_score = int(data["best_score"])
 		current_cutscene_index = int(data["current_cutscene_index"])

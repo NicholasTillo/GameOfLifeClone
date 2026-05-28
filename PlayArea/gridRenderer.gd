@@ -8,7 +8,7 @@ const DEAD_COLOR  = Color(0.1, 0.1, 0.1)
 
 var popup_scene = preload("res://Popup.tscn")
 var popup
-
+var _should_draw: bool
 var popup_enabled: bool = false
 var wing_texture_top_right: Texture2D = preload("res://Assets/Top Right.png")  # your texture here
 var wing_texture_right: Texture2D = preload("res://Assets/WingRight.png")  # your texture here
@@ -22,12 +22,18 @@ var wing_texture_bottom: Texture2D = preload("res://Assets/Bottom.png")  # your 
 
 
 
-
+func clear():
+	_should_draw = false
+	redraw()
+	
 func _draw() -> void:
 	var state = GameManager.state
 	var grid_pixel_size = state.gridSize * CELL_SIZE
 	var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
 	
+	if not _should_draw:
+		_should_draw = true
+		return
 	for y in range(state.gridSize):
 		for x in range(state.gridSize):
 			var color = state.get_cell(x, y).contains.color
@@ -37,24 +43,35 @@ func _draw() -> void:
 	var grid_px = state.gridSize * CELL_SIZE
 	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
 	
-	draw_left_wing(state, CELL_SIZE, offset)
-	draw_right_wing(state, CELL_SIZE, offset)
-	draw_top_wing(state, CELL_SIZE, offset)
+	draw_left_wing(state, CELL_SIZE, offset, state.gridSize)
+	draw_right_wing(state, CELL_SIZE, offset, state.gridSize)
+	draw_top_wing(state, CELL_SIZE, offset, state.gridSize)
 	#Draw Bottom 
-	draw_bottom_wing(state, CELL_SIZE, offset)
+	draw_bottom_wing(state, CELL_SIZE, offset, state.gridSize)
 	
-	offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(grid_pixel_size, grid_pixel_size)) * Vector2(0.75,0.25)
+	
 	#Draw Subships
 	for i in range(len(state.subgrids)):
+		if i == 0:
+			offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.80,0.20)
+		else: 
+			offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.20,0.80)
+			
 		for y in range(state.subgrid_sizes[i]):
 			for x in range(state.subgrid_sizes[i]):
 				var color = state.get_subship_cell(x, y, i).contains.color
 				var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 				draw_rect(rect, color)
+		print(state.subgrids[i])
+		draw_left_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
+		draw_right_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
+		draw_top_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
+		#Draw Bottom 
+		draw_bottom_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
 
 
-func draw_left_wing(state, size, offset):
-	var grid_px = state.gridSize * size
+func draw_left_wing(state, size, offset, gridSize):
+	var grid_px = gridSize * size
 	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
 	#Draw Top
 	draw_texture_rect(wing_texture_top_left, dest_rect, false)
@@ -67,8 +84,8 @@ func draw_left_wing(state, size, offset):
 	#Draw Bottom
 	draw_texture_rect(wing_texture_bottom_left, dest_rect, false)
 	
-func draw_right_wing(state, size, offset):
-	var grid_px = state.gridSize * size
+func draw_right_wing(state, size, offset, gridSize):
+	var grid_px = gridSize * size
 	var dest_rect = Rect2(offset.x + grid_px, offset.y, 30, 30)
 	draw_texture_rect(wing_texture_top_right, dest_rect, false)
 	dest_rect = Rect2(offset.x + grid_px, offset.y + 30, 30, grid_px - 60)
@@ -76,13 +93,13 @@ func draw_right_wing(state, size, offset):
 	dest_rect = Rect2(offset.x + grid_px, offset.y + grid_px - 30, 30, 30)
 	draw_texture_rect(wing_texture_bottom_right, dest_rect, false)
 
-func draw_top_wing(state, size, offset):
-	var grid_px = state.gridSize * size
+func draw_top_wing(state, size, offset, gridSize):
+	var grid_px = gridSize * size
 	var dest_rect = Rect2(offset.x, offset.y-30, grid_px, 30)
 	draw_texture_rect(wing_texture_top, dest_rect, false)
 	
-func draw_bottom_wing(state, size, offset):
-	var grid_px = state.gridSize * size
+func draw_bottom_wing(state, size, offset, gridSize):
+	var grid_px = gridSize * size
 	var dest_rect = Rect2(offset.x , offset.y + grid_px, grid_px, 30)
 	draw_texture_rect(wing_texture_bottom, dest_rect, false)
 
@@ -92,20 +109,41 @@ func _input_event(port, event, ints):
 			popup_enabled = false
 			popup.queue_free()
 		else: 
-			var grid_pixel_size = GameManager.state.gridSize * CELL_SIZE
+			var state = GameManager.state
+			
+			# Check Main Grid
+			var grid_pixel_size = state.gridSize * CELL_SIZE
 			var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
 			
 			var x = int((event.position.x - offset.x )/ CELL_SIZE)
 			var y = int((event.position.y - offset.y )/ CELL_SIZE)
-			if x >= 0 and x < GameManager.state.gridSize and y >= 0 and y < GameManager.state.gridSize:
-				var cell = GameManager.state.cells[y * GameManager.state.gridSize + x]
-				popup = popup_scene.instantiate()
-				popup.position = Vector2(event.position.x,event.position.y)
-				popup.cell_num = y * GameManager.state.gridSize + x
-				popup.script = self
-				add_child(popup)
-				queue_redraw()
-				popup_enabled = true
+			if x >= 0 and x < state.gridSize and y >= 0 and y < state.gridSize:
+				_spawn_popup(event.position, y * state.gridSize + x, -1)
+				return
+
+			# Check Subgrids
+			for i in range(len(state.subgrids)):
+				var sub_offset: Vector2
+				if i == 0:
+					sub_offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.80,0.20)
+				else: 
+					sub_offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.20,0.80)
+				
+				var sx = int((event.position.x - sub_offset.x) / CELL_SIZE)
+				var sy = int((event.position.y - sub_offset.y) / CELL_SIZE)
+				
+				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i]:
+					_spawn_popup(event.position, sy * state.subgrid_sizes[i] + sx, i)
+					return
+
+func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
+	popup = popup_scene.instantiate()
+	popup.position = pos
+	popup.cell_num = cell_idx
+	popup.grid_index = g_idx
+	add_child(popup)
+	queue_redraw()
+	popup_enabled = true
 
 func redraw():
 	queue_redraw()

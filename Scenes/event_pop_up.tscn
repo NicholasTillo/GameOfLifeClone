@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dajgkflsjwdf5"]
+
+[ext_resource type="Script" uid="uid://c007mna6lraq0" path="res://event_pop_up.gd" id="1_rgf86"]
+
+[node name="EventPopUp" type="Control" unique_id=287901850 node_paths=PackedStringArray("name_label", "description_label", "okay_button")]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rgf86")
+name_label = NodePath("NameLabel")
+description_label = NodePath("TextLabel")
+okay_button = NodePath("OkayButton")
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=1532821470]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.73333335, 0.6313726, 0.50980395, 0)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=450318174]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 66.0
+offset_right = 998.0
+offset_bottom = 578.0
+color = Color(0.8732984, 0.8732984, 0.8732984, 1)
+
+[node name="NameLabel" type="Label" parent="." unique_id=1241310315]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = 550.0
+offset_top = 142.0
+offset_right = 597.0
+offset_bottom = 165.0
+text = "Name"
+
+[node name="TextLabel" type="Label" parent="." unique_id=719691039]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = 559.0
+offset_top = 292.0
+offset_right = 599.0
+offset_bottom = 315.0
+text = "Text"
+
+[node name="OkayButton" type="Button" parent="." unique_id=744858214]
+layout_mode = 0
+offset_left = 493.0
+offset_top = 454.0
+offset_right = 665.0
+offset_bottom = 500.0
+text = "Okay
+
+"

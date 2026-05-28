@@ -23,7 +23,12 @@ extends Node
 
 @onready var all_upgrades:Array = [start_money_upgrade1,start_money_upgrade2,start_money_upgrade3,start_money_upgrade4,start_money_upgrade5,start_alive_count1,start_alive_count2,start_alive_count3,start_alive_count4,start_alive_count5,starting_cell_1,starting_cell_2,starting_cell_3,starting_cell_4,starting_cell_5]
 
+
+var UI_controller: UIController
 var chosen_upgrades:Array
+
+var main_ship_size_upgrade_number: int
+var sub_ship_size_upgrade_number: Array = [0,0]
 
 
 func choose_upgrade(param_upgrade: Upgrade):
@@ -33,17 +38,42 @@ func choose_upgrade(param_upgrade: Upgrade):
 func purchase_grid_upgrade():
 	var grid_upgrade: Upgrade = load("res://Upgrades/GridSizeUpgrade1.tres")
 	if GameManager.state.how_much_money() > grid_upgrade.cost:
-		GameManager.state.resize_grid(1)
+		if GameManager.renderer.popup_enabled:
+			GameManager.renderer.popup.queue_free()
+			GameManager.renderer.popup_enabled = false
+		GameManager.state.cells = GameManager.state.resize_grid(1,  GameManager.state.cells, GameManager.state.gridSize)
+		GameManager.state.gridSize += 1
 		GameManager.state.change_money(-grid_upgrade.cost)
+	else:
+		return 0
 
 func purchase_ship_upgrade(sub_ship_upgrade_cost):
-	if GameManager.state.how_much_money() > sub_ship_upgrade_cost:
+	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost:
 		GameManager.state.add_ship(5)
 		GameManager.state.change_money(-sub_ship_upgrade_cost)
+		GameManager.renderer.redraw()
 		return 1
 	else:
 		return 0
 		#Play Sound
+
+func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
+	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost:
+		if GameManager.renderer.popup_enabled:
+			GameManager.renderer.popup.queue_free()
+			GameManager.renderer.popup_enabled = false
+		GameManager.state.change_money(-sub_ship_upgrade_cost)
+		GameManager.state.subgrids[subship_num] = GameManager.state.resize_grid(1, GameManager.state.subgrids[subship_num], GameManager.state.subgrid_sizes[subship_num])
+		GameManager.state.subgrid_sizes[subship_num] += 1
+		sub_ship_size_upgrade_number[subship_num] += 1
+		if sub_ship_size_upgrade_number[subship_num] == 5:
+			#Disable Button
+			print("subship_numDISABLE")
+			
+			UI_controller.diable_subship_size_upgrade(subship_num)
+		return 1
+	else:
+		return 0
 
 #Outside Of Game Upgrades
 func purchase_start_money_upgrade(upgrade:Upgrade):

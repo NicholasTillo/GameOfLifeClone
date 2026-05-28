@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://dgrry5qojicmi"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_00jxh"]
+
+[resource]
+script = ExtResource("1_00jxh")
+name = "Springtrap Invasion"
+text = "Springtrap Appears!!! "
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

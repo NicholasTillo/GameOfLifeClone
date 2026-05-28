@@ -54,8 +54,6 @@ func update_ui_shopeeeeee():
 	update_button(PlayerController.starting_cell_3, button13, "starter_upgrades")
 	update_button(PlayerController.starting_cell_4, button14, "starter_upgrades")
 	update_button(PlayerController.starting_cell_5, button15, "starter_upgrades")
-		
-		
 	
 	
 	button1.pressed.connect(purchase_upgrade.bind(PlayerController.start_money_upgrade1, button1))

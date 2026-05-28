@@ -1,3 +1,6 @@
 [gd_scene format=3 uid="uid://bgp8p0ab5o8qk"]
 
-[node name="Cutscene1" type="Node2D" unique_id=1645025605]
+[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_one.gd" id="1_m8l4a"]
+
+[node name="Cutscene0" type="Node2D" unique_id=1645025605]
+script = ExtResource("1_m8l4a")

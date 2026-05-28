@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dvjvb8pn4gyhf" path="res://reset_button.gd" id="1_4li1v"]
 [ext_resource type="Script" uid="uid://brqihe2fmj4ac" path="res://Scenes/shop_scene.gd" id="1_njw01"]
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="2_35huh"]
+[ext_resource type="AudioStream" uid="uid://7brad8e63v7a" path="res://raven1023-happy-pants-111790.mp3" id="4_6rmb7"]
 
 [node name="ShopScene" type="Control" unique_id=1505458115 node_paths=PackedStringArray("button1", "button2", "button3", "button4", "button5", "button6", "button7", "button8", "button9", "button10", "button11", "button12", "button13", "button14", "button15", "label1", "label2", "label3", "resource_label")]
 layout_mode = 3
@@ -42,40 +43,48 @@ color = Color(0.2417247, 0.1819703, 0.115634, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1528807232]
 layout_mode = 0
-offset_left = 261.0
-offset_top = 118.0
-offset_right = 666.0
-offset_bottom = 379.0
+offset_left = 231.0
+offset_top = 80.0
+offset_right = 787.0
+offset_bottom = 341.0
 
 [node name="Label" type="Label" parent="VBoxContainer" unique_id=1092257974]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "Shop"
+horizontal_alignment = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1305537116]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=56838688]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "Starting Money Increase: "
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=8997205]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1164228906]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "2"
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=329990323]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "2"
 
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=776529383]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "2"
 
 [node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1359943654]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "2"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=186239156]
@@ -83,30 +92,36 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=44995433]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "Better Alive Count At Beginning: "
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=2065112473]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1
 "
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1041416162]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1
 "
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1099139733]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1
 "
 
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1163695957]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1
 "
 
 [node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1186242159]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1
 "
 
@@ -115,26 +130,32 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1220792809]
 layout_mode = 2
+theme_override_font_sizes/font_size = 25
 text = "Starter Slots: "
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1364137521]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=600054458]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1171159276]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=427611904]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=166205626]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "1"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=980215822]
@@ -142,22 +163,27 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1307513859]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Unlock 1"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1153693810]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Unlock 2"
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=416823594]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Unlock 3"
 
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=28500454]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Unlock 4"
 
 [node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=615735384]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Unlock 5"
 
 [node name="ResetButton" type="Button" parent="." unique_id=79857208 node_paths=PackedStringArray("button")]
@@ -166,6 +192,7 @@ offset_left = 516.0
 offset_top = 418.0
 offset_right = 567.0
 offset_bottom = 449.0
+theme_override_font_sizes/font_size = 32
 text = "Back"
 script = ExtResource("1_4li1v")
 button = NodePath(".")
@@ -188,3 +215,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2091988342]
+stream = ExtResource("4_6rmb7")
+volume_db = -25.0
+autoplay = true

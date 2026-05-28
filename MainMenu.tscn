@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="3_qoqlk"]
 [ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="4_iwfq2"]
 [ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_cqjrg"]
+[ext_resource type="AudioStream" uid="uid://cosk58oodjjqp" path="res://lexin_music-space-ambient-sci-fi-121842.mp3" id="8_e2xy7"]
 
 [node name="MainMenu" type="Node2D" unique_id=1386560934]
 
@@ -24,13 +25,14 @@ color = Color(0.2417247, 0.1819703, 0.115634, 1)
 
 [node name="Total Menu" type="VBoxContainer" parent="Control" unique_id=630811595]
 layout_mode = 0
-offset_left = 280.0
-offset_top = 113.0
-offset_right = 479.0
-offset_bottom = 356.0
+offset_left = 65.0
+offset_top = 49.0
+offset_right = 440.0
+offset_bottom = 292.0
 
 [node name="Title" type="Label" parent="Control/Total Menu" unique_id=922234526]
 layout_mode = 2
+theme_override_font_sizes/font_size = 40
 text = "Game Of Life Ripoff"
 
 [node name="Play HBox" type="HBoxContainer" parent="Control/Total Menu" unique_id=99836440]
@@ -38,6 +40,7 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="Control/Total Menu/Play HBox" unique_id=1179979683 node_paths=PackedStringArray("button")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Play    
 "
 script = ExtResource("1_i26rj")
@@ -53,6 +56,7 @@ script = ExtResource("2_7r1g0")
 
 [node name="Upgrade Button" type="Button" parent="Control/Total Menu" unique_id=869280503 node_paths=PackedStringArray("button")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Upgrades
 "
 script = ExtResource("2_eiy7p")
@@ -60,12 +64,14 @@ button = NodePath(".")
 
 [node name="Save Button" type="Button" parent="Control/Total Menu" unique_id=1240730738 node_paths=PackedStringArray("button")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Save"
 script = ExtResource("3_qoqlk")
 button = NodePath(".")
 
 [node name="Load Button" type="Button" parent="Control/Total Menu" unique_id=1397613081 node_paths=PackedStringArray("button", "label")]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Load From Save"
 script = ExtResource("4_iwfq2")
 button = NodePath(".")
@@ -112,3 +118,8 @@ offset_bottom = 82.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=404395373]
+stream = ExtResource("8_e2xy7")
+volume_db = -20.0
+autoplay = true
