@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Game Of Life Rip Off"
-run/main_scene="uid://b6t37ll7ta5cc"
+run/main_scene="uid://bgp8p0ab5o8qk"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 

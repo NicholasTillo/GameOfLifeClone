@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dajgkflsjwdf5"]
 
-[ext_resource type="Script" uid="uid://c007mna6lraq0" path="res://event_pop_up.gd" id="1_rgf86"]
+[ext_resource type="Script" uid="uid://c007mna6lraq0" path="res://event_pop_up.gd" id="1_8vwsy"]
 
 [node name="EventPopUp" type="Control" unique_id=287901850 node_paths=PackedStringArray("name_label", "description_label", "okay_button")]
 z_index = 10
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_rgf86")
+script = ExtResource("1_8vwsy")
 name_label = NodePath("NameLabel")
 description_label = NodePath("TextLabel")
 okay_button = NodePath("OkayButton")

@@ -30,8 +30,8 @@
 ### Visuals and UI
 - Design a proper title for the game
 - Create new visuals for:
-    - The main menu
-    - The shop screen
+    - The main menu - Done
+    - The shop screen 
     - The end screen
 	- Buttons
     - Unique cell types

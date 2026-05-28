@@ -1,13 +1,23 @@
 [gd_scene format=3 uid="uid://b6t37ll7ta5cc"]
 
-[ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_i26rj"]
-[ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_7r1g0"]
-[ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="2_eiy7p"]
-[ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="3_h7a2f"]
-[ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="3_qoqlk"]
-[ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="4_iwfq2"]
-[ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_cqjrg"]
-[ext_resource type="AudioStream" uid="uid://cosk58oodjjqp" path="res://lexin_music-space-ambient-sci-fi-121842.mp3" id="8_e2xy7"]
+[ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_koqhg"]
+[ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_cmrfp"]
+[ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="3_loo7a"]
+[ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="4_if7li"]
+[ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="5_rrcx7"]
+[ext_resource type="Script" uid="uid://jkihvtyurk7g" path="res://Scenes/Round_count.gd" id="6_cmrfp"]
+[ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="6_fh7cp"]
+[ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_8e205"]
+[ext_resource type="AudioStream" uid="uid://cosk58oodjjqp" path="res://lexin_music-space-ambient-sci-fi-121842.mp3" id="8_7467j"]
+
+[sub_resource type="Gradient" id="Gradient_koqhg"]
+offsets = PackedFloat32Array(0.01183432, 0.5443787, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.21106043, 0.21963134, 0.29396576, 1, 0.5204934, 0.4464711, 0.5215269, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cmrfp"]
+gradient = SubResource("Gradient_koqhg")
+fill_from = Vector2(0.4334764, 0.55364805)
+fill_to = Vector2(1, 0.5493562)
 
 [node name="MainMenu" type="Node2D" unique_id=1386560934]
 
@@ -17,11 +27,11 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=293867857]
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=449179007]
 layout_mode = 0
-offset_right = 1158.0
-offset_bottom = 653.0
-color = Color(0.2417247, 0.1819703, 0.115634, 1)
+offset_right = 1153.0
+offset_bottom = 647.0
+texture = SubResource("GradientTexture2D_cmrfp")
 
 [node name="Total Menu" type="VBoxContainer" parent="Control" unique_id=630811595]
 layout_mode = 0
@@ -35,47 +45,56 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "Game Of Life Ripoff"
 
-[node name="Play HBox" type="HBoxContainer" parent="Control/Total Menu" unique_id=99836440]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="Control/Total Menu/Play HBox" unique_id=1179979683 node_paths=PackedStringArray("button")]
+[node name="Button" type="Button" parent="Control/Total Menu" unique_id=369781049 node_paths=PackedStringArray("button")]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Play    
 "
-script = ExtResource("1_i26rj")
+script = ExtResource("1_koqhg")
 button = NodePath(".")
+
+[node name="Play HBox" type="HBoxContainer" parent="Control/Total Menu" unique_id=99836440]
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Control/Total Menu/Play HBox" unique_id=1526744314]
 layout_mode = 2
-text = "Starter Slots"
+theme_override_font_sizes/font_size = 24
+text = "Starter Slots: "
 
 [node name="SlotContainer" type="HBoxContainer" parent="Control/Total Menu/Play HBox" unique_id=1583294046]
 layout_mode = 2
-script = ExtResource("2_7r1g0")
+script = ExtResource("2_cmrfp")
 
 [node name="Upgrade Button" type="Button" parent="Control/Total Menu" unique_id=869280503 node_paths=PackedStringArray("button")]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Upgrades
 "
-script = ExtResource("2_eiy7p")
+script = ExtResource("3_loo7a")
 button = NodePath(".")
 
 [node name="Save Button" type="Button" parent="Control/Total Menu" unique_id=1240730738 node_paths=PackedStringArray("button")]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Save"
-script = ExtResource("3_qoqlk")
+script = ExtResource("4_if7li")
 button = NodePath(".")
 
 [node name="Load Button" type="Button" parent="Control/Total Menu" unique_id=1397613081 node_paths=PackedStringArray("button", "label")]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Load From Save"
-script = ExtResource("4_iwfq2")
+script = ExtResource("5_rrcx7")
 button = NodePath(".")
 label = NodePath("../../Label2")
+
+[node name="Title2" type="Label" parent="Control/Total Menu" unique_id=2059468299 node_paths=PackedStringArray("text_acc")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Next Goal: Round 20"
+horizontal_alignment = 1
+script = ExtResource("6_cmrfp")
+text_acc = NodePath(".")
 
 [node name="Label2" type="Label" parent="Control" unique_id=2089145711 node_paths=PackedStringArray("resource_text")]
 layout_mode = 0
@@ -83,7 +102,7 @@ offset_left = 1013.0
 offset_top = 25.0
 offset_right = 1158.0
 offset_bottom = 53.0
-script = ExtResource("3_h7a2f")
+script = ExtResource("6_fh7cp")
 resource_text = NodePath(".")
 
 [node name="ColorRect" type="ColorRect" parent="Control/Label2" unique_id=304896543]
@@ -92,17 +111,21 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -12.0
+offset_right = -20.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
 [node name="Label3" type="Label" parent="Control" unique_id=254590167 node_paths=PackedStringArray("resource_text")]
 layout_mode = 0
-offset_left = 1021.0
-offset_top = 73.0
-offset_right = 1166.0
-offset_bottom = 101.0
-script = ExtResource("7_cqjrg")
+offset_left = 995.0
+offset_top = 55.0
+offset_right = 1140.0
+offset_bottom = 83.0
+script = ExtResource("7_8e205")
 resource_text = NodePath(".")
 
 [node name="ColorRect" type="ColorRect" parent="Control/Label3" unique_id=1017895009]
@@ -120,6 +143,6 @@ grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=404395373]
-stream = ExtResource("8_e2xy7")
+stream = ExtResource("8_7467j")
 volume_db = -20.0
 autoplay = true

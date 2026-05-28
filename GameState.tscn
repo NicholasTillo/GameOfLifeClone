@@ -58,24 +58,13 @@ offset_bottom = 646.0
 texture = ExtResource("7_m4bkb")
 expand_mode = 1
 
-[node name="NextRoundButton" type="Button" parent="UI" unique_id=1438485095 node_paths=PackedStringArray("button", "ui_Controller")]
-layout_mode = 0
-offset_left = 852.0
-offset_top = 538.0
-offset_right = 924.0
-offset_bottom = 611.0
-text = "Do One
-"
-script = ExtResource("3_krv0r")
-button = NodePath(".")
-ui_Controller = NodePath("..")
-
 [node name="MoneyLabel" type="Label" parent="UI" unique_id=795344317]
 layout_mode = 0
-offset_left = 1015.0
-offset_top = 62.0
-offset_right = 1138.0
-offset_bottom = 89.0
+offset_left = 996.0
+offset_top = 28.0
+offset_right = 1119.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 21
 text = "Money: 10"
 
 [node name="MoneyColorRect" type="ColorRect" parent="UI/MoneyLabel" unique_id=317976140]
@@ -84,16 +73,19 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
 [node name="ResourceLabel" type="Label" parent="UI" unique_id=1991379929]
 layout_mode = 0
-offset_left = 1013.0
-offset_top = 25.0
-offset_right = 1158.0
-offset_bottom = 53.0
+offset_left = 752.0
+offset_top = 27.0
+offset_right = 897.0
+offset_bottom = 55.0
+theme_override_font_sizes/font_size = 21
 text = "Resource : 10"
 
 [node name="ResourceColorRect" type="ColorRect" parent="UI/ResourceLabel" unique_id=634592178]
@@ -106,31 +98,30 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
-[node name="AutoPlayButton" type="Button" parent="UI" unique_id=689869946 node_paths=PackedStringArray("button", "ui_Controller")]
-layout_mode = 0
-offset_left = 1022.0
-offset_top = 540.0
-offset_right = 1094.0
-offset_bottom = 613.0
-text = "Play"
-script = ExtResource("3_8bu60")
-button = NodePath(".")
-ui_Controller = NodePath("..")
-
 [node name="ShopHeaderLabel" type="Label" parent="UI" unique_id=1790248283]
 layout_mode = 0
-offset_left = 765.0
-offset_top = 289.0
-offset_right = 804.0
-offset_bottom = 312.0
+offset_left = 894.0
+offset_top = 119.0
+offset_right = 1003.0
+offset_bottom = 182.0
+theme_override_font_sizes/font_size = 40
 text = "Shop"
+
+[node name="MoneyColorRect" type="ColorRect" parent="UI/ShopHeaderLabel" unique_id=1419304000]
+z_index = -1
+layout_mode = 0
+offset_left = -149.0
+offset_right = 246.0
+offset_bottom = 391.0
+color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
 [node name="ShopHBox" type="HBoxContainer" parent="UI" unique_id=1994313040]
 layout_mode = 0
-offset_left = 761.0
-offset_top = 324.0
-offset_right = 1255.0
-offset_bottom = 425.0
+offset_left = 758.0
+offset_top = 197.0
+offset_right = 1129.0
+offset_bottom = 325.0
+alignment = 1
 
 [node name="MainShipVBox" type="VBoxContainer" parent="UI/ShopHBox" unique_id=1743948213]
 layout_mode = 2
@@ -205,6 +196,29 @@ Subship:
 [node name="PurchaseSubship2" type="Button" parent="UI/ShopHBox" unique_id=1140838289]
 layout_mode = 2
 text = "LOCKED"
+
+[node name="AutoPlayButton" type="Button" parent="UI" unique_id=689869946 node_paths=PackedStringArray("button", "ui_Controller")]
+layout_mode = 0
+offset_left = 819.0
+offset_top = 409.0
+offset_right = 891.0
+offset_bottom = 482.0
+text = "Play"
+script = ExtResource("3_8bu60")
+button = NodePath(".")
+ui_Controller = NodePath("..")
+
+[node name="NextRoundButton" type="Button" parent="UI" unique_id=1438485095 node_paths=PackedStringArray("button", "ui_Controller")]
+layout_mode = 0
+offset_left = 1010.0
+offset_top = 409.0
+offset_right = 1082.0
+offset_bottom = 482.0
+text = "Do One
+"
+script = ExtResource("3_krv0r")
+button = NodePath(".")
+ui_Controller = NodePath("..")
 
 [node name="UI_AudioChannel" type="AudioStreamPlayer" parent="UI" unique_id=1010123659]
 

@@ -10,7 +10,6 @@ var ui: UIController
 var sub_ships: Array
 
 var result: Class
-
 var prev_states: Array
 
 var round_count: int
@@ -30,7 +29,6 @@ var in_gameplay: bool
 
 #Upgrade Here
 var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades": []}
-
 var best_score: int
 
 #List Of Cutscenes They Have Seen. 
@@ -80,12 +78,14 @@ func do_next_round():
 	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
 		best_score = round_count
-		if round_count >= current_cutscene_index * 20:
+		in_gameplay = false
+		if round_count >= (current_cutscene_index + 1) * 20:
 			renderer.clear()
+			current_cutscene_index += 1
 			get_tree().change_scene_to_file("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
 		else:
 			get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
-		in_gameplay = false
+		
 		
 	for i in range(len(state.subgrids)):
 		var copy_array_1 = []

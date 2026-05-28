@@ -1,6 +1,37 @@
 [gd_scene format=3 uid="uid://bgp8p0ab5o8qk"]
 
-[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_one.gd" id="1_m8l4a"]
+[ext_resource type="Script" uid="uid://cm3ivwk22jthf" path="res://Scenes/Starter_Cutscene.gd" id="1_m8l4a"]
+[ext_resource type="Shader" uid="uid://d1glub2hpedxa" path="res://Background.gdshader" id="2_13jt4"]
+[ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_epo75"]
+[ext_resource type="Texture2D" uid="uid://uqcu2jy0vxci" path="res://new_gradient_texture_1d.tres" id="3_k6bgt"]
 
-[node name="Cutscene0" type="Node2D" unique_id=1645025605]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_13jt4"]
+shader = ExtResource("2_13jt4")
+shader_parameter/scroll_speed_x = 0.1
+shader_parameter/scroll_speed_y = 0.05
+shader_parameter/tex = ExtResource("3_k6bgt")
+shader_parameter/star_density = 0.97
+shader_parameter/star_brightness = 1.0
+shader_parameter/twinkle_speed = 1.0
+shader_parameter/star_size = 1.0
+shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
+
+[node name="Cutscene0" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker")]
 script = ExtResource("1_m8l4a")
+Text_Maker = NodePath("Scrolling_Text")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=946993941]
+material = SubResource("ShaderMaterial_13jt4")
+offset_left = -12.0
+offset_right = 1153.0
+offset_bottom = 648.0
+texture = ExtResource("3_k6bgt")
+
+[node name="Scrolling_Text" type="RichTextLabel" parent="." unique_id=578905521]
+offset_left = 162.0
+offset_top = 395.0
+offset_right = 936.0
+offset_bottom = 607.0
+theme_override_font_sizes/normal_font_size = 32
+script = ExtResource("2_epo75")
+metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
