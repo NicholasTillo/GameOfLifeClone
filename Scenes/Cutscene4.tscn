@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bdvkphrbm8umt"]
+
+[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_one.gd" id="1_6tjip"]
+
+[node name="Cutscene4" type="Node2D" unique_id=1645025605]
+script = ExtResource("1_6tjip")
+
+[node name="Control" type="Control" parent="." unique_id=1409268446]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1864814216]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 648.0
+color = Color(0.27367768, 0.16558322, 0.08524602, 1)

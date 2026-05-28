@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://dr8lwqdegqy1h"]
+
+[ext_resource type="Script" uid="uid://d3ur82yf1mah4" path="res://Scenes/pet_store_pop_up.gd" id="1_uv77l"]
+
+[node name="EventPopUp" type="Control" unique_id=287901850 node_paths=PackedStringArray("button1", "button2", "button3", "close_button")]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uv77l")
+button1 = NodePath("BuyAnimal1")
+button2 = NodePath("BuyAnimal2")
+button3 = NodePath("BuyAnimal3")
+close_button = NodePath("OkayButton")
+
+[node name="ColorRect2" type="ColorRect" parent="." unique_id=1532821470]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.73333335, 0.6313726, 0.50980395, 0)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=450318174]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 66.0
+offset_right = 998.0
+offset_bottom = 578.0
+color = Color(0.8732984, 0.8732984, 0.8732984, 1)
+
+[node name="NameLabel" type="Label" parent="." unique_id=1241310315]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = 558.0
+offset_top = 147.0
+offset_right = 605.0
+offset_bottom = 170.0
+text = "Shop"
+
+[node name="TextLabel" type="Label" parent="." unique_id=719691039]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = 559.0
+offset_top = 292.0
+offset_right = 599.0
+offset_bottom = 315.0
+text = "Text"
+
+[node name="OkayButton" type="Button" parent="." unique_id=744858214]
+layout_mode = 0
+offset_left = 493.0
+offset_top = 454.0
+offset_right = 665.0
+offset_bottom = 500.0
+text = "Return To Ship"
+
+[node name="BuyAnimal1" type="Button" parent="." unique_id=884554864]
+layout_mode = 0
+offset_left = 301.0
+offset_top = 354.0
+offset_right = 473.0
+offset_bottom = 400.0
+text = "Animal1"
+
+[node name="BuyAnimal2" type="Button" parent="." unique_id=271352839]
+layout_mode = 0
+offset_left = 492.0
+offset_top = 354.0
+offset_right = 664.0
+offset_bottom = 400.0
+text = "Animal2
+"
+
+[node name="BuyAnimal3" type="Button" parent="." unique_id=2065063129]
+layout_mode = 0
+offset_left = 698.0
+offset_top = 355.0
+offset_right = 870.0
+offset_bottom = 401.0
+text = "Animal3"

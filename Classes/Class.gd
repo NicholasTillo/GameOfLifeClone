@@ -1,6 +1,6 @@
 @abstract
 
-extends Node
+extends RefCounted
 class_name Class
 
 var name1 = "text"

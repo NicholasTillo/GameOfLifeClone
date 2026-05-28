@@ -113,7 +113,7 @@ layout_mode = 0
 offset_left = -149.0
 offset_right = 246.0
 offset_bottom = 391.0
-color = Color(0.2294173, 0.36854005, 0.23573908, 1)
+color = Color(0.5466929, 0.47305351, 0.31705686, 1)
 
 [node name="ShopHBox" type="HBoxContainer" parent="UI" unique_id=1994313040]
 layout_mode = 0

@@ -36,7 +36,7 @@ var current_cutscene_index:int = 0
 
 #Event Variables
 var event_popup_precon_scene = preload("res://Scenes/event_pop_up.tscn")
-
+var pet_store_popup_scene = preload("res://Scenes/pet_store_pop_up.tscn")
 
 func reset_stats():
 	starting_money_increase = 0
@@ -145,6 +145,11 @@ func do_random_event():
 				var chosen_cell = state.cells.pick_random()
 				chosen_cell.contains = Zombie.new()
 				chosen_cell.contains.cell = chosen_cell
+		2: #Exotic Pet Store
+			var pet_store_popup = pet_store_popup_scene.instantiate()
+			event_popup.okay_button.pressed.connect(func(): 
+															get_tree().root.add_child(pet_store_popup)
+															event_popup.close())
 	
 	
 func check_stable_state(param, subgrids):

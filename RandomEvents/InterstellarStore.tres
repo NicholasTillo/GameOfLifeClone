@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://b6j74knkcuiqp"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_7mllm"]
+
+[resource]
+script = ExtResource("1_7mllm")
+name = "Exotic Pet Store"
+text = "On the planet zimblor, there is a exotic pet merchant, would you like to stop by?"
+id = 2
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"
