@@ -9,6 +9,8 @@ class_name UIController
 @export var buy_supship_two_button:Button
 @export var buy_supship_two_size_upgrade_button:Button
 
+@export var do_rewind_button: Button
+
 @export var vbox_ship_one: VBoxContainer
 @export var vbox_ship_two: VBoxContainer
 
@@ -18,6 +20,13 @@ func _ready():
 	buy_supship_one_button.pressed.connect(buy_supship_one)
 	buy_supship_one_size_upgrade_button.pressed.connect(buy_supship_one_size_upgrade.bind(0))
 	buy_supship_two_size_upgrade_button.pressed.connect(buy_supship_two_size_upgrade.bind(1))
+	print(GameManager.rewind_number)
+	if GameManager.rewind_number > 0:
+		do_rewind_button.disabled = false
+		do_rewind_button.visible = true
+		do_rewind_button.pressed.connect(do_rewind)
+		
+	
 	
 	PlayerController.UI_controller = self
 	
@@ -59,6 +68,18 @@ func buy_supship_two():
 		buy_supship_two_button.visible = false
 		vbox_ship_two.visible = true
 
+
+func do_rewind():
+	# Once an event has triggered this run, the button stays visible but does nothing.
+	if GameManager.rewind_blocked:
+		return
+	# Need at least [previous, current] in the history to step back a turn.
+	if GameManager.done_rewinds < GameManager.rewind_number and GameManager.history.size() >= 2:
+		GameManager.history.pop_back()
+		GameManager.prev_states.pop_back()
+		GameManager.restore_snapshot(GameManager.history.back())  # restore the previous turn
+		GameManager.done_rewinds += 1
+		
 
 func diable_subship_size_upgrade(ship_num):
 	if ship_num == 0:

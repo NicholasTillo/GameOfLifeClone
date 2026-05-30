@@ -22,7 +22,7 @@ shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
 
 [node name="Root" type="Node2D" unique_id=858420152]
 
-[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "vbox_ship_one", "vbox_ship_two")]
+[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_mmopi")
@@ -32,6 +32,7 @@ buy_supship_one_button = NodePath("ShopHBox/PurchaseSubship1")
 buy_supship_one_size_upgrade_button = NodePath("ShopHBox/SubshipOneContainer/Subship1SizeUpgrade")
 buy_supship_two_button = NodePath("ShopHBox/PurchaseSubship2")
 buy_supship_two_size_upgrade_button = NodePath("ShopHBox/SubshipTwoContainer/Subship2SizeUpgrade")
+do_rewind_button = NodePath("RewindButton")
 vbox_ship_one = NodePath("ShopHBox/SubshipOneContainer")
 vbox_ship_two = NodePath("ShopHBox/SubshipTwoContainer")
 
@@ -219,6 +220,16 @@ text = "Do One
 script = ExtResource("3_krv0r")
 button = NodePath(".")
 ui_Controller = NodePath("..")
+
+[node name="RewindButton" type="Button" parent="UI" unique_id=291134747]
+visible = false
+layout_mode = 0
+offset_left = 915.0
+offset_top = 407.0
+offset_right = 987.0
+offset_bottom = 480.0
+text = "Rewind
+"
 
 [node name="UI_AudioChannel" type="AudioStreamPlayer" parent="UI" unique_id=1010123659]
 

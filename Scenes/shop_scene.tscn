@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="2_35huh"]
 [ext_resource type="AudioStream" uid="uid://7brad8e63v7a" path="res://raven1023-happy-pants-111790.mp3" id="4_6rmb7"]
 
-[node name="ShopScene" type="Control" unique_id=1505458115 node_paths=PackedStringArray("button1", "button2", "button3", "button4", "button5", "button6", "button7", "button8", "button9", "button10", "button11", "button12", "button13", "button14", "button15", "label1", "label2", "label3", "resource_label")]
+[node name="ShopScene" type="Control" unique_id=1505458115 node_paths=PackedStringArray("button1", "button2", "button3", "button4", "button5", "button6", "button7", "button8", "button9", "button10", "button11", "button12", "button13", "button14", "button15", "button16", "button17", "button18", "button19", "button20", "button21", "button22", "button23", "button24", "button25", "button26", "button27", "button28", "button29", "button30", "button31", "label1", "label2", "label3", "label4", "label5", "resource_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,9 +28,27 @@ button12 = NodePath("VBoxContainer/HBoxContainer/Button2")
 button13 = NodePath("VBoxContainer/HBoxContainer/Button3")
 button14 = NodePath("VBoxContainer/HBoxContainer/Button4")
 button15 = NodePath("VBoxContainer/HBoxContainer/Button5")
-label1 = NodePath("VBoxContainer/HBoxContainer2/Label")
-label2 = NodePath("VBoxContainer/HBoxContainer3/Label")
-label3 = NodePath("VBoxContainer/HBoxContainer/Label")
+button16 = NodePath("VBoxContainer/HBoxContainer5/Button")
+button17 = NodePath("VBoxContainer/HBoxContainer5/Button2")
+button18 = NodePath("VBoxContainer/HBoxContainer5/Button3")
+button19 = NodePath("VBoxContainer/HBoxContainer5/Button4")
+button20 = NodePath("VBoxContainer/HBoxContainer5/Button5")
+button21 = NodePath("VBoxContainer/HBoxContainer6/Button")
+button22 = NodePath("VBoxContainer/HBoxContainer6/Button2")
+button23 = NodePath("VBoxContainer/HBoxContainer6/Button3")
+button24 = NodePath("VBoxContainer/HBoxContainer6/Button4")
+button25 = NodePath("VBoxContainer/HBoxContainer6/Button5")
+button26 = NodePath("HBoxContainer4/Button")
+button27 = NodePath("HBoxContainer4/Button2")
+button28 = NodePath("HBoxContainer4/Button3")
+button29 = NodePath("HBoxContainer4/Button4")
+button30 = NodePath("HBoxContainer4/Button5")
+button31 = NodePath("VBoxContainer/HBoxContainer7/Button")
+label1 = NodePath("VBoxContainer2/Label5")
+label2 = NodePath("VBoxContainer2/Label4")
+label3 = NodePath("VBoxContainer2/Label3")
+label4 = NodePath("VBoxContainer2/Label")
+label5 = NodePath("VBoxContainer2/Label2")
 resource_label = NodePath("Label2")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1212185782]
@@ -41,26 +59,53 @@ offset_right = 1156.0
 offset_bottom = 657.0
 color = Color(0.2417247, 0.1819703, 0.115634, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1528807232]
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=2031123827]
 layout_mode = 0
-offset_left = 231.0
-offset_top = 80.0
-offset_right = 787.0
-offset_bottom = 341.0
+offset_left = 292.0
+offset_top = 132.0
+offset_right = 848.0
+offset_bottom = 347.0
+theme_override_constants/separation = 11
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=1092257974]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Shop"
-horizontal_alignment = 1
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1305537116]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=56838688]
+[node name="Label5" type="Label" parent="VBoxContainer2" unique_id=56838688]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "Starting Money Increase: "
+
+[node name="Label4" type="Label" parent="VBoxContainer2" unique_id=44995433]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Better Alive Count At Beginning: "
+
+[node name="Label3" type="Label" parent="VBoxContainer2" unique_id=1220792809]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Starter Slots: "
+
+[node name="Label" type="Label" parent="VBoxContainer2" unique_id=1261537757]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Max Ship Size:"
+
+[node name="Label2" type="Label" parent="VBoxContainer2" unique_id=1729795787]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Starter Ship Size:"
+
+[node name="Label6" type="Label" parent="VBoxContainer2" unique_id=104739883]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock Rewind: "
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1528807232]
+layout_mode = 0
+offset_left = 710.0
+offset_top = 130.0
+offset_right = 1266.0
+offset_bottom = 441.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1305537116]
+layout_mode = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=8997205]
 layout_mode = 2
@@ -89,11 +134,6 @@ text = "2"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=186239156]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=44995433]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Better Alive Count At Beginning: "
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=2065112473]
 layout_mode = 2
@@ -128,11 +168,6 @@ text = "1
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2007005946]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1220792809]
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Starter Slots: "
-
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1364137521]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
@@ -158,40 +193,76 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "1"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=980215822]
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=496826086]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1307513859]
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=2024349874]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Unlock 1"
+text = "1"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1153693810]
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=1110419477]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Unlock 2"
+text = "1"
 
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=416823594]
+[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=1013844840]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Unlock 3"
+text = "1"
 
-[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=28500454]
+[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=362385899]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Unlock 4"
+text = "1"
 
-[node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=615735384]
+[node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=1204372460]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
-text = "Unlock 5"
+text = "1"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=285640743]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer6" unique_id=1040533921]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer6" unique_id=1226651331]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
+
+[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer6" unique_id=1135142873]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
+
+[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer6" unique_id=1696186880]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
+
+[node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer6" unique_id=574870925]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=285640744]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer7" unique_id=285640746]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "1"
 
 [node name="ResetButton" type="Button" parent="." unique_id=79857208 node_paths=PackedStringArray("button")]
 layout_mode = 0
-offset_left = 516.0
-offset_top = 418.0
-offset_right = 567.0
-offset_bottom = 449.0
+offset_left = 520.0
+offset_top = 469.0
+offset_right = 602.0
+offset_bottom = 522.0
 theme_override_font_sizes/font_size = 32
 text = "Back"
 script = ExtResource("1_4li1v")
@@ -199,10 +270,10 @@ button = NodePath(".")
 
 [node name="Label2" type="Label" parent="." unique_id=1640541896 node_paths=PackedStringArray("resource_text")]
 layout_mode = 0
-offset_left = 1013.0
-offset_top = 25.0
-offset_right = 1158.0
-offset_bottom = 53.0
+offset_left = 703.0
+offset_top = 38.0
+offset_right = 848.0
+offset_bottom = 66.0
 script = ExtResource("2_35huh")
 resource_text = NodePath(".")
 
@@ -220,3 +291,50 @@ color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 stream = ExtResource("4_6rmb7")
 volume_db = -25.0
 autoplay = true
+
+[node name="Label" type="Label" parent="." unique_id=1092257974]
+layout_mode = 0
+offset_left = 292.0
+offset_top = 84.0
+offset_right = 848.0
+offset_bottom = 119.0
+theme_override_font_sizes/font_size = 25
+text = "Shop"
+horizontal_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="." unique_id=980215822]
+layout_mode = 0
+offset_left = 194.0
+offset_top = 414.0
+offset_right = 997.0
+offset_bottom = 456.0
+
+[node name="Label5" type="Label" parent="HBoxContainer4" unique_id=1394391301]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Unlock Professions: "
+
+[node name="Button" type="Button" parent="HBoxContainer4" unique_id=1307513859]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock 1"
+
+[node name="Button2" type="Button" parent="HBoxContainer4" unique_id=1153693810]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock 2"
+
+[node name="Button3" type="Button" parent="HBoxContainer4" unique_id=416823594]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock 3"
+
+[node name="Button4" type="Button" parent="HBoxContainer4" unique_id=28500454]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock 4"
+
+[node name="Button5" type="Button" parent="HBoxContainer4" unique_id=615735384]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Unlock 5"

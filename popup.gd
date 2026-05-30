@@ -12,17 +12,27 @@ var grid_index: int = -1
 @export var chef_button: Button
 @export var springtrap_button: Button
 @export var wall_button:Button
+@export var life_button:Button
+
+var stored_popup_value: bool 
 
 func _ready() -> void:
 	alive_button.pressed.connect(_button_pressed_alive)
 	dead_button.pressed.connect(_button_pressed_dead)
 	zombie_button.pressed.connect(_button_pressed_zombie)
-	mechanic_button.pressed.connect(_button_pressed_mechanic)
-	chef_button.pressed.connect(_button_pressed_chef)
+	if PlayerController.unlock_mechanic_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+		mechanic_button.pressed.connect(_button_pressed_mechanic)
+	else:
+		mechanic_button.text = "locked"
+	if PlayerController.unlock_chef_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+		chef_button.pressed.connect(_button_pressed_chef)
+	else:
+		chef_button.text = "locked"
 	springtrap_button.pressed.connect(_button_pressed_springtrap)
 	wall_button.pressed.connect(_button_pressed_wall)
+	life_button.pressed.connect(_button_pressed_life)
+	stored_popup_value = GameManager.autoplay_enabled
 	
-
 func _get_cell() -> Cell:
 	var state = GameManager.state
 	if grid_index == -1:
@@ -38,7 +48,7 @@ func change_parent(to:Class):
 	GameManager.renderer.redraw()
 	GameManager.ui.update_ui()
 	GameManager.renderer.popup_enabled = false
-	
+
 	queue_free()
 
 
@@ -74,6 +84,9 @@ func _button_pressed_wall():
 	GameManager.state.change_money(-10)
 	change_parent(Wall.new())
 	
+func _button_pressed_life():
+	GameManager.state.change_money(-10)
+	change_parent(Life.new())
 	
 	
 	

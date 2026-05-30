@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://8cebqhnb5xaj"]
 
-[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_one.gd" id="1_h37pv"]
+[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_1.gd" id="1_h37pv"]
+[ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_i61bj"]
 
-[node name="Cutscene5" type="Node2D" unique_id=1645025605]
+[node name="Cutscene5" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker")]
 script = ExtResource("1_h37pv")
+Text_Maker = NodePath("Control/Scrolling_Text")
 
 [node name="Control" type="Control" parent="." unique_id=1409268446]
 layout_mode = 3
@@ -16,3 +18,13 @@ layout_mode = 0
 offset_right = 1153.0
 offset_bottom = 648.0
 color = Color(0.27367768, 0.16558322, 0.08524602, 1)
+
+[node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=49308224]
+layout_mode = 0
+offset_left = 209.0
+offset_top = 394.0
+offset_right = 983.0
+offset_bottom = 606.0
+theme_override_font_sizes/normal_font_size = 32
+script = ExtResource("2_i61bj")
+metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"

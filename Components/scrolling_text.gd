@@ -20,6 +20,8 @@ func list_of_text(text_array):
 	list_of_texts = text_array
 	
 func _on_typing_finished():
+	print(current_text_index)
+	print(len(list_of_texts))
 	current_text_index += 1
 	if len(list_of_texts) > current_text_index:
 		await get_tree().create_timer(1.5).timeout

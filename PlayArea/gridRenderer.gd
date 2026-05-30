@@ -28,26 +28,26 @@ func clear():
 	
 func _draw() -> void:
 	var state = GameManager.state
-	var grid_pixel_size = state.gridSize * CELL_SIZE
+	var grid_pixel_size = state.full_grid_size * CELL_SIZE
 	var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
 	
 	if not _should_draw:
 		_should_draw = true
 		return
-	for y in range(state.gridSize):
-		for x in range(state.gridSize):
+	for y in range(state.full_grid_size):
+		for x in range(state.full_grid_size):
 			var color = state.get_cell(x, y).contains.color
 			var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 			draw_rect(rect, color)
 	#Draw LEft Wing
-	var grid_px = state.gridSize * CELL_SIZE
+	var grid_px = state.full_grid_size * CELL_SIZE
 	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
 	
-	draw_left_wing(state, CELL_SIZE, offset, state.gridSize)
-	draw_right_wing(state, CELL_SIZE, offset, state.gridSize)
-	draw_top_wing(state, CELL_SIZE, offset, state.gridSize)
+	draw_left_wing(state, CELL_SIZE, offset, state.full_grid_size)
+	draw_right_wing(state, CELL_SIZE, offset, state.full_grid_size)
+	draw_top_wing(state, CELL_SIZE, offset, state.full_grid_size)
 	#Draw Bottom 
-	draw_bottom_wing(state, CELL_SIZE, offset, state.gridSize)
+	draw_bottom_wing(state, CELL_SIZE, offset, state.full_grid_size)
 	
 	
 	#Draw Subships
@@ -70,8 +70,8 @@ func _draw() -> void:
 		draw_bottom_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
 
 
-func draw_left_wing(state, size, offset, gridSize):
-	var grid_px = gridSize * size
+func draw_left_wing(state, size, offset, full_grid_size):
+	var grid_px = full_grid_size * size
 	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
 	#Draw Top
 	draw_texture_rect(wing_texture_top_left, dest_rect, false)
@@ -84,8 +84,8 @@ func draw_left_wing(state, size, offset, gridSize):
 	#Draw Bottom
 	draw_texture_rect(wing_texture_bottom_left, dest_rect, false)
 	
-func draw_right_wing(state, size, offset, gridSize):
-	var grid_px = gridSize * size
+func draw_right_wing(state, size, offset, full_grid_size):
+	var grid_px = full_grid_size * size
 	var dest_rect = Rect2(offset.x + grid_px, offset.y, 30, 30)
 	draw_texture_rect(wing_texture_top_right, dest_rect, false)
 	dest_rect = Rect2(offset.x + grid_px, offset.y + 30, 30, grid_px - 60)
@@ -93,13 +93,13 @@ func draw_right_wing(state, size, offset, gridSize):
 	dest_rect = Rect2(offset.x + grid_px, offset.y + grid_px - 30, 30, 30)
 	draw_texture_rect(wing_texture_bottom_right, dest_rect, false)
 
-func draw_top_wing(state, size, offset, gridSize):
-	var grid_px = gridSize * size
+func draw_top_wing(state, size, offset, full_grid_size):
+	var grid_px = full_grid_size * size
 	var dest_rect = Rect2(offset.x, offset.y-30, grid_px, 30)
 	draw_texture_rect(wing_texture_top, dest_rect, false)
 	
-func draw_bottom_wing(state, size, offset, gridSize):
-	var grid_px = gridSize * size
+func draw_bottom_wing(state, size, offset, full_grid_size):
+	var grid_px = full_grid_size * size
 	var dest_rect = Rect2(offset.x , offset.y + grid_px, grid_px, 30)
 	draw_texture_rect(wing_texture_bottom, dest_rect, false)
 
@@ -112,13 +112,13 @@ func _input_event(port, event, ints):
 			var state = GameManager.state
 			
 			# Check Main Grid
-			var grid_pixel_size = state.gridSize * CELL_SIZE
+			var grid_pixel_size = state.full_grid_size * CELL_SIZE
 			var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
 			
 			var x = int((event.position.x - offset.x )/ CELL_SIZE)
 			var y = int((event.position.y - offset.y )/ CELL_SIZE)
-			if x >= 0 and x < state.gridSize and y >= 0 and y < state.gridSize:
-				_spawn_popup(event.position, y * state.gridSize + x, -1)
+			if x >= 0 and x < state.full_grid_size and y >= 0 and y < state.full_grid_size and changeable_cell(y * state.full_grid_size + x):
+				_spawn_popup(event.position, y * state.full_grid_size + x, -1)
 				return
 
 			# Check Subgrids
@@ -132,7 +132,7 @@ func _input_event(port, event, ints):
 				var sx = int((event.position.x - sub_offset.x) / CELL_SIZE)
 				var sy = int((event.position.y - sub_offset.y) / CELL_SIZE)
 				
-				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i]:
+				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i] and changeable_cell(y * state.full_grid_size + x):
 					_spawn_popup(event.position, sy * state.subgrid_sizes[i] + sx, i)
 					return
 
@@ -145,5 +145,11 @@ func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
 	queue_redraw()
 	popup_enabled = true
 
+func changeable_cell(location:int):
+	var valid_classes= ["Alive", "Dead", "Wall","Chef","Mechanic","Pet1","Pet2","Pet3"]
+	if GameManager.state.cells[location].contains.id in valid_classes :
+		return true
+	else:
+		return false
 func redraw():
 	queue_redraw()

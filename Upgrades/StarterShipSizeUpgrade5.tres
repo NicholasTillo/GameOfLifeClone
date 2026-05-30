@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Upgrade" format=3 uid="uid://kki6jusx8sxe"]
+
+[ext_resource type="Script" uid="uid://ca6j1ty6ohuk2" path="res://Upgrade.gd" id="1_jry21"]
+
+[resource]
+script = ExtResource("1_jry21")
+cost = 1000
+id = "25"
+type = "money"
+metadata/_custom_type_script = "uid://ca6j1ty6ohuk2"

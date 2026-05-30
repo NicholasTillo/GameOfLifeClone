@@ -7,7 +7,7 @@ func _init():
 	id = "Dead"
 	
 
-func process_next_round():
+func _process_next_round():
 	var dead_count = 0
 	var alive_count = 0
 	

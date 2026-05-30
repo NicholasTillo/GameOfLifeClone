@@ -9,7 +9,7 @@ func _init():
 	
 	
 
-func process_next_round():
+func _process_next_round():
 	if  GameManager.state.moneyAmount >= 1:
 		GameManager.state.change_money(-25)
 		return Chef.new()

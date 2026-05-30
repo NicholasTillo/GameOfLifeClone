@@ -1,12 +1,12 @@
 extends Class
-class_name Wall
+class_name Dog
 
 
 func _init():
 	visual = 1
-	color = Color.GRAY
-	id = "Wall"
+	color = Color.WEB_PURPLE
+	id = "Dog"
 
 func _process_next_round():
-	return Wall.new()
+	return Dog.new()
 		

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d3425gc6jxmv3" path="res://popup.gd" id="1_482t0"]
 
-[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "zombie_button", "mechanic_button", "chef_button", "springtrap_button", "wall_button")]
+[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "zombie_button", "mechanic_button", "chef_button", "springtrap_button", "wall_button", "life_button")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -15,6 +15,7 @@ mechanic_button = NodePath("VBoxContainer/HBoxContainer2/Button4")
 chef_button = NodePath("VBoxContainer/HBoxContainer3/Button5")
 springtrap_button = NodePath("VBoxContainer/HBoxContainer3/Button6")
 wall_button = NodePath("VBoxContainer/HBoxContainer4/Button5")
+life_button = NodePath("VBoxContainer/HBoxContainer4/Button6")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1278243861]
 layout_mode = 0
@@ -74,4 +75,5 @@ text = "Wall
 
 [node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=2031299878]
 layout_mode = 2
-text = "6"
+text = "Life
+"

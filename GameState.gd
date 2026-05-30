@@ -4,7 +4,9 @@ extends Resource
 
 var nullCell = Cell.new()
 
-@export var gridSize: int = 10
+var starter_grid_size: int = 10
+var full_grid_size: int
+
 var cells: Array = []
 
 #Player Resoruces
@@ -19,10 +21,11 @@ func _init() -> void:
 	
 func initialize_grid():
 	cells = []
-	cells.resize(gridSize * gridSize)
+	full_grid_size = starter_grid_size
+	cells.resize(full_grid_size * full_grid_size)
 	
 	
-	for i in range(gridSize*gridSize):
+	for i in range(full_grid_size*full_grid_size):
 		cells[i] = Cell.new()
 		if randf() < GameManager.starting_alive_chance:
 			cells[i].contains = Alive.new()
@@ -34,17 +37,17 @@ func initialize_grid():
 	#Deal with specific slots: 
 	var chosen_ids = []
 	for i in range(GameManager.starting_slots):
-		var id = randi_range(0, (gridSize*gridSize)  - 1)
+		var id = randi_range(0, (full_grid_size*full_grid_size)  - 1)
 		while id in chosen_ids:
-			id = randi_range(0,  (gridSize*gridSize) - 1)
+			id = randi_range(0,  (full_grid_size*full_grid_size) - 1)
 		cells[id].contains = GameManager.slots[i]
 		cells[id].contains.cell = cells[id]
 		chosen_ids.append(id)
 	
 	#Set up the neighbours. 
-	for i in range(gridSize*gridSize):
-		var x = i % gridSize
-		var y = i / gridSize
+	for i in range(full_grid_size*full_grid_size):
+		var x = i % full_grid_size
+		var y = i / full_grid_size
 			
 		for dy in [-1, 0, 1]:
 			for dx in [-1, 0, 1]:
@@ -52,12 +55,11 @@ func initialize_grid():
 					continue
 				var nx = x + dx
 				var ny = y + dy
-				if nx < 0 or nx >= gridSize:
+				if nx < 0 or nx >= full_grid_size:
 					continue
-				if ny < 0 or ny >= gridSize:
+				if ny < 0 or ny >= full_grid_size:
 					continue
-				cells[i].neighbours.append(cells[ny * gridSize + nx])
-			
+				cells[i].neighbours.append(cells[ny * full_grid_size + nx])
 
 
 func resize_grid(amount: int, input_grid: Array, grid_size: int) -> Array:
@@ -95,18 +97,12 @@ func resize_grid(amount: int, input_grid: Array, grid_size: int) -> Array:
 				new_cells[i].neighbours.append(new_cells[ny * (grid_size + amount) + nx])
 	GameManager.renderer.redraw()
 	return new_cells
-
-	
-	
-	
-	
-	
 	
 
 func get_cell(x:int, y:int):
-	if not( x >= 0 and x < gridSize and y >= 0 and y < gridSize):
+	if not( x >= 0 and x < full_grid_size and y >= 0 and y < full_grid_size):
 		return null; 
-	return cells[y * gridSize + x]
+	return cells[y * full_grid_size + x]
 	
 func get_subship_cell(x:int, y:int, ship:int):
 	if not( x >= 0 and x < subgrid_sizes[ship] and y >= 0 and y < subgrid_sizes[ship]):

@@ -9,6 +9,11 @@
 ### Gameplay and Mechanics
 - Create New Cell Types
 	- Add Chef - Done
+	- Pet 1 - Sandshark 
+	- Pet 2 - Plorian 
+	- Pet 3 - Dog 
+	
+	- Life - Done
 	- More 
 	
 - Add new in-game upgrades:
@@ -17,14 +22,15 @@
 		Logic for creatging a ship is done, just have to add additional money and score and also add it to the hasing 05/24
 		Subship stable state checking is done. Just have to account for upgrading the subship size. 
 		Basically done, all thats left now is the additional upgrades, size upgrades are good. 
-		Still unsure of what they can be? 
-		
-    - Rewind upgrade
-- Events that happen every 25 - 50 generations. 
+
+    - Rewind upgrade 
+	
+- Events that happen every 25 - 50 generations. - Logic is done. 
 	-Event Logic and Resoruce to instatiate - Done
 	- Add more events and add to switch case in gridNode 
+	- Life Event Logic. - 
 
-- Make it so the player cannot turn the bad cells into dead cells. 
+- Make it so the player cannot turn the bad cells into dead cells. - Done
 
 
 ### Visuals and UI
@@ -35,9 +41,14 @@
     - The end screen
 	- Buttons
     - Unique cell types
+	- Font
+	
 - Add cutscenes that trigger when you hit specific round counts
     - Cutscene 1 
     - Cutscene 2
+	- Cutscene 3
+	- Cutscene 4 
+	- Cutscene 5
 
 ### Balancing 
 - Balance Money and Resource Generation 
