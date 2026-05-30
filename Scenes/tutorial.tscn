@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bja0ka5i0lt2j"]
+
+[ext_resource type="Texture2D" uid="uid://tr233bhjh4jh" path="res://tutorial.png" id="1_ka2pi"]
+[ext_resource type="Script" uid="uid://dmjo32d4brm6c" path="res://Scenes/tutorial_scene.gd" id="2_tut"]
+
+[node name="TutorialScene" type="Node2D" unique_id=781688161]
+script = ExtResource("2_tut")
+
+[node name="Control" type="Control" parent="." unique_id=2104839179]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1014701779]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = 5.0
+offset_right = -3.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ka2pi")
+expand_mode = 1
+stretch_mode = 5

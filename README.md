@@ -23,7 +23,7 @@
 		Subship stable state checking is done. Just have to account for upgrading the subship size. 
 		Basically done, all thats left now is the additional upgrades, size upgrades are good. 
 
-    - Rewind upgrade 
+    - Rewind upgrade - Done
 	
 - Events that happen every 25 - 50 generations. - Logic is done. 
 	-Event Logic and Resoruce to instatiate - Done
@@ -45,8 +45,8 @@
 	
 - Add cutscenes that trigger when you hit specific round counts
     - Cutscene 1 
-    - Cutscene 2
-	- Cutscene 3
+    - Cutscene 2 
+	- Cutscene 3 
 	- Cutscene 4 
 	- Cutscene 5
 

@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="5_rrcx7"]
 [ext_resource type="Script" uid="uid://jkihvtyurk7g" path="res://Scenes/Round_count.gd" id="6_cmrfp"]
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="6_fh7cp"]
+[ext_resource type="Script" uid="uid://cpxf6wjj8xtyj" path="res://Scenes/tutorial.gd" id="6_loo7a"]
 [ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_8e205"]
 [ext_resource type="AudioStream" uid="uid://cosk58oodjjqp" path="res://lexin_music-space-ambient-sci-fi-121842.mp3" id="8_7467j"]
 
@@ -87,6 +88,12 @@ text = "Load From Save"
 script = ExtResource("5_rrcx7")
 button = NodePath(".")
 label = NodePath("../../Label2")
+
+[node name="Tutorial" type="Button" parent="Control/Total Menu" unique_id=1144261783]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Tutorial"
+script = ExtResource("6_loo7a")
 
 [node name="Title2" type="Label" parent="Control/Total Menu" unique_id=2059468299 node_paths=PackedStringArray("text_acc")]
 layout_mode = 2
