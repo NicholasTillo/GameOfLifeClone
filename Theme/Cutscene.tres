@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://scgub2omhjx"]
+
+[ext_resource type="FontFile" uid="uid://7vkaxraqk7eo" path="res://Theme/Geo-Regular.ttf" id="1_8wm2n"]
+
+[resource]
+RichTextLabel/font_sizes/normal_font_size = 40
+RichTextLabel/fonts/normal_font = ExtResource("1_8wm2n")

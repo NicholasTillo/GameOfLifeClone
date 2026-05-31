@@ -2,16 +2,20 @@
 
 [ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_1.gd" id="1_6tjip"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_1yb5k"]
+[ext_resource type="Theme" uid="uid://scgub2omhjx" path="res://Theme/Cutscene.tres" id="2_joiyv"]
+[ext_resource type="AudioStream" uid="uid://cgirivxos2my" path="res://Assets/Cutscene4.mp3" id="4_26hii"]
 
-[node name="Cutscene4" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker")]
+[node name="Cutscene4" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker", "audioPlayer")]
 script = ExtResource("1_6tjip")
 Text_Maker = NodePath("Control/Scrolling_Text")
+audioPlayer = NodePath("Control/AudioStreamPlayer")
 
 [node name="Control" type="Control" parent="." unique_id=1409268446]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("2_joiyv")
 
 [node name="ColorRect" type="ColorRect" parent="Control" unique_id=1864814216]
 layout_mode = 0
@@ -28,3 +32,8 @@ offset_bottom = 606.0
 theme_override_font_sizes/normal_font_size = 32
 script = ExtResource("2_1yb5k")
 metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Control" unique_id=1188529699]
+stream = ExtResource("4_26hii")
+volume_db = -20.0
+autoplay = true

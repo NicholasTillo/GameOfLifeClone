@@ -21,8 +21,9 @@ func _process_next_round():
 	if  alive_count < 1:
 		return Dead.new()
 	else:
-		GameManager.state.change_money(1)
+		GameManager.change_resource(1)
 		return Mechanic.new()
+	
 	
 	
 func threatening():

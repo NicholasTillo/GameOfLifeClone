@@ -9,9 +9,9 @@
 ### Gameplay and Mechanics
 - Create New Cell Types
 	- Add Chef - Done
-	- Pet 1 - Sandshark 
-	- Pet 2 - Plorian 
-	- Pet 3 - Dog 
+	- Pet 1 - Sandshark - 
+	- Pet 2 - Plorian - 
+	- Pet 3 - Dog - 
 	
 	- Life - Done
 	- More 
@@ -28,7 +28,8 @@
 - Events that happen every 25 - 50 generations. - Logic is done. 
 	-Event Logic and Resoruce to instatiate - Done
 	- Add more events and add to switch case in gridNode 
-	- Life Event Logic. - 
+	- Life Event Logic. - Done Must be above 100 round, and have seen cutscene 4. 
+	
 
 - Make it so the player cannot turn the bad cells into dead cells. - Done
 
@@ -39,7 +40,7 @@
     - The main menu - Done
     - The shop screen 
     - The end screen
-	- Buttons
+	- Buttons - Done
     - Unique cell types
 	- Font
 	
@@ -55,7 +56,7 @@
 - Make a Tutorial
 
 ### Audio
-- Put in sound effects for the actual gameplay section
+- Put in sound effects for the actual gameplay section - Done
 
 
 C:\Users\Nicholas\Desktop\DesignDocuments\GameDesignDocuments\GameOfLifeCopy.md

@@ -52,6 +52,8 @@ var pet_store_popup_scene = preload("res://Scenes/pet_store_pop_up.tscn")
 
 var done_rewinds: int = 0
 
+
+
 func reset_stats():
 	starting_money_increase = 0
 	starting_alive_chance = 0.5
@@ -127,7 +129,6 @@ func do_next_round():
 			state.subgrids[i][j].contains.cell = state.subgrids[i][j]
 
 	renderer.redraw()
-	change_resource(2)
 	round_count += 1
 	done_rewinds = 0
 
@@ -156,10 +157,20 @@ func load_resources_from_folder(path: String) -> Array[Resource]:
 func do_random_event():
 	#An event permanently changes the board this run; block rewinding past it.
 	rewind_blocked = true
+	
 	var list_of_events:Array = load_resources_from_folder("res://RandomEvents")
 	var chosen_event: random_event = list_of_events.pick_random()
-	while chosen_event.enabled == false:
-		chosen_event = list_of_events.pick_random()
+	
+	
+	#Account for Meaning Of Life
+	if round_count >= 100 && GameManager.current_cutscene_index == 4:
+		for e in list_of_events:
+			if e.id == 3:
+				chosen_event = e
+				break
+	else:
+		while chosen_event.enabled == false:
+			chosen_event = list_of_events.pick_random()
 	
 	
 	var event_popup = event_popup_precon_scene.instantiate()
@@ -185,7 +196,10 @@ func do_random_event():
 			event_popup.okay_button.pressed.connect(func(): 
 															get_tree().root.add_child(pet_store_popup)
 															event_popup.close())
-	
+		3: #Meaning Of Life
+			var chosen_cell = state.cells.pick_random()
+			chosen_cell.contains = Life.new()
+			chosen_cell.contains.cell = chosen_cell
 	
 func check_stable_state(param, subgrids):
 	var hashed = hash_state(param, subgrids)
@@ -289,7 +303,7 @@ func id_to_class(id: String) -> Class:
 		"Chef": return Chef.new()
 		"Corpse": return Corpse.new()
 		"Zombie": return Zombie.new()
-		"Mechanic": return Mechanic.new()
+		"Nurse": return Nurse.new()
 		"Wall": return Wall.new()
 		"Springtrap": return Springtrap.new()
 		"Life": return Life.new()

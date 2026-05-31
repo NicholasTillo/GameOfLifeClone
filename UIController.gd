@@ -44,7 +44,8 @@ func buy_supship_one():
 Subship 2:
 1000 "
 		buy_supship_two_button.pressed.connect(buy_supship_two)
-
+	else: 
+		GameOfLifeAudio.play_ui_disabled()
 
 
 
@@ -52,14 +53,17 @@ Subship 2:
 func buy_supship_one_size_upgrade(value):
 	var succeed = PlayerController.purchase_ship_size_upgrade(50, value)
 	if succeed:
-		#Play Sound
-		pass 
+		pass
+	else: 
+		GameOfLifeAudio.play_ui_disabled()
 	
 func buy_supship_two_size_upgrade(value):
 	var succeed = PlayerController.purchase_ship_size_upgrade(50, value)
 	if succeed:
 		#Play Sound
 		pass 
+	else: 
+		GameOfLifeAudio.play_ui_disabled()
 		
 
 func buy_supship_two():
@@ -67,24 +71,25 @@ func buy_supship_two():
 	if succeed:
 		buy_supship_two_button.visible = false
 		vbox_ship_two.visible = true
-
+	else: 
+		GameOfLifeAudio.play_ui_disabled()
 
 func do_rewind():
 	# Once an event has triggered this run, the button stays visible but does nothing.
 	if GameManager.rewind_blocked:
-		return
+		GameOfLifeAudio.play_ui_disabled()	
 	# Need at least [previous, current] in the history to step back a turn.
 	if GameManager.done_rewinds < GameManager.rewind_number and GameManager.history.size() >= 2:
 		GameManager.history.pop_back()
 		GameManager.prev_states.pop_back()
 		GameManager.restore_snapshot(GameManager.history.back())  # restore the previous turn
 		GameManager.done_rewinds += 1
-		
+		GameOfLifeAudio.play_rewind()
+	else: 
+		GameOfLifeAudio.play_ui_disabled()	
 
 func diable_subship_size_upgrade(ship_num):
 	if ship_num == 0:
-		buy_supship_one_size_upgrade_button.text = "MAX SIZE"
-		buy_supship_one_size_upgrade_button.pressed.disconnect((buy_supship_one_size_upgrade))
+		buy_supship_one_size_upgrade_button.text = "Max Ship Size"
 	else:
-		buy_supship_two_size_upgrade_button.text = "MAX SIZE"
-		buy_supship_two_size_upgrade_button.pressed.disconnect((buy_supship_two_size_upgrade))
+		buy_supship_two_size_upgrade_button.text = "Max Ship Size"

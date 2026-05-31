@@ -146,7 +146,7 @@ func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
 	popup_enabled = true
 
 func changeable_cell(location:int):
-	var valid_classes= ["Alive", "Dead", "Wall","Chef","Mechanic","Pet1","Pet2","Pet3"]
+	var valid_classes= ["Alive", "Dead", "Wall","Chef","Nurse","Pet1","Pet2","Pet3"]
 	if GameManager.state.cells[location].contains.id in valid_classes :
 		return true
 	else:

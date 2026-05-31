@@ -35,9 +35,14 @@ extends Node
 @onready var starter_ship_size_upgrade_5: Upgrade = load("res://Upgrades/StarterShipSizeUpgrade5.tres")
 
 @onready var unlock_chef_upgrade: Upgrade = load("res://Upgrades/UnlockChef.tres")
-@onready var unlock_mechanic_upgrade: Upgrade = load("res://Upgrades/UnlockMechanic.tres")
+@onready var unlock_nurse_upgrade: Upgrade = load("res://Upgrades/UnlockNurse.tres")
 
 @onready var unlock_rewind_upgrade: Upgrade = load("res://Upgrades/unlock_rewind.tres")
+@onready var unlock_rewind_upgrade2: Upgrade = load("res://Upgrades/unlock_rewind2.tres")
+@onready var unlock_rewind_upgrade3: Upgrade = load("res://Upgrades/unlock_rewind3.tres")
+@onready var unlock_rewind_upgrade4: Upgrade = load("res://Upgrades/unlock_rewind4.tres")
+@onready var unlock_rewind_upgrade5: Upgrade = load("res://Upgrades/unlock_rewind5.tres")
+
 
 
 
@@ -49,8 +54,8 @@ extends Node
 									starting_cell_1,starting_cell_2,starting_cell_3,starting_cell_4,starting_cell_5,
 									max_ship_size_upgrade_1,max_ship_size_upgrade_2,max_ship_size_upgrade_3,max_ship_size_upgrade_4,max_ship_size_upgrade_5,
 									starter_ship_size_upgrade_1,starter_ship_size_upgrade_2,starter_ship_size_upgrade_3,starter_ship_size_upgrade_4,starter_ship_size_upgrade_5,
-									unlock_chef_upgrade,unlock_mechanic_upgrade,
-									unlock_rewind_upgrade]
+									unlock_chef_upgrade,unlock_nurse_upgrade,
+									unlock_rewind_upgrade, unlock_rewind_upgrade2, unlock_rewind_upgrade3,unlock_rewind_upgrade4,unlock_rewind_upgrade5]
 
 
 var UI_controller: UIController
@@ -75,7 +80,9 @@ func purchase_grid_upgrade():
 		GameManager.state.full_grid_size += 1
 		
 		GameManager.state.change_money(-grid_upgrade.cost)
+		GameOfLifeAudio.play_purchase()
 	else:
+		GameOfLifeAudio.play_ui_disabled()
 		return 0
 
 
@@ -85,13 +92,15 @@ func purchase_ship_upgrade(sub_ship_upgrade_cost):
 		GameManager.state.add_ship(5)
 		GameManager.state.change_money(-sub_ship_upgrade_cost)
 		GameManager.renderer.redraw()
+		GameOfLifeAudio.play_purchase()
 		return 1
 	else:
+		GameOfLifeAudio.play_ui_disabled()
 		return 0
 		#Play Sound
 
 func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
-	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost:
+	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost && sub_ship_size_upgrade_number[subship_num] <= 5:
 		if GameManager.renderer.popup_enabled:
 			GameManager.renderer.popup.queue_free()
 			GameManager.renderer.popup_enabled = false
@@ -102,8 +111,10 @@ func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
 		if sub_ship_size_upgrade_number[subship_num] == 5:
 			#Disable Button
 			UI_controller.diable_subship_size_upgrade(subship_num)
+		GameOfLifeAudio.play_purchase()
 		return 1
 	else:
+		GameOfLifeAudio.play_ui_disabled()
 		return 0
 
 #Outside Of Game Upgrades

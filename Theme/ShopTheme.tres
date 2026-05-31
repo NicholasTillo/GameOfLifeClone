@@ -1,0 +1,30 @@
+[gd_resource type="Theme" format=3 uid="uid://bp86gilf1q1wj"]
+
+[ext_resource type="FontFile" uid="uid://eeepgqptqc67" path="res://Theme/BitcountGridSingle-VariableFont_CRSV,ELSH,ELXP,slnt,wght.ttf" id="1_p3qw8"]
+[ext_resource type="FontFile" uid="uid://ml473enksho7" path="res://Theme/Anta-Regular.ttf" id="1_vhtk5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dsnc"]
+bg_color = Color(0.5568281, 0.5229627, 0.22324553, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.38170323, 0.3817033, 0.38170302, 1)
+border_blend = true
+shadow_color = Color(0.23029521, 0.47095692, 0.26316833, 0.6)
+shadow_size = 1
+
+[resource]
+Button/constants/align_to_largest_stylebox = 1
+Button/constants/h_separation = 4
+Button/constants/line_spacing = 2
+Button/font_sizes/font_size = 20
+Button/fonts/font = ExtResource("1_p3qw8")
+Button/styles/normal = SubResource("StyleBoxFlat_0dsnc")
+Label/font_sizes/font_size = 18
+Label/fonts/font = ExtResource("1_vhtk5")
+RichTextLabel/fonts/bold_font = ExtResource("1_vhtk5")
+RichTextLabel/fonts/bold_italics_font = ExtResource("1_vhtk5")
+RichTextLabel/fonts/italics_font = ExtResource("1_vhtk5")
+RichTextLabel/fonts/mono_font = ExtResource("1_vhtk5")
+RichTextLabel/fonts/normal_font = ExtResource("1_vhtk5")

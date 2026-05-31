@@ -32,7 +32,10 @@ extends Control
 @export var button29:Button
 @export var button30:Button
 @export var button31:Button
-
+@export var button32:Button
+@export var button33:Button
+@export var button34:Button
+@export var button35:Button
 
 @export var label1:Label
 @export var label2:Label
@@ -85,9 +88,14 @@ func update_ui_shopeeeeee():
 
 
 	update_button(PlayerController.unlock_chef_upgrade, button26, "unlock_cells")
-	update_button(PlayerController.unlock_mechanic_upgrade, button27, "unlock_cells")
+	update_button(PlayerController.unlock_nurse_upgrade, button27, "unlock_cells")
 
 	update_button(PlayerController.unlock_rewind_upgrade, button31, "unlock_rewind")
+	update_button(PlayerController.unlock_rewind_upgrade2, button32, "unlock_rewind")
+	update_button(PlayerController.unlock_rewind_upgrade3, button33, "unlock_rewind")
+	update_button(PlayerController.unlock_rewind_upgrade4, button34, "unlock_rewind")
+	update_button(PlayerController.unlock_rewind_upgrade5, button35, "unlock_rewind")
+	
 
 
 	button1.pressed.connect(purchase_upgrade.bind(PlayerController.start_money_upgrade1, button1))
@@ -122,9 +130,14 @@ func update_ui_shopeeeeee():
 	
 	
 	button26.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_chef_upgrade, button26))
-	button27.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_mechanic_upgrade, button27))
+	button27.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_nurse_upgrade, button27))
 
 	button31.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade, button31))
+	button32.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade2, button32))
+	button33.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade3, button33))
+	button34.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade4, button34))
+	button35.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade5, button35))
+	
 
 
 	update_ui_shop()
@@ -134,6 +147,9 @@ func purchase_upgrade(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_start_money_upgrade(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 
@@ -142,6 +158,9 @@ func purchase_alive_count(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_start_alive_count(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 
@@ -149,6 +168,9 @@ func purchase_starting_cell(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_start_count(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 
@@ -156,6 +178,9 @@ func purchase_max_ship_size(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_max_ship_size_upgrade(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 
@@ -163,6 +188,9 @@ func purchase_starter_ship_size(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_starter_ship_size_upgrade(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 	
@@ -170,6 +198,9 @@ func purchase_new_cell(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_unlock_cell(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 
@@ -177,6 +208,9 @@ func purchase_rewind(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
 		PlayerController.purchase_rewind(upgrade)
 		GameManager.change_resource(-upgrade.cost)
+		GameOfLifeAudio.play_purchase()
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 	update_ui_shopeeeeee()
 

@@ -9,5 +9,4 @@ func _init():
 
 func _process_next_round():
 	# Neighbours are turned into Life by the wrapper in Class.process_next_round();
-	# a Life cell simply stays alive.
 	return Life.new()

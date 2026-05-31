@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bnt2cha6un585"]
 
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_smct1"]
 [ext_resource type="Script" uid="uid://x8ua10rnpfok" path="res://EndgameUI.gd.gd" id="1_ubtgc"]
 [ext_resource type="Script" uid="uid://dvjvb8pn4gyhf" path="res://reset_button.gd" id="2_xpohu"]
 
@@ -10,6 +11,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("1_smct1")
 script = ExtResource("1_ubtgc")
 end_label = NodePath("VBoxContainer/Label")
 
@@ -21,9 +23,9 @@ color = Color(0.4379676, 0.2545097, 0.124275334, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=79680706]
 layout_mode = 0
-offset_left = 457.0
+offset_left = 426.0
 offset_top = 220.0
-offset_right = 781.0
+offset_right = 750.0
 offset_bottom = 399.0
 
 [node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=713755722]

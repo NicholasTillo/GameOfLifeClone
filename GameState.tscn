@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://bmvph23pmj1x8"]
 
 [ext_resource type="Script" uid="uid://b6e4n7bklcrf4" path="res://UIController.gd" id="1_mmopi"]
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_xsja8"]
 [ext_resource type="Script" uid="uid://brjomm11nki4y" path="res://PlayArea/AutoPlayButton.gd" id="3_8bu60"]
 [ext_resource type="Script" uid="uid://bwaqwx42fxspd" path="res://PlayArea/NextRoundButton.gd" id="3_krv0r"]
 [ext_resource type="Texture2D" uid="uid://uqcu2jy0vxci" path="res://new_gradient_texture_1d.tres" id="3_licig"]
 [ext_resource type="Script" uid="uid://bdt7crlrq6wkh" path="res://Shop/shop_button.gd" id="4_8bu60"]
 [ext_resource type="Shader" uid="uid://d1glub2hpedxa" path="res://Background.gdshader" id="5_6dwkx"]
+[ext_resource type="Shader" uid="uid://b7hljktb3s7ld" path="res://ScreenShader.gdshader" id="5_8o48q"]
 [ext_resource type="Texture2D" uid="uid://oky1w48px7xi" path="res://screentexture.jpg" id="7_m4bkb"]
 [ext_resource type="AudioStream" uid="uid://s8m4ltibxl3e" path="res://the_mountain-sci-fi-512284.mp3" id="8_ti75m"]
 
@@ -20,11 +22,23 @@ shader_parameter/twinkle_speed = 1.0
 shader_parameter/star_size = 1.0
 shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_frrfw"]
+shader = ExtResource("5_8o48q")
+shader_parameter/tex = ExtResource("7_m4bkb")
+shader_parameter/radius = 0.5650000268375
+shader_parameter/threshold = 0.2410000114475
+shader_parameter/intensity = 1.7170000815575
+shader_parameter/spread = 1.9130000908675
+shader_parameter/glow_color = Color(1, 1, 1, 1)
+
 [node name="Root" type="Node2D" unique_id=858420152]
 
 [node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
 layout_mode = 3
 anchors_preset = 0
+offset_left = -1.0
+offset_right = -1.0
+theme = ExtResource("1_xsja8")
 script = ExtResource("1_mmopi")
 texty = NodePath("MoneyLabel")
 resource_text = NodePath("ResourceLabel")
@@ -41,32 +55,33 @@ light_mask = 0
 z_index = -50
 material = SubResource("ShaderMaterial_licig")
 layout_mode = 0
-offset_left = 2.2819605
-offset_top = 654.0
-offset_right = 654.68207
-offset_bottom = 1384.1743
+offset_left = 2.2819602
+offset_top = 647.1698
+offset_right = 647.85187
+offset_bottom = 1377.3441
 rotation = -1.5707964
 mouse_filter = 2
 texture = ExtResource("3_licig")
 
 [node name="PanelTexture" type="TextureRect" parent="UI" unique_id=524609031]
 z_index = -2
+material = SubResource("ShaderMaterial_frrfw")
 layout_mode = 0
 offset_left = 731.0
-offset_top = 5.0
 offset_right = 1153.0
-offset_bottom = 646.0
+offset_bottom = 648.0
 texture = ExtResource("7_m4bkb")
 expand_mode = 1
 
 [node name="MoneyLabel" type="Label" parent="UI" unique_id=795344317]
 layout_mode = 0
 offset_left = 996.0
-offset_top = 28.0
+offset_top = 25.0
 offset_right = 1119.0
-offset_bottom = 58.0
+offset_bottom = 55.0
 theme_override_font_sizes/font_size = 21
 text = "Money: 10"
+horizontal_alignment = 1
 
 [node name="MoneyColorRect" type="ColorRect" parent="UI/MoneyLabel" unique_id=317976140]
 z_index = -1
@@ -74,8 +89,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 1.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2294173, 0.36854005, 0.23573908, 1)
@@ -83,11 +96,12 @@ color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 [node name="ResourceLabel" type="Label" parent="UI" unique_id=1991379929]
 layout_mode = 0
 offset_left = 752.0
-offset_top = 27.0
+offset_top = 25.0
 offset_right = 897.0
 offset_bottom = 55.0
 theme_override_font_sizes/font_size = 21
 text = "Resource : 10"
+horizontal_alignment = 1
 
 [node name="ResourceColorRect" type="ColorRect" parent="UI/ResourceLabel" unique_id=634592178]
 z_index = -1
@@ -101,14 +115,16 @@ color = Color(0.2294173, 0.36854005, 0.23573908, 1)
 
 [node name="ShopHeaderLabel" type="Label" parent="UI" unique_id=1790248283]
 layout_mode = 0
-offset_left = 894.0
-offset_top = 119.0
-offset_right = 1003.0
-offset_bottom = 182.0
+offset_left = 886.0
+offset_top = 145.0
+offset_right = 995.0
+offset_bottom = 208.0
 theme_override_font_sizes/font_size = 40
 text = "Shop"
+horizontal_alignment = 1
 
 [node name="MoneyColorRect" type="ColorRect" parent="UI/ShopHeaderLabel" unique_id=1419304000]
+visible = false
 z_index = -1
 layout_mode = 0
 offset_left = -149.0
@@ -118,10 +134,10 @@ color = Color(0.5466929, 0.47305351, 0.31705686, 1)
 
 [node name="ShopHBox" type="HBoxContainer" parent="UI" unique_id=1994313040]
 layout_mode = 0
-offset_left = 758.0
-offset_top = 197.0
-offset_right = 1129.0
-offset_bottom = 325.0
+offset_left = 752.0
+offset_top = 249.0
+offset_right = 1123.0
+offset_bottom = 377.0
 alignment = 1
 
 [node name="MainShipVBox" type="VBoxContainer" parent="UI/ShopHBox" unique_id=1743948213]
@@ -130,6 +146,7 @@ layout_mode = 2
 [node name="MainShipLabel" type="Label" parent="UI/ShopHBox/MainShipVBox" unique_id=1857983118]
 layout_mode = 2
 text = "Main Ship"
+horizontal_alignment = 1
 
 [node name="MainShipSizeUpgradeButton" type="Button" parent="UI/ShopHBox/MainShipVBox" unique_id=1155390065 node_paths=PackedStringArray("button")]
 layout_mode = 2
@@ -200,10 +217,10 @@ text = "LOCKED"
 
 [node name="AutoPlayButton" type="Button" parent="UI" unique_id=689869946 node_paths=PackedStringArray("button", "ui_Controller")]
 layout_mode = 0
-offset_left = 819.0
-offset_top = 409.0
-offset_right = 891.0
-offset_bottom = 482.0
+offset_left = 779.0
+offset_top = 523.0
+offset_right = 851.0
+offset_bottom = 596.0
 text = "Play"
 script = ExtResource("3_8bu60")
 button = NodePath(".")
@@ -211,10 +228,10 @@ ui_Controller = NodePath("..")
 
 [node name="NextRoundButton" type="Button" parent="UI" unique_id=1438485095 node_paths=PackedStringArray("button", "ui_Controller")]
 layout_mode = 0
-offset_left = 1010.0
-offset_top = 409.0
-offset_right = 1082.0
-offset_bottom = 482.0
+offset_left = 1043.0
+offset_top = 521.0
+offset_right = 1115.0
+offset_bottom = 594.0
 text = "Do One
 "
 script = ExtResource("3_krv0r")
@@ -222,16 +239,23 @@ button = NodePath(".")
 ui_Controller = NodePath("..")
 
 [node name="RewindButton" type="Button" parent="UI" unique_id=291134747]
-visible = false
 layout_mode = 0
-offset_left = 915.0
-offset_top = 407.0
-offset_right = 987.0
-offset_bottom = 480.0
+offset_left = 913.0
+offset_top = 522.0
+offset_right = 985.0
+offset_bottom = 595.0
 text = "Rewind
 "
 
 [node name="UI_AudioChannel" type="AudioStreamPlayer" parent="UI" unique_id=1010123659]
+
+[node name="ColorRect" type="ColorRect" parent="UI" unique_id=112272859]
+layout_mode = 0
+offset_left = 730.0
+offset_top = 4.0
+offset_right = 732.0
+offset_bottom = 649.0
+color = Color(0.7666196, 0.76661956, 0.76661956, 0.88235295)
 
 [node name="BackgroundMusicPlayer" type="AudioStreamPlayer" parent="." unique_id=105109344]
 stream = ExtResource("8_ti75m")

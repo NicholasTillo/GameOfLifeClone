@@ -7,23 +7,25 @@ var cell_num: int
 var grid_index: int = -1
 @export var alive_button: Button
 @export var dead_button: Button
-@export var zombie_button: Button
 @export var mechanic_button: Button
+@export var nurse_button: Button
 @export var chef_button: Button
 @export var springtrap_button: Button
 @export var wall_button:Button
 @export var life_button:Button
+@export var zealot_button:Button
+
 
 var stored_popup_value: bool 
 
 func _ready() -> void:
 	alive_button.pressed.connect(_button_pressed_alive)
 	dead_button.pressed.connect(_button_pressed_dead)
-	zombie_button.pressed.connect(_button_pressed_zombie)
-	if PlayerController.unlock_mechanic_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
-		mechanic_button.pressed.connect(_button_pressed_mechanic)
+	mechanic_button.pressed.connect(_button_pressed_mechanic)
+	if PlayerController.unlock_nurse_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+		nurse_button.pressed.connect(_button_pressed_nurse)
 	else:
-		mechanic_button.text = "locked"
+		nurse_button.text = "locked"
 	if PlayerController.unlock_chef_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
 		chef_button.pressed.connect(_button_pressed_chef)
 	else:
@@ -31,6 +33,7 @@ func _ready() -> void:
 	springtrap_button.pressed.connect(_button_pressed_springtrap)
 	wall_button.pressed.connect(_button_pressed_wall)
 	life_button.pressed.connect(_button_pressed_life)
+	zealot_button.pressed.connect(_button_pressed_zealot)
 	stored_popup_value = GameManager.autoplay_enabled
 	
 func _get_cell() -> Cell:
@@ -57,43 +60,68 @@ func _button_pressed_alive():
 	if cell.contains.id  != "Alive" and GameManager.state.how_much_money() >= 10:
 		GameManager.state.change_money(-10)
 		change_parent(Alive.new())
-		
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
+		
 func _button_pressed_dead():
 	var cell = _get_cell()
 	if cell.contains.id != "Dead":
 		GameManager.state.change_money(10)
 		change_parent(Dead.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 		
-		
-func _button_pressed_zombie():
-	GameManager.change_resource(-1)
-	change_parent(Zombie.new())
-	
-
 func _button_pressed_mechanic():
-	GameManager.change_resource(-1)
-	change_parent(Mechanic.new())
+	var cell = _get_cell()
+	if cell.contains.id  != "Mechanic" and GameManager.state.how_much_money() >= 10:
+		GameManager.change_resource(-1)
+		change_parent(Mechanic.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
+func _button_pressed_nurse():
+	var cell = _get_cell()
+	if cell.contains.id  != "Nurse" and GameManager.state.how_much_money() >= 10:
+		GameManager.change_resource(-1)
+		change_parent(Nurse.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 func _button_pressed_springtrap():
-	GameManager.state.change_money(-10)
-	change_parent(Springtrap.new())
-	
+	var cell = _get_cell()
+	if cell.contains.id  != "Springtrap" and GameManager.state.how_much_money() >= 10:
+		GameManager.state.change_money(-10)
+		change_parent(Springtrap.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 	
 func _button_pressed_wall():
-	GameManager.state.change_money(-10)
-	change_parent(Wall.new())
-	
+	var cell = _get_cell()
+	if cell.contains.id  != "Wall" and GameManager.state.how_much_money() >= 10:
+		GameManager.state.change_money(-10)
+		change_parent(Wall.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 func _button_pressed_life():
-	GameManager.state.change_money(-10)
-	change_parent(Life.new())
-	
-	
+	var cell = _get_cell()
+	if cell.contains.id  != "Zealot" and GameManager.state.how_much_money() >= 10:
+		GameManager.state.change_money(-10)
+		change_parent(Life.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
+
+func _button_pressed_zealot():
+	var cell = _get_cell()
+	if cell.contains.id  != "Zealot" and GameManager.state.how_much_money() >= 10:
+		GameManager.state.change_money(-10)
+		change_parent(Zealot.new())	
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 	
 func _button_pressed_chef():
 	var cell = _get_cell()
-	if cell.contains.id  != "Alive" and GameManager.state.how_much_money() >= 50:
-		GameManager.state.change_money(50)
+	if cell.contains.id  != "Chef" and GameManager.state.how_much_money() >= 50:
+		GameManager.state.change_money(-50)
 		change_parent(Chef.new())
 	else:
-		pass
+		GameOfLifeAudio.play_ui_disabled()

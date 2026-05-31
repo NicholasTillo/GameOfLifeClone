@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dajgkflsjwdf5"]
 
 [ext_resource type="Script" uid="uid://c007mna6lraq0" path="res://event_pop_up.gd" id="1_8vwsy"]
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_mps5s"]
 
 [node name="EventPopUp" type="Control" unique_id=287901850 node_paths=PackedStringArray("name_label", "description_label", "okay_button")]
 z_index = 10
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_mps5s")
 script = ExtResource("1_8vwsy")
 name_label = NodePath("NameLabel")
 description_label = NodePath("TextLabel")
@@ -46,6 +48,8 @@ offset_top = 292.0
 offset_right = 599.0
 offset_bottom = 315.0
 text = "Text"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="OkayButton" type="Button" parent="." unique_id=744858214]
 layout_mode = 0

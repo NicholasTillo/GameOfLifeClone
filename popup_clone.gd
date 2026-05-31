@@ -41,7 +41,7 @@ func button3_func():
 	
 	
 func button4_func():
-	var return_class = (Mechanic.new())
+	var return_class = (Nurse.new())
 	button4.text = return_class.id
 	result_chosen.emit(return_class)
 	queue_free()

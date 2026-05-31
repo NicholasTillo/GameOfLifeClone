@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dr8lwqdegqy1h"]
 
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_1ywly"]
 [ext_resource type="Script" uid="uid://d3ur82yf1mah4" path="res://Scenes/pet_store_pop_up.gd" id="1_uv77l"]
 
 [node name="EventPopUp" type="Control" unique_id=287901850 node_paths=PackedStringArray("button1", "button2", "button3", "close_button")]
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_1ywly")
 script = ExtResource("1_uv77l")
 button1 = NodePath("BuyAnimal1")
 button2 = NodePath("BuyAnimal2")

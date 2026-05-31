@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://b0fvltq7pff37"]
 
 [ext_resource type="Script" uid="uid://c2juei2mhu25d" path="res://popup_clone.gd" id="1_alrux"]
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_idwyy"]
 
 [node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("button1", "button2", "button3", "button4")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("1_idwyy")
 script = ExtResource("1_alrux")
 button1 = NodePath("Button")
 button2 = NodePath("Button2")
@@ -56,4 +58,4 @@ offset_left = 45.0
 offset_top = 116.0
 offset_right = 102.0
 offset_bottom = 158.0
-text = "Mechanic"
+text = "Nurse"

@@ -6,3 +6,4 @@ extends Control
 
 func _ready():
 	end_label.text = "Game Over. You survived: " + str(GameManager.round_count) + " rounds"
+	GameOfLifeAudio.play_lose()

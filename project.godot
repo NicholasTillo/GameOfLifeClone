@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameManager="*uid://cupypfwvs2yvp"
 PlayerController="*uid://ccsg3tqjmtag4"
+GameOfLifeAudio="*uid://caay5vnet4h35"
 
 [physics]
 

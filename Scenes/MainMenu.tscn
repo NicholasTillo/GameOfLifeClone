@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b6t37ll7ta5cc"]
 
+[ext_resource type="Theme" uid="uid://infrvv0jjmrh" path="res://Theme/MainMenuTheme.tres" id="1_if7li"]
 [ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_koqhg"]
 [ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_cmrfp"]
 [ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="3_loo7a"]
@@ -27,6 +28,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("1_if7li")
 
 [node name="TextureRect" type="TextureRect" parent="Control" unique_id=449179007]
 layout_mode = 0
