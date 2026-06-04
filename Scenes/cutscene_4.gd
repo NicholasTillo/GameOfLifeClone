@@ -12,10 +12,10 @@ var cutscene4_audio = load("res://Scenes/cutscene_4.gd")
 func _ready() -> void:
 	Text_Maker.list_of_text(["Captain Cup \n Final Object Log, We are going across the edge of the universe. .", 
 							"Cube 2 \n just working on the *important pods* now, it will be done within the year. ", 
-							"Captain \n Hello Everybody my name is markiplier. "])
+							"Captain \n . "])
 	Text_Maker.display_text("~5230CE - The Edge Of The Universe")
 
-	fade_in(audioPlayer, 0.0, 4.0)
+	fade_in(audioPlayer, -20.0, 4.0)
 
 
 func fade_in(player: AudioStreamPlayer, target_db: float = 0.0, duration: float = 1.0) -> void:

@@ -33,10 +33,10 @@ offset_bottom = 367.0
 
 [node name="Character2" type="ColorRect" parent="Control" unique_id=1691542103]
 layout_mode = 0
-offset_left = 836.0
-offset_top = 345.0
-offset_right = 876.0
-offset_bottom = 385.0
+offset_left = 811.0
+offset_top = 337.0
+offset_right = 851.0
+offset_bottom = 377.0
 
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=1462396555]
 layout_mode = 0

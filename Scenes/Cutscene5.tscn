@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://8cebqhnb5xaj"]
 
-[ext_resource type="Script" uid="uid://cs6p6su250hma" path="res://Scenes/cutscene_1.gd" id="1_h37pv"]
+[ext_resource type="Script" uid="uid://dyrqa66asel58" path="res://Scenes/cutscene_5.gd" id="1_5gmbf"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_i61bj"]
 [ext_resource type="AudioStream" uid="uid://6hk54hr3540l" path="res://Assets/Cutscene5.mp3" id="3_5gmbf"]
 
 [node name="Cutscene5" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker", "audioPlayer")]
-script = ExtResource("1_h37pv")
+script = ExtResource("1_5gmbf")
 Text_Maker = NodePath("Control/Scrolling_Text")
 audioPlayer = NodePath("AudioStreamPlayer")
 

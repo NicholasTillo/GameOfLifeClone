@@ -38,7 +38,7 @@
 - Design a proper title for the game
 - Create new visuals for:
     - The main menu - Done
-    - The shop screen 
+    - The shop screen  
     - The end screen
 	- Buttons - Done
     - Unique cell types
@@ -54,6 +54,7 @@
 ### Balancing 
 - Balance Money and Resource Generation 
 - Make a Tutorial
+	Need 10 images to put in the tutorial 
 
 ### Audio
 - Put in sound effects for the actual gameplay section - Done

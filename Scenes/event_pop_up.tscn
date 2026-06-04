@@ -43,10 +43,10 @@ text = "Name"
 [node name="TextLabel" type="Label" parent="." unique_id=719691039]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 0
-offset_left = 559.0
-offset_top = 292.0
-offset_right = 599.0
-offset_bottom = 315.0
+offset_left = 294.0
+offset_top = 287.0
+offset_right = 876.0
+offset_bottom = 402.0
 text = "Text"
 horizontal_alignment = 1
 autowrap_mode = 3

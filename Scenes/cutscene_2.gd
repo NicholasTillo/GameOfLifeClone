@@ -15,7 +15,7 @@ func _ready() -> void:
 							"Captain \n *died*. "])
 	Text_Maker.display_text("2084CE - Outside of the Skoopa Galaxy")
 
-	fade_in(audioPlayer, 0.0, 4.0)
+	fade_in(audioPlayer, -20.0, 4.0)
 
 
 func fade_in(player: AudioStreamPlayer, target_db: float = 0.0, duration: float = 1.0) -> void:
