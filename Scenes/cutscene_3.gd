@@ -10,10 +10,9 @@ var cutscene3_audio = load("res://Scenes/cutscene_3.gd")
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain \n The more we search, the more emptiness we find, we have scanned ", 
-							"Cube 2 \n just working on the *important pods* now, it will be done within the year. ", 
+	Text_Maker.list_of_text(["Captain \n The more we search, the more emptiness we find, we have scanned the whole observible universe, and found nothing with the meaning signature", 
 							"Captain \n Hello Everybody my name is markiplier. "])
-	Text_Maker.display_text("2026CE - ")
+	Text_Maker.display_text("3214CE - ")
 
 	fade_in(audioPlayer, -20.0, 4.0)
 

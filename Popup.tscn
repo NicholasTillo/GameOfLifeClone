@@ -29,31 +29,35 @@ offset_bottom = 195.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=422413506]
 layout_mode = 0
-offset_left = 21.0
-offset_top = 21.0
-offset_right = 173.0
-offset_bottom = 122.0
+offset_left = 13.0
+offset_top = 16.0
+offset_right = 253.0
+offset_bottom = 188.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=800708664]
 layout_mode = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1240488209]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Alive"
 
 [node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=536445502]
 layout_mode = 2
-text = "Dead"
+size_flags_horizontal = 3
+text = "  Dead  "
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1095479809]
 layout_mode = 2
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1609059624]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Mechanic"
 
 [node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=630345969]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Wall
 "
 
@@ -62,14 +66,17 @@ layout_mode = 2
 
 [node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1392001318]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Chef"
 
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1181688847]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Nurse"
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=730142315]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Zealot"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=1399099765]
@@ -77,9 +84,24 @@ layout_mode = 2
 
 [node name="Button7" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1001777718]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Springtrap"
 
 [node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=2031299878]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Life
 "
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1045613469]
+layout_mode = 2
+
+[node name="Button7" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=1537284134]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Locked"
+
+[node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=876805018]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Locked"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://bx6gso8sw016c"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_mkklu"]
+
+[resource]
+script = ExtResource("1_mkklu")
+name = "Going Through An Astroid Belt"
+text = "The ship is going through "
+id = 4
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

@@ -3,6 +3,22 @@
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_smct1"]
 [ext_resource type="Script" uid="uid://x8ua10rnpfok" path="res://EndgameUI.gd.gd" id="1_ubtgc"]
 [ext_resource type="Script" uid="uid://dvjvb8pn4gyhf" path="res://reset_button.gd" id="2_xpohu"]
+[ext_resource type="Texture2D" uid="uid://oky1w48px7xi" path="res://screentexture.jpg" id="3_lm6k6"]
+[ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="4_flick"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ilg5d"]
+shader = ExtResource("4_flick")
+shader_parameter/flicker_strength = 0.06
+shader_parameter/flicker_speed = 18.0
+shader_parameter/jitter_strength = 0.002
+shader_parameter/roll_strength = 0.004
+shader_parameter/roll_speed = 0.15
+shader_parameter/scanline_strength = 0.12
+shader_parameter/scanline_count = 480.0
+shader_parameter/chroma_offset = 0.0015
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ilg5d"]
+bg_color = Color(0.5273542, 0.62991965, 0.5667123, 1)
 
 [node name="DeadScene" type="Node2D" unique_id=781688161]
 
@@ -13,29 +29,36 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_smct1")
 script = ExtResource("1_ubtgc")
-end_label = NodePath("VBoxContainer/Label")
+end_label = NodePath("PanelContainer/VBoxContainer/Label")
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=244131742]
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1055312632]
+z_index = -2
+material = SubResource("ShaderMaterial_ilg5d")
 layout_mode = 0
-offset_right = 1156.0
-offset_bottom = 655.0
-color = Color(0.4379676, 0.2545097, 0.124275334, 1)
+offset_right = 1155.0
+offset_bottom = 651.0
+texture = ExtResource("3_lm6k6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=79680706]
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1404711624]
 layout_mode = 0
-offset_left = 426.0
-offset_top = 220.0
-offset_right = 750.0
-offset_bottom = 399.0
+offset_left = 407.0
+offset_top = 199.0
+offset_right = 730.0
+offset_bottom = 331.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ilg5d")
 
-[node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=713755722]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer" unique_id=79680706]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Game Over
-"
-horizontal_alignment = 1
 
-[node name="ResetButton" type="Button" parent="Control/VBoxContainer" unique_id=1566726393 node_paths=PackedStringArray("button")]
+[node name="Label" type="Label" parent="Control/PanelContainer/VBoxContainer" unique_id=713755722]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResetButton" type="Button" parent="Control/PanelContainer/VBoxContainer" unique_id=1566726393 node_paths=PackedStringArray("button")]
 layout_mode = 2
 text = "Reset"
 script = ExtResource("2_xpohu")

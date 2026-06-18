@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://cplql782ha0qq"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Space Pirate Attack"
+text = "Dodge! "
+id = 8
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

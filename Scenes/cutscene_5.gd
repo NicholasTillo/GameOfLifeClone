@@ -10,8 +10,9 @@ var cutscene5_audio = load("res://Scenes/cutscene_5.gd")
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain ???? \n Its beautiful.", 
-							"Captain \n Hello Everybody my name is markiplier. "])
+	Text_Maker.list_of_text(["Captain ???? \n We have finally reached the center of the universe. ", 
+							"Captain ???? \n If it would be anywhere, it would be here. ",
+							"Captain ???? \n Its beautiful. "])
 	Text_Maker.display_text("????CE - ?????")
 	audioPlayer.stream = cutscene5_audio
 	audioPlayer.play()

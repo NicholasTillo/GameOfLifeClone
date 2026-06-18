@@ -4,6 +4,18 @@
 [ext_resource type="Theme" uid="uid://scgub2omhjx" path="res://Theme/Cutscene.tres" id="2_duplo"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_w5wil"]
 [ext_resource type="AudioStream" uid="uid://d4mq7xfmqm8ji" path="res://Assets/Cutscene1.mp3" id="4_ajl8d"]
+[ext_resource type="Shader" uid="uid://f7l338i5ioqd" path="res://Scenes/CircleShader.gdshader" id="5_6xn6i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hl1ss"]
+shader = ExtResource("5_6xn6i")
+shader_parameter/land_color = Color(0.3238035, 0.62401086, 0.61342514, 1)
+shader_parameter/ocean_color = Color(0.32529432, 0.32024336, 0.20122704, 1)
+shader_parameter/surface_scale = 2.1870000563825
+shader_parameter/spin_speed = 0.0170000008075
+shader_parameter/light_dir = Vector2(-0.6, -0.6)
+shader_parameter/ambient = 0.17200000817
+shader_parameter/atmosphere_color = Color(0.007843138, 0.08627451, 0.15686275, 1)
+shader_parameter/atmosphere_power = 5.154000197315
 
 [node name="Cutscene1" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker", "audioPlayer")]
 script = ExtResource("1_dif7x")
@@ -52,3 +64,10 @@ metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
 stream = ExtResource("4_ajl8d")
 volume_db = -20.0
 autoplay = true
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2068165178]
+material = SubResource("ShaderMaterial_hl1ss")
+offset_left = 473.0
+offset_top = 200.0
+offset_right = 673.0
+offset_bottom = 400.0

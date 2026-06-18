@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://uqcu2jy0vxci" path="res://new_gradient_texture_1d.tres" id="3_licig"]
 [ext_resource type="Script" uid="uid://bdt7crlrq6wkh" path="res://Shop/shop_button.gd" id="4_8bu60"]
 [ext_resource type="Shader" uid="uid://d1glub2hpedxa" path="res://Background.gdshader" id="5_6dwkx"]
-[ext_resource type="Shader" uid="uid://b7hljktb3s7ld" path="res://ScreenShader.gdshader" id="5_8o48q"]
+[ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="5_8o48q"]
 [ext_resource type="Texture2D" uid="uid://oky1w48px7xi" path="res://screentexture.jpg" id="7_m4bkb"]
 [ext_resource type="AudioStream" uid="uid://s8m4ltibxl3e" path="res://the_mountain-sci-fi-512284.mp3" id="8_ti75m"]
 
@@ -24,12 +24,14 @@ shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_frrfw"]
 shader = ExtResource("5_8o48q")
-shader_parameter/tex = ExtResource("7_m4bkb")
-shader_parameter/radius = 0.5650000268375
-shader_parameter/threshold = 0.2410000114475
-shader_parameter/intensity = 1.7170000815575
-shader_parameter/spread = 1.9130000908675
-shader_parameter/glow_color = Color(1, 1, 1, 1)
+shader_parameter/flicker_strength = 0.06
+shader_parameter/flicker_speed = 18.0
+shader_parameter/jitter_strength = 0.002
+shader_parameter/roll_strength = 0.004
+shader_parameter/roll_speed = 0.15
+shader_parameter/scanline_strength = 0.12
+shader_parameter/scanline_count = 480.0
+shader_parameter/chroma_offset = 0.0015
 
 [node name="Root" type="Node2D" unique_id=858420152]
 
@@ -239,6 +241,7 @@ button = NodePath(".")
 ui_Controller = NodePath("..")
 
 [node name="RewindButton" type="Button" parent="UI" unique_id=291134747]
+visible = false
 layout_mode = 0
 offset_left = 913.0
 offset_top = 522.0

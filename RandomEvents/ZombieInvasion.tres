@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_dw58p")
-name = "Zombie Invasion"
-text = "100000 Billion Zombies Upon Thee"
+name = "Aliens Have Breached The Ship"
+text = "An alien has punch a hole in the hull, and are infecting the people of your ship"
 id = 1
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

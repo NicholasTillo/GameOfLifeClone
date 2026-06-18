@@ -10,8 +10,8 @@ var culm_time = 0
 var cutscene4_audio = load("res://Scenes/cutscene_4.gd") 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain Cup \n Final Object Log, We are going across the edge of the universe. .", 
-							"Cube 2 \n just working on the *important pods* now, it will be done within the year. ", 
+	Text_Maker.list_of_text(["Captain Cup \n Captian Log Entry 9103221, For those who come after us, We are going across the edge of the universe.", 
+							"Captain Cup \n There is no way to know what lies beyond, but we shall find out. ", 
 							"Captain \n . "])
 	Text_Maker.display_text("~5230CE - The Edge Of The Universe")
 

@@ -47,6 +47,13 @@ theme_override_font_sizes/normal_font_size = 32
 script = ExtResource("2_epo75")
 metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
 
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=484914463]
+layout_mode = 0
+offset_left = 335.0
+offset_top = 207.0
+offset_right = 792.0
+offset_bottom = 383.0
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=548128221]
 stream = ExtResource("6_tktsf")
 volume_db = -20.0

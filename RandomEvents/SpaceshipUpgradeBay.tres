@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://tnab67k0htdh"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_802dx"]
+
+[resource]
+script = ExtResource("1_802dx")
+name = "Spaceship Upgrade Bay"
+text = "Free Spaceship Upgrades! "
+id = 7
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

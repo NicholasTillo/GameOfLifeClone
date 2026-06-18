@@ -16,6 +16,9 @@ var moneyAmount = 5 + GameManager.starting_money_increase
 var subgrids: Array = []
 var subgrid_sizes: Array = []
 var sub_ship_index = 0
+var min_number_of_surrounding_alives = 2
+
+
 func _init() -> void:
 	initialize_grid()
 	

@@ -49,7 +49,8 @@ var current_cutscene_index:int = 0
 #Event Variables
 var event_popup_precon_scene = preload("res://Scenes/event_pop_up.tscn")
 var pet_store_popup_scene = preload("res://Scenes/pet_store_pop_up.tscn")
-
+var num_remaining_astroids = 0
+var num_remaining_ecodeadzone = 0
 var done_rewinds: int = 0
 
 
@@ -99,17 +100,27 @@ func do_next_round():
 		result = state.cells[i].contains.process_next_round()
 		copy_array.append(result)
 		
-		
+	
 	for i in range(len(state.cells)):
 		state.cells[i].contains = copy_array[i]
 		state.cells[i].contains.cell = state.cells[i]
+	
+	if num_remaining_astroids > 0:
+		#Do astroid Belt Stuff. 
+		var chosen_cell = state.cells.pick_random()
+		#Play Animation Of Astroid
+		num_remaining_astroids -= 1
+	if num_remaining_ecodeadzone > 0:
+		num_remaining_astroids -= 1
+		if num_remaining_astroids == 0:
+			state.min_number_of_surrounding_alives -= 1
 		
 	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
 		best_score = round_count
 		in_gameplay = false
+		renderer.clear()
 		if round_count >= (current_cutscene_index + 1) * 20:
-			renderer.clear()
 			current_cutscene_index += 1
 			print("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
 			get_tree().change_scene_to_file("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
@@ -185,7 +196,7 @@ func do_random_event():
 			var chosen_cell = state.cells.pick_random()
 			chosen_cell.contains = Springtrap.new()
 			chosen_cell.contains.cell = chosen_cell
-		1: #Zombie Invasion
+		1: #Alien Invasion
 			var num_of_zombies = 5
 			for i in range(num_of_zombies):
 				var chosen_cell = state.cells.pick_random()
@@ -200,6 +211,30 @@ func do_random_event():
 			var chosen_cell = state.cells.pick_random()
 			chosen_cell.contains = Life.new()
 			chosen_cell.contains.cell = chosen_cell
+		4:#Astroid Belt
+			num_remaining_astroids =  (randi() % 15 )+ 5 #Random 5-20
+
+		5:#Eco Dead Zone
+			#Affect Alive cells to have a lower number of guys required. 
+			state.min_number_of_surrounding_alives += 1
+			num_remaining_ecodeadzone += (randi() % 15 )+ 5
+			
+		6:#Religious Reform
+			var num_of_zealots = 3
+			var i = 0
+			while i < num_of_zealots:
+				var chosen_cell = state.cells.pick_random()
+				if chosen_cell.contains is Alive:
+					chosen_cell.contains = Zealot.new()
+					chosen_cell.contains.cell = chosen_cell
+					i += 1
+				
+		7: #Spaceship Upgrade Bay
+			#make a popup, then allow them to choose
+			pass
+		8:#Spaceship attack, 
+			#Make a popup of a subscreen minigame
+			pass
 	
 func check_stable_state(param, subgrids):
 	var hashed = hash_state(param, subgrids)

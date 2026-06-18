@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://infrvv0jjmrh" path="res://Theme/MainMenuTheme.tres" id="1_if7li"]
 [ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_koqhg"]
 [ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_cmrfp"]
+[ext_resource type="Shader" uid="uid://cqqah5hwno2ha" path="res://Scenes/MainMenu.gdshader" id="2_rrcx7"]
 [ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="3_loo7a"]
 [ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="4_if7li"]
 [ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="5_rrcx7"]
@@ -12,14 +13,24 @@
 [ext_resource type="Script" uid="uid://j72ab8neo3ak" path="res://best_score_label.gd" id="7_8e205"]
 [ext_resource type="AudioStream" uid="uid://cosk58oodjjqp" path="res://lexin_music-space-ambient-sci-fi-121842.mp3" id="8_7467j"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fh7cp"]
+shader = ExtResource("2_rrcx7")
+shader_parameter/star_density = 70.0
+shader_parameter/star_amount = 0.06
+shader_parameter/star_size = 0.06
+shader_parameter/twinkle_speed = 2.5
+shader_parameter/star_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_rrcx7"]
+
 [sub_resource type="Gradient" id="Gradient_koqhg"]
-offsets = PackedFloat32Array(0.01183432, 0.5443787, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.21106043, 0.21963134, 0.29396576, 1, 0.5204934, 0.4464711, 0.5215269, 1)
+offsets = PackedFloat32Array(0.01183432, 0.6987952, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0.42352942, 0.36862746, 0.42745098, 0.5529412, 0.52156866, 0.44705883, 0.52156866, 0.7411765)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_cmrfp"]
 gradient = SubResource("Gradient_koqhg")
-fill_from = Vector2(0.4334764, 0.55364805)
-fill_to = Vector2(1, 0.5493562)
+fill_from = Vector2(0.9652174, 0.5652174)
+fill_to = Vector2(0.4347826, 0.5782609)
 
 [node name="MainMenu" type="Node2D" unique_id=1386560934]
 
@@ -29,6 +40,13 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_if7li")
+
+[node name="BackgroundTwinkle" type="TextureRect" parent="Control" unique_id=574163049]
+material = SubResource("ShaderMaterial_fh7cp")
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 647.0
+texture = SubResource("CanvasTexture_rrcx7")
 
 [node name="TextureRect" type="TextureRect" parent="Control" unique_id=449179007]
 layout_mode = 0

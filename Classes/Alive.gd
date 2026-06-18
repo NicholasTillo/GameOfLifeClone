@@ -30,7 +30,7 @@ func _process_next_round():
 	if chef_nearby:
 		return Alive.new()
 
-	if alive_count < 2 or alive_count > 3:
+	if alive_count < GameManager.state.min_number_of_surrounding_alives or alive_count > 3:
 		return Dead.new()
 	else:
 		GameManager.state.change_money(1)

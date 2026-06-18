@@ -35,4 +35,4 @@ func _process_next_round():
 	if alive_count < 2 or alive_count > 3:
 		return Dead.new()
 	else:
-		return Alive.new()
+		return Zealot.new()
