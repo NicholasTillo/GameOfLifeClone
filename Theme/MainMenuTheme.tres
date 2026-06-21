@@ -3,6 +3,8 @@
 [ext_resource type="FontFile" uid="uid://ml473enksho7" path="res://Theme/Anta-Regular.ttf" id="1_ba8ds"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dsnc"]
+content_margin_top = 6.0
+content_margin_bottom = 6.0
 bg_color = Color(0.2765194, 0.27372485, 0.44623458, 1)
 border_width_left = 1
 border_width_top = 1

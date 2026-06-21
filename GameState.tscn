@@ -35,7 +35,7 @@ shader_parameter/chroma_offset = 0.0015
 
 [node name="Root" type="Node2D" unique_id=858420152]
 
-[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
+[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "buy_supship_one_taxes_upgrade_button", "buy_supship_two_taxes_upgrade_button", "buy_ship_taxes_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -1.0
@@ -48,6 +48,9 @@ buy_supship_one_button = NodePath("ShopHBox/PurchaseSubship1")
 buy_supship_one_size_upgrade_button = NodePath("ShopHBox/SubshipOneContainer/Subship1SizeUpgrade")
 buy_supship_two_button = NodePath("ShopHBox/PurchaseSubship2")
 buy_supship_two_size_upgrade_button = NodePath("ShopHBox/SubshipTwoContainer/Subship2SizeUpgrade")
+buy_supship_one_taxes_upgrade_button = NodePath("ShopHBox/SubshipOneContainer/Subship1Button3")
+buy_supship_two_taxes_upgrade_button = NodePath("ShopHBox/SubshipTwoContainer/Subship2Button3")
+buy_ship_taxes_upgrade_button = NodePath("ShopHBox/MainShipVBox/PlaceHolderButton1")
 do_rewind_button = NodePath("RewindButton")
 vbox_ship_one = NodePath("ShopHBox/SubshipOneContainer")
 vbox_ship_two = NodePath("ShopHBox/SubshipTwoContainer")
@@ -158,7 +161,7 @@ button = NodePath(".")
 
 [node name="PlaceHolderButton1" type="Button" parent="UI/ShopHBox/MainShipVBox" unique_id=1622863660]
 layout_mode = 2
-text = "Button 6"
+text = "Raise Taxes"
 
 [node name="PlaceHolderButton2" type="Button" parent="UI/ShopHBox/MainShipVBox" unique_id=1928874220]
 layout_mode = 2

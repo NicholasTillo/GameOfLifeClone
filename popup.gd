@@ -13,7 +13,7 @@ var grid_index: int = -1
 @export var springtrap_button: Button
 @export var wall_button:Button
 @export var life_button:Button
-@export var zealot_button:Button
+@export var revolutionary_button:Button
 
 
 var stored_popup_value: bool 
@@ -33,7 +33,7 @@ func _ready() -> void:
 	springtrap_button.pressed.connect(_button_pressed_springtrap)
 	wall_button.pressed.connect(_button_pressed_wall)
 	life_button.pressed.connect(_button_pressed_life)
-	zealot_button.pressed.connect(_button_pressed_zealot)
+	revolutionary_button.pressed.connect(_button_pressed_revolutionary)
 	stored_popup_value = GameManager.autoplay_enabled
 	
 func _get_cell() -> Cell:
@@ -104,17 +104,17 @@ func _button_pressed_wall():
 		GameOfLifeAudio.play_ui_disabled()
 func _button_pressed_life():
 	var cell = _get_cell()
-	if cell.contains.id  != "Zealot" and GameManager.state.how_much_money() >= 10:
+	if cell.contains.id  != "Revolutionary" and GameManager.state.how_much_money() >= 10:
 		GameManager.state.change_money(-10)
 		change_parent(Life.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-func _button_pressed_zealot():
+func _button_pressed_revolutionary():
 	var cell = _get_cell()
-	if cell.contains.id  != "Zealot" and GameManager.state.how_much_money() >= 10:
+	if cell.contains.id  != "Revolutionary" and GameManager.state.how_much_money() >= 10:
 		GameManager.state.change_money(-10)
-		change_parent(Zealot.new())	
+		change_parent(Revolutionary.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 	

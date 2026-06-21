@@ -38,6 +38,7 @@ var max_number_size_upgrades :int = 5
 var rewind_number: int = 0
 
 var in_gameplay: bool
+var money_per_alive: float = 0
 
 #Upgrade Here
 var chosen_upgrades:Dictionary = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades": [], "max_ship_size_upgrade": [], "starter_ship_size_upgrade": [], "unlock_cells": [], "unlock_rewind": []}
@@ -110,9 +111,13 @@ func do_next_round():
 		var chosen_cell = state.cells.pick_random()
 		#Play Animation Of Astroid
 		num_remaining_astroids -= 1
+		chosen_cell.contains = Dead.new() 
+		chosen_cell.contains.id = chosen_cell
+		
+	
 	if num_remaining_ecodeadzone > 0:
-		num_remaining_astroids -= 1
-		if num_remaining_astroids == 0:
+		num_remaining_ecodeadzone -= 1
+		if num_remaining_ecodeadzone == 0:
 			state.min_number_of_surrounding_alives -= 1
 		
 	if check_stable_state(state.cells, state.subgrids):
@@ -220,12 +225,12 @@ func do_random_event():
 			num_remaining_ecodeadzone += (randi() % 15 )+ 5
 			
 		6:#Religious Reform
-			var num_of_zealots = 3
+			var num_of_revolutionaries = 3
 			var i = 0
-			while i < num_of_zealots:
+			while i < num_of_revolutionaries:
 				var chosen_cell = state.cells.pick_random()
 				if chosen_cell.contains is Alive:
-					chosen_cell.contains = Zealot.new()
+					chosen_cell.contains = Revolutionary.new()
 					chosen_cell.contains.cell = chosen_cell
 					i += 1
 				
@@ -359,6 +364,8 @@ func how_much_resource():
 	
 func save_game():
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	if save_file == null:
+		return false
 	var json_string = JSON.stringify({"resource": resourceAmount,"best_score": best_score, "current_cutscene_index": current_cutscene_index})
 	save_file.store_line(json_string)
 	
@@ -390,11 +397,12 @@ func save_game():
 	var new_dict = {}
 	json_string = JSON.stringify({"upgrades": {"money_upgrades": new_1, "chance_upgrades":new_2, "starter_upgrades":new_3, "max_ship_size_upgrade":new_4, "starter_ship_size_upgrade":new_5, "unlock_cells":new_6, "unlock_rewind":new_7}})
 	save_file.store_line(json_string)
-	
-	
+	return true
+
+
 func load_game():
 	if not FileAccess.file_exists("user://savegame.save"):
-		return # Error! We don't have a save to load.
+		return false # Error! We don't have a save to load.
 		
 	chosen_upgrades = {"money_upgrades": [], "chance_upgrades":[], "starter_upgrades":[], "max_ship_size_upgrade":[], "starter_ship_size_upgrade":[], "unlock_cells":[], "unlock_rewind":[]}
 	reset_stats()
@@ -406,9 +414,10 @@ func load_game():
 	var parse_result = json.parse(json_string)
 	if not parse_result == OK:
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+		return false
 	else:
 		var data = json.data
-		resourceAmount = int(data["resource"])	
+		resourceAmount = int(data["resource"])
 		best_score = int(data["best_score"])
 		current_cutscene_index = int(data["current_cutscene_index"])
 		
@@ -420,6 +429,7 @@ func load_game():
 	parse_result = json.parse(json_string)
 	if not parse_result == OK:
 		print("JSON Parse Error: ", json.get_error_message(), " in ", json_string, " at line ", json.get_error_line())
+		return false
 	else:
 		var data = json.data
 		var copy_chosen_upgrades = data["upgrades"]
@@ -468,6 +478,4 @@ func load_game():
 						if k.id == j:
 							PlayerController.purchase_rewind(k)
 							chosen_upgrades["unlock_rewind"].append(k)
-				
-							
-							
+	return true

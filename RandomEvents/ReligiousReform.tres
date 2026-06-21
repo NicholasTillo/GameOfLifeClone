@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_0y2xu")
-name = "Religious Reform"
-text = "Zealots Appear"
+name = "Revolutionary Reform"
+text = "Revolutionaries Appear, power to the people"
 id = 6
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

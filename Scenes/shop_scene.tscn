@@ -4,7 +4,22 @@
 [ext_resource type="Theme" uid="uid://bp86gilf1q1wj" path="res://Theme/ShopTheme.tres" id="1_jwdga"]
 [ext_resource type="Script" uid="uid://brqihe2fmj4ac" path="res://Scenes/shop_scene.gd" id="1_njw01"]
 [ext_resource type="Script" uid="uid://dvw01busa5fi4" path="res://ResourceLabel.gd" id="2_35huh"]
+[ext_resource type="Shader" uid="uid://1m0tov6gtga4" path="res://Scenes/wood_material.gdshader" id="3_uxpe5"]
 [ext_resource type="AudioStream" uid="uid://7brad8e63v7a" path="res://raven1023-happy-pants-111790.mp3" id="4_6rmb7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uxpe5"]
+shader = ExtResource("3_uxpe5")
+shader_parameter/light_color = Color(0.0068761515, 0.3261273, 0.31947678, 1)
+shader_parameter/dark_color = Color(0.19898897, 0.2065346, 0.21151459, 1)
+shader_parameter/ring_scale = 2.4
+shader_parameter/wave_scale = 8.454
+shader_parameter/random_scale = 2.0
+shader_parameter/noise_scale = 0.01
+
+[sub_resource type="Gradient" id="Gradient_uxpe5"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5ycja"]
+gradient = SubResource("Gradient_uxpe5")
 
 [node name="ShopScene" type="Control" unique_id=1505458115 node_paths=PackedStringArray("button1", "button2", "button3", "button4", "button5", "button6", "button7", "button8", "button9", "button10", "button11", "button12", "button13", "button14", "button15", "button16", "button17", "button18", "button19", "button20", "button21", "button22", "button23", "button24", "button25", "button26", "button27", "button28", "button29", "button30", "button31", "button32", "button33", "button34", "button35", "label1", "label2", "label3", "label4", "label5", "resource_label")]
 layout_mode = 3
@@ -57,13 +72,14 @@ label4 = NodePath("VBoxContainer2/Label")
 label5 = NodePath("VBoxContainer2/Label2")
 resource_label = NodePath("Label2")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1212185782]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1772512646]
+material = SubResource("ShaderMaterial_uxpe5")
 layout_mode = 0
 offset_left = 30.0
 offset_top = 24.0
 offset_right = 1121.0
 offset_bottom = 627.0
-color = Color(0.2417247, 0.1819703, 0.115634, 1)
+texture = SubResource("GradientTexture1D_5ycja")
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=2031123827]
 layout_mode = 0

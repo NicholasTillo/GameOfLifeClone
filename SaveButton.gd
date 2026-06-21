@@ -8,5 +8,6 @@ func _ready():
 	button.pressed.connect(_button_pressed)
 	
 func _button_pressed():
-	GameManager.save_game()
+	if GameManager.save_game():
+		button.text = "Saved!"
 	

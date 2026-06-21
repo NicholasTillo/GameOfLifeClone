@@ -57,14 +57,15 @@ texture = SubResource("GradientTexture2D_cmrfp")
 [node name="Total Menu" type="VBoxContainer" parent="Control" unique_id=630811595]
 layout_mode = 0
 offset_left = 65.0
-offset_top = 49.0
+offset_top = 75.0
 offset_right = 440.0
-offset_bottom = 292.0
+offset_bottom = 497.0
 
 [node name="Title" type="Label" parent="Control/Total Menu" unique_id=922234526]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "Game Of Life Ripoff"
+text = "Game Of Life Ripoff
+"
 
 [node name="Button" type="Button" parent="Control/Total Menu" unique_id=369781049 node_paths=PackedStringArray("button")]
 layout_mode = 2

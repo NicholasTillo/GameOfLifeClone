@@ -8,6 +8,9 @@ func _ready():
 	button.pressed.connect(_button_pressed)
 	
 func _button_pressed():
-	GameManager.load_game()
+	if GameManager.load_game():
+		button.text = "Loaded Successfully"
+	else:
+		button.text = "Invalid Or Missing Save"
 	label.update_ui()
 	

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d3425gc6jxmv3" path="res://popup.gd" id="1_482t0"]
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_awv4j"]
 
-[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "nurse_button", "chef_button", "springtrap_button", "wall_button", "life_button", "zealot_button")]
+[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "nurse_button", "chef_button", "springtrap_button", "wall_button", "life_button", "revolutionary_button")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -18,7 +18,7 @@ chef_button = NodePath("VBoxContainer/HBoxContainer3/Button5")
 springtrap_button = NodePath("VBoxContainer/HBoxContainer4/Button7")
 wall_button = NodePath("VBoxContainer/HBoxContainer2/Button6")
 life_button = NodePath("VBoxContainer/HBoxContainer4/Button6")
-zealot_button = NodePath("VBoxContainer/HBoxContainer3/Button3")
+revolutionary_button = NodePath("VBoxContainer/HBoxContainer3/Button3")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1278243861]
 layout_mode = 0
@@ -77,7 +77,7 @@ text = "Nurse"
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=730142315]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Zealot"
+text = "Revolutionary"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=1399099765]
 layout_mode = 2

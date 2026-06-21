@@ -9,6 +9,12 @@ class_name UIController
 @export var buy_supship_two_button:Button
 @export var buy_supship_two_size_upgrade_button:Button
 
+@export var buy_supship_one_taxes_upgrade_button:Button
+@export var buy_supship_two_taxes_upgrade_button:Button
+
+@export var buy_ship_taxes_upgrade_button:Button
+
+
 @export var do_rewind_button: Button
 
 @export var vbox_ship_one: VBoxContainer
@@ -20,6 +26,11 @@ func _ready():
 	buy_supship_one_button.pressed.connect(buy_supship_one)
 	buy_supship_one_size_upgrade_button.pressed.connect(buy_supship_one_size_upgrade.bind(0))
 	buy_supship_two_size_upgrade_button.pressed.connect(buy_supship_two_size_upgrade.bind(1))
+	
+	buy_ship_taxes_upgrade_button.pressed.connect(buy_ship_taxes_upgrade)
+	
+	
+	
 	print(GameManager.rewind_number)
 	if GameManager.rewind_number > 0:
 		do_rewind_button.disabled = false
@@ -48,8 +59,6 @@ Subship 2:
 		GameOfLifeAudio.play_ui_disabled()
 
 
-
-
 func buy_supship_one_size_upgrade(value):
 	var succeed = PlayerController.purchase_ship_size_upgrade(50, value)
 	if succeed:
@@ -65,7 +74,16 @@ func buy_supship_two_size_upgrade(value):
 	else: 
 		GameOfLifeAudio.play_ui_disabled()
 		
-
+		
+func buy_ship_taxes_upgrade():
+	var succeed = PlayerController.purchase_main_ship_taxes_upgrade(50)
+	if succeed:
+		#Play Sound
+		pass 
+	else: 
+		GameOfLifeAudio.play_ui_disabled()
+		
+		
 func buy_supship_two():
 	var succeed = PlayerController.purchase_ship_upgrade(10)
 	if succeed:
