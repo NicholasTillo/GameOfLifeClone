@@ -103,6 +103,10 @@ func draw_bottom_wing(state, size, offset, full_grid_size):
 	var dest_rect = Rect2(offset.x , offset.y + grid_px, grid_px, 30)
 	draw_texture_rect(wing_texture_bottom, dest_rect, false)
 
+
+	
+		
+		
 func _input_event(port, event, ints):
 	if event is InputEventMouseButton and event.pressed:
 		if popup_enabled: 

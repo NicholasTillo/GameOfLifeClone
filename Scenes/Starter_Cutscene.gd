@@ -13,6 +13,6 @@ func _ready() -> void:
 	Text_Maker.display_text("2143CE - 359 Light years from Earth - Deep Space")
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
+	if ((event is InputEventMouseButton and event.pressed) or (event is InputEventKey and event.keycode == KEY_SPACE)):
 		get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn")
  

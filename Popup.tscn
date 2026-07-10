@@ -6,8 +6,10 @@
 [node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "nurse_button", "chef_button", "springtrap_button", "wall_button", "life_button", "revolutionary_button")]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -1.0
+offset_top = -3.0
+offset_right = 39.0
+offset_bottom = 37.0
 theme = ExtResource("1_awv4j")
 script = ExtResource("1_482t0")
 alive_button = NodePath("VBoxContainer/HBoxContainer/Button")

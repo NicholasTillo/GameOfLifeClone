@@ -78,6 +78,7 @@ func _process(delta: float) -> void:
 			culm_time += delta
 	
 	
+
 #DEV: [ adds 100 resource, ] adds 100 money
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -85,6 +86,7 @@ func _input(event: InputEvent) -> void:
 			change_resource(100)
 		elif event.keycode == KEY_BRACKETRIGHT:
 			state.change_money(100)
+		
 
 
 func reset() -> void:
@@ -93,7 +95,11 @@ func reset() -> void:
 	round_count = 0
 	init_history()
 	
-	
+
+
+
+		
+		
 func do_next_round():
 	var copy_array = []
 	
@@ -112,7 +118,7 @@ func do_next_round():
 		#Play Animation Of Astroid
 		num_remaining_astroids -= 1
 		chosen_cell.contains = Dead.new() 
-		chosen_cell.contains.id = chosen_cell
+		chosen_cell.contains.id = chosen_cell.id
 		
 	
 	if num_remaining_ecodeadzone > 0:
