@@ -10,9 +10,11 @@ config_version=5
 
 [application]
 
-config/name="Game Of Life Rip Off"
+config/name="Game Of The Meaning Of Life"
+config/version="0.1"
 run/main_scene="uid://bgp8p0ab5o8qk"
 config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="uid://bso5hg7ipmnqt"
 
 [autoload]
 

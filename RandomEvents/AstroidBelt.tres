@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_mkklu")
 name = "Going Through An Astroid Belt"
-text = "The ship is going through "
+text = "The belt closes around the ship. For a long while there is nothing to do but listen to it find you, one hull section at a time."
 id = 4
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

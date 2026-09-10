@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_ml75k")
 name = "Space Pirate Attack"
-text = "Dodge! "
+text = "Pirates rake the hull on their way past. Three sections are alight, and fire does not stay where it starts."
 id = 8
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

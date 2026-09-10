@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://scgub2omhjx" path="res://Theme/Cutscene.tres" id="2_r5ox8"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_xipgr"]
 [ext_resource type="AudioStream" uid="uid://d2kadshviiy0f" path="res://Assets/Cutscene3.mp3" id="4_xfer0"]
+[ext_resource type="Texture2D" uid="uid://gqxv5s2ekjvy" path="res://Assets/cutscene3.png" id="5_f0npg"]
 
 [node name="Cutscene3" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker", "audioPlayer")]
 script = ExtResource("1_xfer0")
@@ -17,11 +18,10 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_r5ox8")
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1864814216]
-layout_mode = 0
-offset_right = 1153.0
-offset_bottom = 648.0
-color = Color(0.27367768, 0.16558322, 0.08524602, 1)
+[node name="Cutscene3" type="Sprite2D" parent="Control" unique_id=1593864124]
+position = Vector2(593, 312)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("5_f0npg")
 
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=1848741626]
 layout_mode = 0
@@ -32,6 +32,13 @@ offset_bottom = 606.0
 theme_override_font_sizes/normal_font_size = 32
 script = ExtResource("2_xipgr")
 metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
+
+[node name="Character1" type="ColorRect" parent="Control" unique_id=1310524924]
+layout_mode = 0
+offset_left = 394.0
+offset_top = 402.0
+offset_right = 434.0
+offset_bottom = 442.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1142661085]
 stream = ExtResource("4_xfer0")

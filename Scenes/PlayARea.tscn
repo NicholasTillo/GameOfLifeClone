@@ -6,6 +6,7 @@
 size = Vector2(1153.75, 643.25)
 
 [node name="Area2D" type="Area2D" unique_id=633177129]
+texture_filter = 1
 script = ExtResource("1_dcg76")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1488597218]

@@ -49,17 +49,19 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	update_ui_shopeeeeee()
+	connect_buttons()
+	update_shop_ui()
 	
-func update_button(upgrade, button: Button, category: String):
+func update_button(upgrade, button: Button, category: String, upgrade_name: String = ""):
+	var prefix = upgrade_name + "\n" if upgrade_name != "" else ""
 	if upgrade in GameManager.chosen_upgrades[category]:
-		button.text = "Sold"
+		button.text = prefix + "Sold"
 		button.disabled = true
 	else:
-		button.text = str(upgrade.cost)
+		button.text = prefix + str(upgrade.cost)
 		button.disabled = false
 
-func update_ui_shopeeeeee():
+func update_shop_ui():
 	update_button(PlayerController.start_money_upgrade1, button1, "money_upgrades")
 	update_button(PlayerController.start_money_upgrade2, button2, "money_upgrades")
 	update_button(PlayerController.start_money_upgrade3, button3, "money_upgrades")
@@ -87,17 +89,27 @@ func update_ui_shopeeeeee():
 	update_button(PlayerController.starter_ship_size_upgrade_5, button25, "starter_ship_size_upgrade")
 
 
-	update_button(PlayerController.unlock_chef_upgrade, button26, "unlock_cells")
-	update_button(PlayerController.unlock_nurse_upgrade, button27, "unlock_cells")
+	update_button(PlayerController.unlock_chef_upgrade, button26, "unlock_cells", "Chef")
+	update_button(PlayerController.unlock_innovator_upgrade, button27, "unlock_cells", "Innovator")
+
+	#Only Chef and Innovator exist as profession upgrades; the remaining slots have no
+	#Upgrade resource behind them, so don't show buttons that can't do anything.
+	button28.visible = false
+	button29.visible = false
+	button30.visible = false
 
 	update_button(PlayerController.unlock_rewind_upgrade, button31, "unlock_rewind")
 	update_button(PlayerController.unlock_rewind_upgrade2, button32, "unlock_rewind")
 	update_button(PlayerController.unlock_rewind_upgrade3, button33, "unlock_rewind")
 	update_button(PlayerController.unlock_rewind_upgrade4, button34, "unlock_rewind")
 	update_button(PlayerController.unlock_rewind_upgrade5, button35, "unlock_rewind")
-	
+
+	update_ui_shop()
 
 
+#Wiring is done once from _ready(); update_shop_ui() re-runs after every purchase
+#and must not reconnect these signals.
+func connect_buttons():
 	button1.pressed.connect(purchase_upgrade.bind(PlayerController.start_money_upgrade1, button1))
 	button2.pressed.connect(purchase_upgrade.bind(PlayerController.start_money_upgrade2, button2))
 	button3.pressed.connect(purchase_upgrade.bind(PlayerController.start_money_upgrade3, button3))
@@ -130,17 +142,13 @@ func update_ui_shopeeeeee():
 	
 	
 	button26.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_chef_upgrade, button26))
-	button27.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_nurse_upgrade, button27))
+	button27.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_innovator_upgrade, button27))
 
 	button31.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade, button31))
 	button32.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade2, button32))
 	button33.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade3, button33))
 	button34.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade4, button34))
 	button35.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade5, button35))
-	
-
-
-	update_ui_shop()
 	
 
 func purchase_upgrade(upgrade, button: Button):
@@ -151,7 +159,7 @@ func purchase_upgrade(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 
 func purchase_alive_count(upgrade, button: Button):
@@ -162,7 +170,7 @@ func purchase_alive_count(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 func purchase_starting_cell(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
@@ -172,7 +180,7 @@ func purchase_starting_cell(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 func purchase_max_ship_size(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
@@ -182,7 +190,7 @@ func purchase_max_ship_size(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 func purchase_starter_ship_size(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
@@ -192,7 +200,7 @@ func purchase_starter_ship_size(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 	
 func purchase_new_cell(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
@@ -202,7 +210,7 @@ func purchase_new_cell(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 func purchase_rewind(upgrade, button: Button):
 	if GameManager.resourceAmount >= upgrade.cost:
@@ -212,7 +220,7 @@ func purchase_rewind(upgrade, button: Button):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-	update_ui_shopeeeeee()
+	update_shop_ui()
 
 
 func update_ui_shop():

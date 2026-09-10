@@ -7,12 +7,10 @@ var culm_time = 0
 
 
 @export var audioPlayer: AudioStreamPlayer
-var cutscene4_audio = load("res://Scenes/cutscene_4.gd") 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain Cup \n Captian Log Entry 9103221, For those who come after us, We are going across the edge of the universe.", 
-							"Captain Cup \n There is no way to know what lies beyond, but we shall find out. ", 
-							"Captain \n . "])
+	Text_Maker.list_of_text(["Captain Cup \n Captain gave up on the mission that I will resume, For those who come after us, We are going across the edge of the universe.", 
+							"Captain Cup \n There is no way to know what lies beyond, but we shall find out in memory of those who came before us. "])
 	Text_Maker.display_text("~5230CE - The Edge Of The Universe")
 
 	fade_in(audioPlayer, -20.0, 4.0)

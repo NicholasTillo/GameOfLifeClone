@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_802dx")
 name = "Spaceship Upgrade Bay"
-text = "Free Spaceship Upgrades! "
+text = "A drydock hails you out of the dark and says the work is on the house. There is time for exactly one job before the ship has to move on."
 id = 7
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

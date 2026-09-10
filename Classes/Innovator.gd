@@ -1,11 +1,11 @@
 extends Class
 
-class_name Nurse
+class_name Innovator
 
 func _init():
 	visual = 1
 	color = Color.PINK
-	id = "Nurse"
+	id = "Innovator"
 	
 	
 
@@ -22,7 +22,7 @@ func _process_next_round():
 		return Dead.new()
 	else:
 		GameManager.state.change_money(1)
-		return Nurse.new()
+		return Innovator.new()
 	
 	
 	

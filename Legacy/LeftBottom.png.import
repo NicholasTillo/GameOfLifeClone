@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6k42kk0i1v1q"
-path="res://.godot/imported/Bottom.png-77222031609f95246ac08dec3d02354f.ctex"
+uid="uid://kccskv6j21sc"
+path="res://.godot/imported/LeftBottom.png-833eecec6b6f9ef981abe8d5a6375cf7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Bottom.png"
-dest_files=["res://.godot/imported/Bottom.png-77222031609f95246ac08dec3d02354f.ctex"]
+source_file="res://Legacy/LeftBottom.png"
+dest_files=["res://.godot/imported/LeftBottom.png-833eecec6b6f9ef981abe8d5a6375cf7.ctex"]
 
 [params]
 

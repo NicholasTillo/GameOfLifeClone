@@ -163,11 +163,6 @@ button = NodePath(".")
 layout_mode = 2
 text = "Raise Taxes"
 
-[node name="PlaceHolderButton2" type="Button" parent="UI/ShopHBox/MainShipVBox" unique_id=1928874220]
-layout_mode = 2
-text = "Button 5
-"
-
 [node name="SubshipOneContainer" type="VBoxContainer" parent="UI/ShopHBox" unique_id=295693066]
 visible = false
 layout_mode = 2
@@ -182,12 +177,7 @@ text = "Size Upgrade"
 
 [node name="Subship1Button3" type="Button" parent="UI/ShopHBox/SubshipOneContainer" unique_id=717229047]
 layout_mode = 2
-text = "Button 6"
-
-[node name="Subship1Button4" type="Button" parent="UI/ShopHBox/SubshipOneContainer" unique_id=1980703277]
-layout_mode = 2
-text = "Button 5
-"
+text = "Raise Taxes"
 
 [node name="SubshipTwoContainer" type="VBoxContainer" parent="UI/ShopHBox" unique_id=1462857819]
 visible = false
@@ -203,12 +193,7 @@ text = "Size Upgrade"
 
 [node name="Subship2Button3" type="Button" parent="UI/ShopHBox/SubshipTwoContainer" unique_id=83668782]
 layout_mode = 2
-text = "Button 6"
-
-[node name="Subship2Button4" type="Button" parent="UI/ShopHBox/SubshipTwoContainer" unique_id=227514106]
-layout_mode = 2
-text = "Button 5
-"
+text = "Raise Taxes"
 
 [node name="PurchaseSubship1" type="Button" parent="UI/ShopHBox" unique_id=2064119185]
 layout_mode = 2

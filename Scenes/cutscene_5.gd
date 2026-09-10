@@ -6,17 +6,15 @@ var culm_time = 0
 # Called when the node enters the scene tree for the first time.
 
 @export var audioPlayer: AudioStreamPlayer
-var cutscene5_audio = load("res://Scenes/cutscene_5.gd") 
 
 
 func _ready() -> void:
 	Text_Maker.list_of_text(["Captain ???? \n We have finally reached the center of the universe. ", 
 							"Captain ???? \n If it would be anywhere, it would be here. ",
-							"Captain ???? \n Its beautiful. "])
+							"\n",
+							"Captain ???? \n It's beautiful. "])
 	Text_Maker.display_text("????CE - ?????")
-	audioPlayer.stream = cutscene5_audio
-	audioPlayer.play()
-	
+
 	fade_in(audioPlayer, -20.0, 4.0)
 
 

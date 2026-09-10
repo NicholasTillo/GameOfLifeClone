@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bpms3pugxvsll" path="res://Scenes/cutscene_4.gd" id="1_26hii"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_1yb5k"]
 [ext_resource type="Theme" uid="uid://scgub2omhjx" path="res://Theme/Cutscene.tres" id="2_joiyv"]
+[ext_resource type="Texture2D" uid="uid://gqxv5s2ekjvy" path="res://Assets/cutscene3.png" id="3_nnj5y"]
 [ext_resource type="AudioStream" uid="uid://cgirivxos2my" path="res://Assets/Cutscene4.mp3" id="4_26hii"]
 
 [node name="Cutscene4" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker", "audioPlayer")]
@@ -17,11 +18,17 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_joiyv")
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1864814216]
+[node name="Cutscene3" type="Sprite2D" parent="Control" unique_id=809876679]
+position = Vector2(593, 312)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("3_nnj5y")
+
+[node name="Character1" type="ColorRect" parent="Control" unique_id=1187133875]
 layout_mode = 0
-offset_right = 1153.0
-offset_bottom = 648.0
-color = Color(0.27367768, 0.16558322, 0.08524602, 1)
+offset_left = 381.0
+offset_top = 370.0
+offset_right = 421.0
+offset_bottom = 410.0
 
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=675503048]
 layout_mode = 0

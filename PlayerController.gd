@@ -35,7 +35,7 @@ extends Node
 @onready var starter_ship_size_upgrade_5: Upgrade = load("res://Upgrades/StarterShipSizeUpgrade5.tres")
 
 @onready var unlock_chef_upgrade: Upgrade = load("res://Upgrades/UnlockChef.tres")
-@onready var unlock_nurse_upgrade: Upgrade = load("res://Upgrades/UnlockNurse.tres")
+@onready var unlock_innovator_upgrade: Upgrade = load("res://Upgrades/UnlockInnovator.tres")
 
 @onready var unlock_rewind_upgrade: Upgrade = load("res://Upgrades/unlock_rewind.tres")
 @onready var unlock_rewind_upgrade2: Upgrade = load("res://Upgrades/unlock_rewind2.tres")
@@ -50,7 +50,7 @@ extends Node
 									starting_cell_1,starting_cell_2,starting_cell_3,starting_cell_4,starting_cell_5,
 									max_ship_size_upgrade_1,max_ship_size_upgrade_2,max_ship_size_upgrade_3,max_ship_size_upgrade_4,max_ship_size_upgrade_5,
 									starter_ship_size_upgrade_1,starter_ship_size_upgrade_2,starter_ship_size_upgrade_3,starter_ship_size_upgrade_4,starter_ship_size_upgrade_5,
-									unlock_chef_upgrade,unlock_nurse_upgrade,
+									unlock_chef_upgrade,unlock_innovator_upgrade,
 									unlock_rewind_upgrade, unlock_rewind_upgrade2, unlock_rewind_upgrade3,unlock_rewind_upgrade4,unlock_rewind_upgrade5]
 
 
@@ -129,6 +129,25 @@ func purchase_main_ship_taxes_upgrade(upgrade_cost):
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 		return 0
+
+
+#Free in-run upgrades, granted by the Spaceship Upgrade Bay event.
+func grant_free_grid_upgrade():
+	GameManager.state.cells = GameManager.state.resize_grid(1, GameManager.state.cells, GameManager.state.full_grid_size)
+	GameManager.state.full_grid_size += 1
+	GameManager.renderer.redraw()
+	GameOfLifeAudio.play_purchase()
+
+
+func grant_free_ship_upgrade():
+	GameManager.state.add_ship(5)
+	GameManager.renderer.redraw()
+	GameOfLifeAudio.play_purchase()
+
+
+func grant_free_ship_taxes_upgrade():
+	GameManager.money_per_alive += 0.1
+	GameOfLifeAudio.play_purchase()
 
 
 #Outside Of Game Upgrades

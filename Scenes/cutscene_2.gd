@@ -6,12 +6,11 @@ var culm_time = 0
 # Called when the node enters the scene tree for the first time.
 
 @export var audioPlayer: AudioStreamPlayer
-var cutscene2_audio = load("res://Scenes/cutscene_2.gd")
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain \n Hello, im about to die, bring on my legacy, tell me when we meet in heaven.", 
-							"Captain 2. \n Okay I will keep youre legacy going dad. ", 
+	Text_Maker.list_of_text(["Captain \n Hello, I'm about to die, bring on my legacy, tell me when we meet in heaven.", 
+							"Captain 2. \n Okay I will keep your legacy going dad. ", 
 							"Captain \n *died*. "])
 	Text_Maker.display_text("2084CE - Outside of the Skoopa Galaxy")
 

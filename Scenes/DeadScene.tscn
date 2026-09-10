@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bnt2cha6un585"]
 
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_smct1"]
-[ext_resource type="Script" uid="uid://x8ua10rnpfok" path="res://EndgameUI.gd.gd" id="1_ubtgc"]
+[ext_resource type="Script" uid="uid://x8ua10rnpfok" path="res://EndgameUI.gd" id="1_ubtgc"]
 [ext_resource type="Script" uid="uid://dvjvb8pn4gyhf" path="res://reset_button.gd" id="2_xpohu"]
 [ext_resource type="Texture2D" uid="uid://oky1w48px7xi" path="res://screentexture.jpg" id="3_lm6k6"]
 [ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="4_flick"]

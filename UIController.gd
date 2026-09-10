@@ -95,7 +95,8 @@ func buy_supship_two():
 func do_rewind():
 	# Once an event has triggered this run, the button stays visible but does nothing.
 	if GameManager.rewind_blocked:
-		GameOfLifeAudio.play_ui_disabled()	
+		GameOfLifeAudio.play_ui_disabled()
+		return
 	# Need at least [previous, current] in the history to step back a turn.
 	if GameManager.done_rewinds < GameManager.rewind_number and GameManager.history.size() >= 2:
 		GameManager.history.pop_back()

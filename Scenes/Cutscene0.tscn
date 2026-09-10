@@ -5,7 +5,9 @@
 [ext_resource type="Theme" uid="uid://scgub2omhjx" path="res://Theme/Cutscene.tres" id="2_16cy2"]
 [ext_resource type="Script" uid="uid://b5v8y8a7h3y1n" path="res://Components/scrolling_text.gd" id="2_epo75"]
 [ext_resource type="Texture2D" uid="uid://uqcu2jy0vxci" path="res://new_gradient_texture_1d.tres" id="3_k6bgt"]
+[ext_resource type="Texture2D" uid="uid://ct61ix2u5q7gq" path="res://Assets/Ship1.png" id="6_jeamb"]
 [ext_resource type="AudioStream" uid="uid://bbdyceuce2qfa" path="res://Assets/Cutscene0.mp3" id="6_tktsf"]
+[ext_resource type="Shader" uid="uid://b5w4ii0c1ew2f" path="res://Scenes/ShipDrift.gdshader" id="7_drift"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_13jt4"]
 shader = ExtResource("2_13jt4")
@@ -17,6 +19,37 @@ shader_parameter/star_brightness = 1.0
 shader_parameter/twinkle_speed = 1.0
 shader_parameter/star_size = 1.0
 shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_drift"]
+shader = ExtResource("7_drift")
+shader_parameter/bob_amount = 1.5
+shader_parameter/bob_speed = 0.7
+shader_parameter/sway_amount = 1.0
+shader_parameter/sway_speed = 0.43
+shader_parameter/roll_degrees = 1.5
+shader_parameter/roll_speed = 0.31
+shader_parameter/buzz_amount = 0.15
+shader_parameter/buzz_speed = 27.0
+
+[sub_resource type="Gradient" id="Gradient_jeamb"]
+colors = PackedColorArray(0.85490197, 0.6509804, 0.3137255, 1, 0.8039216, 0.14509805, 0.15686275, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_em208"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_d56a3"]
+width = 15
+height = 15
+noise = SubResource("FastNoiseLite_em208")
+color_ramp = SubResource("Gradient_jeamb")
+bump_strength = 3.2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jeamb"]
+particle_flag_disable_z = true
+angular_velocity_min = -10.000016
+angular_velocity_max = 9.999984
+orbit_velocity_min = -0.049999908
+orbit_velocity_max = 0.050000098
+gravity = Vector3(-200, 0, 0)
 
 [node name="Cutscene0" type="Node2D" unique_id=1645025605 node_paths=PackedStringArray("Text_Maker")]
 script = ExtResource("1_m8l4a")
@@ -47,12 +80,20 @@ theme_override_font_sizes/normal_font_size = 32
 script = ExtResource("2_epo75")
 metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
 
-[node name="ColorRect" type="ColorRect" parent="Control" unique_id=484914463]
-layout_mode = 0
-offset_left = 335.0
-offset_top = 207.0
-offset_right = 792.0
-offset_bottom = 383.0
+[node name="Ship1" type="Sprite2D" parent="Control" unique_id=308171218]
+texture_filter = 1
+material = SubResource("ShaderMaterial_drift")
+position = Vector2(586, 304)
+scale = Vector2(4, 4)
+texture = ExtResource("6_jeamb")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Control" unique_id=1037667150]
+position = Vector2(485, 318)
+amount_ratio = 0.1718
+texture = SubResource("NoiseTexture2D_d56a3")
+lifetime = 1.72
+fixed_fps = 20
+process_material = SubResource("ParticleProcessMaterial_jeamb")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=548128221]
 stream = ExtResource("6_tktsf")

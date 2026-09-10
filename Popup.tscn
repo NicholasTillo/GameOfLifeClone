@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d3425gc6jxmv3" path="res://popup.gd" id="1_482t0"]
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_awv4j"]
 
-[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "nurse_button", "chef_button", "springtrap_button", "wall_button", "life_button", "revolutionary_button")]
+[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "innovator_button", "chef_button", "springtrap_button", "wall_button", "life_button", "revolutionary_button")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -1.0
@@ -15,7 +15,7 @@ script = ExtResource("1_482t0")
 alive_button = NodePath("VBoxContainer/HBoxContainer/Button")
 dead_button = NodePath("VBoxContainer/HBoxContainer/Button2")
 mechanic_button = NodePath("VBoxContainer/HBoxContainer2/Button3")
-nurse_button = NodePath("VBoxContainer/HBoxContainer3/Button4")
+innovator_button = NodePath("VBoxContainer/HBoxContainer3/Button4")
 chef_button = NodePath("VBoxContainer/HBoxContainer3/Button5")
 springtrap_button = NodePath("VBoxContainer/HBoxContainer4/Button7")
 wall_button = NodePath("VBoxContainer/HBoxContainer2/Button6")
@@ -74,7 +74,7 @@ text = "Chef"
 [node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1181688847]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Nurse"
+text = "Innovator"
 
 [node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=730142315]
 layout_mode = 2

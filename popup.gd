@@ -8,7 +8,7 @@ var grid_index: int = -1
 @export var alive_button: Button
 @export var dead_button: Button
 @export var mechanic_button: Button
-@export var nurse_button: Button
+@export var innovator_button: Button
 @export var chef_button: Button
 @export var springtrap_button: Button
 @export var wall_button:Button
@@ -22,10 +22,10 @@ func _ready() -> void:
 	alive_button.pressed.connect(_button_pressed_alive)
 	dead_button.pressed.connect(_button_pressed_dead)
 	mechanic_button.pressed.connect(_button_pressed_mechanic)
-	if PlayerController.unlock_nurse_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
-		nurse_button.pressed.connect(_button_pressed_nurse)
+	if PlayerController.unlock_innovator_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+		innovator_button.pressed.connect(_button_pressed_innovator)
 	else:
-		nurse_button.text = "locked"
+		innovator_button.text = "locked"
 	if PlayerController.unlock_chef_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
 		chef_button.pressed.connect(_button_pressed_chef)
 	else:
@@ -74,17 +74,17 @@ func _button_pressed_dead():
 		
 func _button_pressed_mechanic():
 	var cell = _get_cell()
-	if cell.contains.id  != "Mechanic" and GameManager.state.how_much_money() >= 10:
+	if cell.contains.id  != "Mechanic" and GameManager.how_much_resource() >= 1:
 		GameManager.change_resource(-1)
 		change_parent(Mechanic.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 
-func _button_pressed_nurse():
+func _button_pressed_innovator():
 	var cell = _get_cell()
-	if cell.contains.id  != "Nurse" and GameManager.state.how_much_money() >= 10:
+	if cell.contains.id  != "Innovator" and GameManager.how_much_resource() >= 1:
 		GameManager.change_resource(-1)
-		change_parent(Nurse.new())
+		change_parent(Innovator.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 func _button_pressed_springtrap():
@@ -104,7 +104,7 @@ func _button_pressed_wall():
 		GameOfLifeAudio.play_ui_disabled()
 func _button_pressed_life():
 	var cell = _get_cell()
-	if cell.contains.id  != "Revolutionary" and GameManager.state.how_much_money() >= 10:
+	if cell.contains.id  != "Life" and GameManager.state.how_much_money() >= 10:
 		GameManager.state.change_money(-10)
 		change_parent(Life.new())
 	else:

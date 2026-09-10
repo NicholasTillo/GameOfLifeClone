@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xukkuusm6163"
-path="res://.godot/imported/WingRight.png-1c24fe6006e5cc4f4fc4c8a99ea69758.ctex"
+uid="uid://d23fkk5y6uy81"
+path="res://.godot/imported/cutscene2.png-2cbe2e30ded04cdb527c7f44615f5783.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/WingRight.png"
-dest_files=["res://.godot/imported/WingRight.png-1c24fe6006e5cc4f4fc4c8a99ea69758.ctex"]
+source_file="res://Assets/cutscene2.png"
+dest_files=["res://.godot/imported/cutscene2.png-2cbe2e30ded04cdb527c7f44615f5783.ctex"]
 
 [params]
 

@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_dh4th")
 name = "Ecological Dead Zone"
-text = "Cells are dying of starvaton"
+text = "The ship crosses into dead space. The lights stay on and the air keeps moving, but nothing grows out here, and the crew start thinning from the edges inward."
 id = 5
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

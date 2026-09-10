@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cj450reolfsvd"
-path="res://.godot/imported/WingLeft.png-2a3adcaa44f01c4ca3525be5a0b5301e.ctex"
+uid="uid://bklsjloe8t21s"
+path="res://.godot/imported/Top.png-283f3f9eb09f433c1a245d7eb8e4788c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/WingLeft.png"
-dest_files=["res://.godot/imported/WingLeft.png-2a3adcaa44f01c4ca3525be5a0b5301e.ctex"]
+source_file="res://Legacy/Top.png"
+dest_files=["res://.godot/imported/Top.png-283f3f9eb09f433c1a245d7eb8e4788c.ctex"]
 
 [params]
 

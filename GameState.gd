@@ -112,7 +112,7 @@ func get_subship_cell(x:int, y:int, ship:int):
 		return null; 
 	return subgrids[ship][y * subgrid_sizes[ship] + x]
 
-func change_money(x: int):
+func change_money(x: float):
 	moneyAmount += x
 	GameManager.ui.update_ui()
 	

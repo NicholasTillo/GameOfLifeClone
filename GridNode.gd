@@ -50,8 +50,11 @@ var current_cutscene_index:int = 0
 #Event Variables
 var event_popup_precon_scene = preload("res://Scenes/event_pop_up.tscn")
 var pet_store_popup_scene = preload("res://Scenes/pet_store_pop_up.tscn")
+var spaceship_upgrade_bay_popup_scene = preload("res://Scenes/spaceship_upgrade_bay_pop_up.tscn")
 var num_remaining_astroids = 0
 var num_remaining_ecodeadzone = 0
+#Shared budget of extra fires the Spaceship Attack outbreak may still create by spreading.
+var fire_spreads_remaining: int = 0
 var done_rewinds: int = 0
 
 
@@ -78,16 +81,6 @@ func _process(delta: float) -> void:
 			culm_time += delta
 	
 	
-
-#DEV: [ adds 100 resource, ] adds 100 money
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_BRACKETLEFT:
-			change_resource(100)
-		elif event.keycode == KEY_BRACKETRIGHT:
-			state.change_money(100)
-		
-
 
 func reset() -> void:
 	state = GameState.new()
@@ -125,7 +118,9 @@ func do_next_round():
 		num_remaining_ecodeadzone -= 1
 		if num_remaining_ecodeadzone == 0:
 			state.min_number_of_surrounding_alives -= 1
-		
+
+	spread_fire()
+
 	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
 		best_score = round_count
@@ -241,12 +236,53 @@ func do_random_event():
 					i += 1
 				
 		7: #Spaceship Upgrade Bay
-			#make a popup, then allow them to choose
-			pass
-		8:#Spaceship attack, 
-			#Make a popup of a subscreen minigame
-			pass
+			var upgrade_bay_popup = spaceship_upgrade_bay_popup_scene.instantiate()
+			event_popup.okay_button.pressed.connect(func():
+															get_tree().root.add_child(upgrade_bay_popup)
+															event_popup.close())
+		8:#Spaceship attack,
+			var num_of_fires = 3
+			fire_spreads_remaining = 5
+			#Walls are firebreaks, so the strike can't set one alight either.
+			var flammable = []
+			for c in state.cells:
+				if not (c.contains is Wall):
+					flammable.append(c)
+			for i in range(num_of_fires):
+				if flammable.is_empty():
+					break
+				var chosen_cell = flammable.pick_random()
+				chosen_cell.contains = Fire.new()
+				chosen_cell.contains.cell = chosen_cell
 	
+# Every fire that has just burned for SPREAD_AGE rounds ignites one random non-burning
+# neighbour, until the outbreak's shared spread budget runs out. Runs after the round's
+# double-buffered pass so a new fire can't clobber a cell that pass is still reading.
+func spread_fire() -> void:
+	if fire_spreads_remaining <= 0:
+		return
+
+	for cell in state.cells:
+		if fire_spreads_remaining <= 0:
+			return
+		if not (cell.contains is Fire) or cell.contains.age != Fire.SPREAD_AGE:
+			continue
+
+		var targets = []
+		for neighbour in cell.neighbours:
+			#Walls are firebreaks: fire never spreads into one.
+			if not (neighbour.contains is Fire) and not (neighbour.contains is Wall):
+				targets.append(neighbour)
+
+		if targets.is_empty():
+			continue
+
+		var target = targets.pick_random()
+		target.contains = Fire.new()
+		target.contains.cell = target
+		fire_spreads_remaining -= 1
+
+
 func check_stable_state(param, subgrids):
 	var hashed = hash_state(param, subgrids)
 	
@@ -349,13 +385,14 @@ func id_to_class(id: String) -> Class:
 		"Chef": return Chef.new()
 		"Corpse": return Corpse.new()
 		"Zombie": return Zombie.new()
-		"Nurse": return Nurse.new()
+		"Innovator": return Innovator.new()
 		"Wall": return Wall.new()
 		"Springtrap": return Springtrap.new()
 		"Life": return Life.new()
 		"Sandshark": return Sandshark.new()
 		"Plorian": return Plorian.new()
 		"Dog": return Dog.new()
+		"Fire": return Fire.new()
 		_: return Dead.new()
 
 
@@ -414,7 +451,10 @@ func load_game():
 	reset_stats()
 	
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
-	
+	if save_file == null:
+		push_error("Failed to open save file: %s" % FileAccess.get_open_error())
+		return false
+
 	var json_string = save_file.get_line()
 	var json = JSON.new()
 	var parse_result = json.parse(json_string)

@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_00jxh")
 name = "Springtrap Invasion"
-text = "Springtrap Appears!!! "
+text = "Seven nights. That is how long the thing in the maintenance deck has waited, and it will not wait an eighth. It comes out where the lights have gone."
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

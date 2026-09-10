@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_dw58p")
 name = "Aliens Have Breached The Ship"
-text = "An alien has punch a hole in the hull, and are infecting the people of your ship"
+text = "An alien punches through the hull and is inside before the alarm finishes. It moves toward the empty places, where there is nobody left to hold it back."
 id = 1
 enabled = true
 metadata/_custom_type_script = "uid://cmshelun5apk1"

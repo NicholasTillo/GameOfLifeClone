@@ -10,14 +10,28 @@ var popup_scene = preload("res://Popup.tscn")
 var popup
 var _should_draw: bool
 var popup_enabled: bool = false
-var wing_texture_top_right: Texture2D = preload("res://Assets/Top Right.png")  # your texture here
-var wing_texture_right: Texture2D = preload("res://Assets/WingRight.png")  # your texture here
-var wing_texture_bottom_right: Texture2D = preload("res://Assets/RightBottom.png")  # your texture here
-var wing_texture_top_left: Texture2D = preload("res://Assets/TopLeftt.png")  # your texture here
-var wing_texture_left: Texture2D = preload("res://Assets/WingLeft.png")  # your texture here
-var wing_texture_bottom_left: Texture2D = preload("res://Assets/LeftBottom.png")  # your texture here
-var wing_texture_top: Texture2D = preload("res://Assets/Top.png")  # your texture here
-var wing_texture_bottom: Texture2D = preload("res://Assets/Bottom.png")  # your texture here
+var frame_texture: Texture2D = preload("res://Assets/ShipUpCLose1.png")
+var booster_texture: Texture2D = preload("res://Assets/SPrite2.png")
+
+#Booster hangs off the bottom of the main ship only. Both of these are eyeball knobs:
+#SCALE sizes the 64x64 art against the grid, OFFSET_Y is how far below the hull's
+#bottom edge it sits - raise it to drop the booster further down the screen.
+const BOOSTER_SCALE := 2.0
+const BOOSTER_OFFSET_Y := 292.0
+
+#Hull frame drawn around every grid, from the Aseprite 9-slice in
+#Assets/ShipUpCLose1.json (slice "Slice 1"). Aseprite gives "center" relative to
+#"bounds", so the margins below are center.x/y and bounds.wh - (center.xy + center.wh).
+const FRAME_REGION := Rect2(13, 6, 37, 41)
+const FRAME_TL := Vector2(7, 3)   #left, top margins in source pixels
+const FRAME_BR := Vector2(6, 3)   #right, bottom margins in source pixels
+#Nine-patch corners draw at their source size, so the art is scaled up to reach
+#BORDER thickness. Tune FRAME_SCALE against the art until the corners look right.
+const FRAME_SCALE := 4.0
+const BORDER := 30.0
+#The nine-patch middle is hollow, so it gets filled with this first - otherwise the
+#gaps between cells are transparent and show whatever is behind the play area.
+const BACKGROUND_COLOR := Color.BLACK
 
 
 
@@ -34,20 +48,15 @@ func _draw() -> void:
 	if not _should_draw:
 		_should_draw = true
 		return
+	#Booster first, so the hull frame draws over the end that tucks under it.
+	draw_booster(offset, state.full_grid_size * CELL_SIZE)
+	#Frame next: it fills the background the cells then draw on top of.
+	draw_frame(offset, state.full_grid_size * CELL_SIZE)
 	for y in range(state.full_grid_size):
 		for x in range(state.full_grid_size):
 			var color = state.get_cell(x, y).contains.color
 			var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 			draw_rect(rect, color)
-	#Draw LEft Wing
-	var grid_px = state.full_grid_size * CELL_SIZE
-	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
-	
-	draw_left_wing(state, CELL_SIZE, offset, state.full_grid_size)
-	draw_right_wing(state, CELL_SIZE, offset, state.full_grid_size)
-	draw_top_wing(state, CELL_SIZE, offset, state.full_grid_size)
-	#Draw Bottom 
-	draw_bottom_wing(state, CELL_SIZE, offset, state.full_grid_size)
 	
 	
 	#Draw Subships
@@ -57,51 +66,45 @@ func _draw() -> void:
 		else: 
 			offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.20,0.80)
 			
+		draw_frame(offset, state.subgrid_sizes[i] * CELL_SIZE)
 		for y in range(state.subgrid_sizes[i]):
 			for x in range(state.subgrid_sizes[i]):
 				var color = state.get_subship_cell(x, y, i).contains.color
 				var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 				draw_rect(rect, color)
-		print(state.subgrids[i])
-		draw_left_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
-		draw_right_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
-		draw_top_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
-		#Draw Bottom 
-		draw_bottom_wing(state.subgrids[i], CELL_SIZE, offset, state.subgrid_sizes[i])
 
 
-func draw_left_wing(state, size, offset, full_grid_size):
-	var grid_px = full_grid_size * size
-	var dest_rect = Rect2(offset.x - 30, offset.y, 30, 30)
-	#Draw Top
-	draw_texture_rect(wing_texture_top_left, dest_rect, false)
-	
-	#Draw Middle Section
-	dest_rect = Rect2(offset.x - 30, offset.y + 30, 30, grid_px - 60)
-	draw_texture_rect(wing_texture_left, dest_rect, false)
-	
-	dest_rect = Rect2(offset.x - 30, offset.y + grid_px - 30, 30, 30)
-	#Draw Bottom
-	draw_texture_rect(wing_texture_bottom_left, dest_rect, false)
-	
-func draw_right_wing(state, size, offset, full_grid_size):
-	var grid_px = full_grid_size * size
-	var dest_rect = Rect2(offset.x + grid_px, offset.y, 30, 30)
-	draw_texture_rect(wing_texture_top_right, dest_rect, false)
-	dest_rect = Rect2(offset.x + grid_px, offset.y + 30, 30, grid_px - 60)
-	draw_texture_rect(wing_texture_right, dest_rect, false)
-	dest_rect = Rect2(offset.x + grid_px, offset.y + grid_px - 30, 30, 30)
-	draw_texture_rect(wing_texture_bottom_right, dest_rect, false)
+#Booster centred below the bottom of a grid.
+func draw_booster(offset: Vector2, grid_px: float) -> void:
+	var size := booster_texture.get_size() * BOOSTER_SCALE
+	var pos := Vector2(
+			offset.x + grid_px * 0.5 - size.x * 0.5,
+			offset.y + grid_px + BORDER + BOOSTER_OFFSET_Y)
+	draw_texture_rect(booster_texture, Rect2(pos, size), false)
 
-func draw_top_wing(state, size, offset, full_grid_size):
-	var grid_px = full_grid_size * size
-	var dest_rect = Rect2(offset.x, offset.y-30, grid_px, 30)
-	draw_texture_rect(wing_texture_top, dest_rect, false)
-	
-func draw_bottom_wing(state, size, offset, full_grid_size):
-	var grid_px = full_grid_size * size
-	var dest_rect = Rect2(offset.x , offset.y + grid_px, grid_px, 30)
-	draw_texture_rect(wing_texture_bottom, dest_rect, false)
+
+#One nine-patch hull frame around a grid, hollow in the middle so the cells show
+#through. Replaces the eight hand-placed wing textures this used to draw.
+func draw_frame(offset: Vector2, grid_px: float) -> void:
+	var rect := Rect2(offset.x - BORDER, offset.y - BORDER,
+			grid_px + BORDER * 2.0, grid_px + BORDER * 2.0)
+
+	#Fill what the nine-patch leaves hollow. The centre is the frame rect inset by the
+	#scaled margins, not the grid rect - the margins are uneven, so it is not symmetric.
+	var inset_tl := FRAME_TL * FRAME_SCALE
+	var inset_br := FRAME_BR * FRAME_SCALE
+	draw_rect(Rect2(rect.position + inset_tl, rect.size - inset_tl - inset_br), BACKGROUND_COLOR)
+
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(FRAME_SCALE, FRAME_SCALE))
+	RenderingServer.canvas_item_add_nine_patch(
+			get_canvas_item(),
+			Rect2(rect.position / FRAME_SCALE, rect.size / FRAME_SCALE),
+			FRAME_REGION,
+			frame_texture.get_rid(),
+			FRAME_TL, FRAME_BR,
+			RenderingServer.NINE_PATCH_STRETCH, RenderingServer.NINE_PATCH_STRETCH,
+			false)
+	draw_set_transform_matrix(Transform2D.IDENTITY)
 
 
 	
@@ -136,7 +139,7 @@ func _input_event(port, event, ints):
 				var sx = int((event.position.x - sub_offset.x) / CELL_SIZE)
 				var sy = int((event.position.y - sub_offset.y) / CELL_SIZE)
 				
-				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i] and changeable_cell(y * state.full_grid_size + x):
+				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i] and changeable_cell(sy * state.subgrid_sizes[i] + sx, i):
 					_spawn_popup(event.position, sy * state.subgrid_sizes[i] + sx, i)
 					return
 
@@ -149,11 +152,9 @@ func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
 	queue_redraw()
 	popup_enabled = true
 
-func changeable_cell(location:int):
-	var valid_classes= ["Alive", "Dead", "Wall","Chef","Nurse","Pet1","Pet2","Pet3"]
-	if GameManager.state.cells[location].contains.id in valid_classes :
-		return true
-	else:
-		return false
+func changeable_cell(location: int, grid_index: int = -1) -> bool:
+	var valid_classes = ["Alive", "Dead", "Wall", "Chef", "Innovator", "Pet1", "Pet2", "Pet3"]
+	var cell = GameManager.state.subgrids[grid_index][location] if grid_index >= 0 else GameManager.state.cells[location]
+	return cell.contains.id in valid_classes
 func redraw():
 	queue_redraw()
