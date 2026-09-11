@@ -38,6 +38,8 @@ func _ready() -> void:
 	failures += _test_captain()
 	failures += _test_starter_slots()
 	failures += _test_slot_picker_lifetime()
+	failures += _test_build_menu()
+	failures += _test_money_display()
 	failures += _test_upgrade_ids_unique()
 	if failures == 0:
 		print("test_cells: OK")
@@ -1163,11 +1165,16 @@ func _test_starter_slots() -> int:
 	if not _same_set(unlockable.keys(), ["Chef", "Innovator", "NuclearEngineer", "Captain"]):
 		print("FAIL unlockable cells are %s" % [unlockable.keys()]); failures += 1
 	if not _same_set(Popup1.PLACEABLE, ["Alive", "Mechanic", "Doctor", "Robot", "Innovator",
-			"Chef", "NuclearEngineer", "Captain", "Wall", "Springtrap", "Life",
-			"Revolutionary"]):
+			"Chef", "NuclearEngineer", "Captain", "Wall"]):
 		print("FAIL placeable cells are %s" % [Popup1.PLACEABLE]); failures += 1
-	if "Dead" in Popup1.PLACEABLE:
-		print("FAIL Dead is offered as a starter cell"); failures += 1
+	#Dead is the clear-this-berth action. Life, Springtrap and Revolutionary still exist -
+	#events create all three - but the player cannot buy or start with them.
+	for id in ["Dead", "Life", "Springtrap", "Revolutionary"]:
+		if id in Popup1.PLACEABLE:
+			print("FAIL %s is offered to the player" % id); failures += 1
+		if GameManager.id_to_class(id).id != id:
+			print("FAIL %s was removed from id_to_class, events still need it" % id)
+			failures += 1
 	for id in Popup1.PLACEABLE:
 		if GameManager.id_to_class(id).id != id:
 			print("FAIL placeable cell \"%s\" is not in id_to_class" % id); failures += 1
@@ -1196,8 +1203,7 @@ func _test_starter_slots() -> int:
 			offered.append(b.text)
 	#Everything that never needed an unlock is on offer from the first run; the four Shop
 	#cells are locked until bought.
-	if not _same_set(offered, ["Alive", "Mechanic", "Doctor", "Robot", "Wall", "Springtrap",
-			"Life", "Revolutionary"]):
+	if not _same_set(offered, ["Alive", "Mechanic", "Doctor", "Robot", "Wall"]):
 		print("FAIL with nothing bought the picker offered %s" % [offered]); failures += 1
 	if locked != unlockable.size():
 		print("FAIL %d locked buttons, expected %d" % [locked, unlockable.size()]); failures += 1
@@ -1295,6 +1301,91 @@ func _test_slot_picker_lifetime() -> int:
 	container.free()
 	GameManager.slots = was_slots
 	GameManager.starting_slots = was_count
+	return failures
+
+
+# Every @export in popup.gd must resolve to a real button in Popup.tscn. A NodePath broken
+# by renaming or moving a node parses fine and only fails when a player opens the menu, so
+# it is worth instantiating the real scene here.
+func _test_build_menu() -> int:
+	var failures := 0
+	var was: Array = GameManager.chosen_upgrades["unlock_cells"]
+	GameManager.chosen_upgrades["unlock_cells"] = PlayerController.unlockable_cells().values()
+	GameManager.state = GameState.new()
+
+	var menu: Popup1 = (load("res://Popup.tscn") as PackedScene).instantiate()
+	menu.cell_num = 0
+	add_child(menu)
+
+	# One button per placeable cell, plus Clear.
+	var wired := {
+		"Alive": menu.alive_button, "Mechanic": menu.mechanic_button,
+		"Wall": menu.wall_button, "Doctor": menu.doctor_button,
+		"Robot": menu.robot_button, "Innovator": menu.innovator_button,
+		"Chef": menu.chef_button, "NuclearEngineer": menu.nuclear_engineer_button,
+		"Captain": menu.captain_button,
+	}
+	if not _same_set(wired.keys(), Popup1.PLACEABLE):
+		print("FAIL the menu wires %s but PLACEABLE is %s" % [wired.keys(), Popup1.PLACEABLE])
+		failures += 1
+	if menu.dead_button == null:
+		print("FAIL the Clear button is not wired"); failures += 1
+
+	for id in wired:
+		var button: Button = wired[id]
+		if button == null:
+			print("FAIL %s button did not resolve - check its NodePath" % id); failures += 1
+		elif button.pressed.get_connections().is_empty():
+			print("FAIL %s button resolved but nothing is connected to it" % id); failures += 1
+
+	# Buttons appear in PLACEABLE order, so the four Shop unlocks sit together at the end.
+	var order: Array = []
+	for row in menu.get_node("VBoxContainer").get_children():
+		for b in row.get_children():
+			if b != menu.dead_button:
+				#Node names are StringName; PLACEABLE holds plain Strings.
+				order.append(String(b.name))
+	var expected: Array = Popup1.PLACEABLE
+	if order != expected:
+		print("FAIL menu order is %s, expected %s" % [order, expected]); failures += 1
+	var first_locked: int = expected.size()
+	for i in range(expected.size()):
+		if PlayerController.unlockable_cells().has(expected[i]):
+			first_locked = i
+			break
+	for i in range(first_locked, expected.size()):
+		if not PlayerController.unlockable_cells().has(expected[i]):
+			print("FAIL %s is free but sits after a locked cell" % expected[i]); failures += 1
+
+	menu.free()
+	GameManager.chosen_upgrades["unlock_cells"] = was
+	return failures
+
+
+# Money is stored as a float but shown as a whole number, floored - never rounded up past
+# what the player can actually spend.
+func _test_money_display() -> int:
+	var failures := 0
+
+	# [held, what the label should read]
+	for case in [[5.0, "5"], [9.7, "9"], [0.0, "0"], [10.999, "10"], [-3.2, "-4"],
+			[123.5, "123"], [0.9, "0"]]:
+		var got: String = UIController.money_text(case[0])
+		var want: String = "Money: " + case[1]
+		if got != want:
+			print("FAIL %s shown as \"%s\", expected \"%s\"" % [case[0], got, want])
+			failures += 1
+		if "." in got:
+			print("FAIL the money label still shows a decimal point: %s" % got); failures += 1
+
+	# Displaying a whole number must not round UP past what can actually be spent: on 9.7
+	# the label says 9 and a 10-money cell is still refused, so the two agree.
+	GameManager.state = GameState.new()
+	GameManager.state.moneyAmount = 9.7
+	if GameManager.state.how_much_money() >= 10:
+		print("FAIL 9.7 money was treated as enough for a 10 cell"); failures += 1
+	if not is_equal_approx(GameManager.state.moneyAmount, 9.7):
+		print("FAIL the stored money lost its fraction"); failures += 1
 	return failures
 
 

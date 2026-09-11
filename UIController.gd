@@ -87,9 +87,17 @@ func _set_tooltips() -> void:
 			% GameManager.rewind_number
 
 func update_ui():
-	texty.text = "Money: " + str( GameManager.state.moneyAmount)
+	texty.text = money_text(GameManager.state.moneyAmount)
 	resource_text.text = "Resource: " + str(GameManager.resourceAmount)
 	_update_generation()
+
+
+#Money is kept as a float - Raise Taxes pays out in tenths - but the player is shown a whole
+#number. Floored rather than rounded, because every purchase compares against the true
+#amount: on 9.7 you cannot afford a 10 cell, and a label reading "10" would make the refusal
+#look like a bug.
+static func money_text(amount: float) -> String:
+	return "Money: %d" % floori(amount)
 
 
 #The generation counter and the line under it. Both read GameManager's pacing constants, so

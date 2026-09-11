@@ -10,10 +10,7 @@ var grid_index: int = -1
 @export var mechanic_button: Button
 @export var innovator_button: Button
 @export var chef_button: Button
-@export var springtrap_button: Button
 @export var wall_button:Button
-@export var life_button:Button
-@export var revolutionary_button:Button
 @export var doctor_button:Button
 @export var robot_button:Button
 @export var nuclear_engineer_button:Button
@@ -25,10 +22,7 @@ var stored_popup_value: bool
 #Every price in this popup, in one place. The tooltips below are built from these same
 #consts, so a hover can never advertise a price the button does not actually charge.
 const COST_ALIVE := 10
-const COST_SPRINGTRAP := 10
 const COST_WALL := 10
-const COST_LIFE := 10
-const COST_REVOLUTIONARY := 10
 const COST_CHEF := 50
 const COST_DOCTOR := 25
 const COST_ROBOT := 30
@@ -42,8 +36,10 @@ const COST_INNOVATOR_RESOURCE := 1
 #offers exactly this list, so the two menus cannot drift apart - a cell added to one shows
 #up in the other. Dead is deliberately absent: it is the clear-this-berth action, and an
 #unfilled starter slot already holds one.
-const PLACEABLE := ["Alive", "Mechanic", "Doctor", "Robot", "Innovator", "Chef",
-		"NuclearEngineer", "Captain", "Wall", "Springtrap", "Life", "Revolutionary"]
+#Freely available first, then the four Shop unlocks, so the locked buttons sit together at
+#the end of both menus instead of being scattered through them.
+const PLACEABLE := ["Alive", "Mechanic", "Wall", "Doctor", "Robot",
+		"Innovator", "Chef", "NuclearEngineer", "Captain"]
 
 
 func _ready() -> void:
@@ -66,10 +62,7 @@ func _ready() -> void:
 		captain_button.pressed.connect(_button_pressed_captain)
 	else:
 		captain_button.text = "locked"
-	springtrap_button.pressed.connect(_button_pressed_springtrap)
 	wall_button.pressed.connect(_button_pressed_wall)
-	life_button.pressed.connect(_button_pressed_life)
-	revolutionary_button.pressed.connect(_button_pressed_revolutionary)
 	doctor_button.pressed.connect(_button_pressed_doctor)
 	robot_button.pressed.connect(_button_pressed_robot)
 	stored_popup_value = GameManager.autoplay_enabled
@@ -83,9 +76,6 @@ func _set_tooltips() -> void:
 	dead_button.tooltip_text = "Clear - refunds %d money\nEmpties the cell. Anyone there is gone." % REFUND_DEAD
 	mechanic_button.tooltip_text = "Mechanic - %d resource\nEarns +%d resource a round. Dies with no crew beside it." % [COST_MECHANIC_RESOURCE, Mechanic.PAYOUT]
 	wall_button.tooltip_text = "Wall - %d money\nNever changes. Shapes patterns and blocks fire." % COST_WALL
-	springtrap_button.tooltip_text = "Springtrap - %d money\nKills crew around it for 7 rounds, then dies." % COST_SPRINGTRAP
-	life_button.tooltip_text = "Life - %d money\nSpreads to every neighbour, forever." % COST_LIFE
-	revolutionary_button.tooltip_text = "Revolutionary - %d money\nPays nothing, and converts the crew beside it." % COST_REVOLUTIONARY
 	doctor_button.tooltip_text = "Doctor - %d money\nLives and earns like crew, and raises the bodies beside it." % COST_DOCTOR
 	robot_button.tooltip_text = "Robot - %d money\nCounts as crew to its neighbours, and seizes up with no Mechanic aboard." % COST_ROBOT
 
@@ -158,14 +148,6 @@ func _button_pressed_innovator():
 		change_parent(Innovator.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
-func _button_pressed_springtrap():
-	var cell = _get_cell()
-	if cell.contains.id  != "Springtrap" and GameManager.state.how_much_money() >= COST_SPRINGTRAP:
-		GameManager.state.change_money(-COST_SPRINGTRAP)
-		change_parent(Springtrap.new())
-	else:
-		GameOfLifeAudio.play_ui_disabled()
-	
 func _button_pressed_wall():
 	var cell = _get_cell()
 	if cell.contains.id  != "Wall" and GameManager.state.how_much_money() >= COST_WALL:
@@ -173,22 +155,6 @@ func _button_pressed_wall():
 		change_parent(Wall.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()
-func _button_pressed_life():
-	var cell = _get_cell()
-	if cell.contains.id  != "Life" and GameManager.state.how_much_money() >= COST_LIFE:
-		GameManager.state.change_money(-COST_LIFE)
-		change_parent(Life.new())
-	else:
-		GameOfLifeAudio.play_ui_disabled()
-
-func _button_pressed_revolutionary():
-	var cell = _get_cell()
-	if cell.contains.id  != "Revolutionary" and GameManager.state.how_much_money() >= COST_REVOLUTIONARY:
-		GameManager.state.change_money(-COST_REVOLUTIONARY)
-		change_parent(Revolutionary.new())
-	else:
-		GameOfLifeAudio.play_ui_disabled()
-	
 func _button_pressed_chef():
 	var cell = _get_cell()
 	if cell.contains.id  != "Chef" and GameManager.state.how_much_money() >= COST_CHEF:

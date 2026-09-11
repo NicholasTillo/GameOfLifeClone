@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d3425gc6jxmv3" path="res://popup.gd" id="1_482t0"]
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_awv4j"]
 
-[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "innovator_button", "chef_button", "springtrap_button", "wall_button", "life_button", "revolutionary_button", "doctor_button", "robot_button", "nuclear_engineer_button", "captain_button")]
+[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("alive_button", "dead_button", "mechanic_button", "wall_button", "doctor_button", "robot_button", "innovator_button", "chef_button", "nuclear_engineer_button", "captain_button")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -1.0
@@ -12,116 +12,93 @@ offset_right = 39.0
 offset_bottom = 37.0
 theme = ExtResource("1_awv4j")
 script = ExtResource("1_482t0")
-alive_button = NodePath("VBoxContainer/HBoxContainer/Button")
-dead_button = NodePath("VBoxContainer/HBoxContainer/Button2")
-mechanic_button = NodePath("VBoxContainer/HBoxContainer2/Button3")
-innovator_button = NodePath("VBoxContainer/HBoxContainer3/Button4")
-chef_button = NodePath("VBoxContainer/HBoxContainer3/Button5")
-springtrap_button = NodePath("VBoxContainer/HBoxContainer4/Button7")
-wall_button = NodePath("VBoxContainer/HBoxContainer2/Button6")
-life_button = NodePath("VBoxContainer/HBoxContainer4/Button6")
-revolutionary_button = NodePath("VBoxContainer/HBoxContainer3/Button3")
-doctor_button = NodePath("VBoxContainer/HBoxContainer5/Button7")
-robot_button = NodePath("VBoxContainer/HBoxContainer5/Button6")
-nuclear_engineer_button = NodePath("VBoxContainer/HBoxContainer5/Button8")
-captain_button = NodePath("VBoxContainer/HBoxContainer6/Button9")
+alive_button = NodePath("VBoxContainer/Row1/Alive")
+dead_button = NodePath("VBoxContainer/Row1/Dead")
+mechanic_button = NodePath("VBoxContainer/Row2/Mechanic")
+wall_button = NodePath("VBoxContainer/Row2/Wall")
+doctor_button = NodePath("VBoxContainer/Row3/Doctor")
+robot_button = NodePath("VBoxContainer/Row3/Robot")
+innovator_button = NodePath("VBoxContainer/Row4/Innovator")
+chef_button = NodePath("VBoxContainer/Row4/Chef")
+nuclear_engineer_button = NodePath("VBoxContainer/Row5/NuclearEngineer")
+captain_button = NodePath("VBoxContainer/Row5/Captain")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1278243861]
 layout_mode = 0
 offset_left = 1.0
 offset_top = 3.0
 offset_right = 268.0
-offset_bottom = 232.0
+offset_bottom = 195.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=422413506]
 layout_mode = 0
 offset_left = 13.0
 offset_top = 16.0
 offset_right = 253.0
-offset_bottom = 225.0
+offset_bottom = 188.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=800708664]
+[node name="Row1" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1240488209]
+[node name="Alive" type="Button" parent="VBoxContainer/Row1"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Alive"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=536445502]
+[node name="Dead" type="Button" parent="VBoxContainer/Row1"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "  Dead  "
+text = "Clear"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1095479809]
+[node name="Row2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1609059624]
+[node name="Mechanic" type="Button" parent="VBoxContainer/Row2"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Mechanic"
 
-[node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=630345969]
+[node name="Wall" type="Button" parent="VBoxContainer/Row2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Wall
-"
+text = "Wall"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=1677662922]
+[node name="Row3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Button5" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1392001318]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Chef"
-
-[node name="Button4" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1181688847]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Innovator"
-
-[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=730142315]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Revolutionary"
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=1399099765]
-layout_mode = 2
-
-[node name="Button7" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1001777718]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Springtrap"
-
-[node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=2031299878]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Life
-"
-
-[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1045613469]
-layout_mode = 2
-
-[node name="Button7" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=1537284134]
+[node name="Doctor" type="Button" parent="VBoxContainer/Row3"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Doctor"
 
-[node name="Button6" type="Button" parent="VBoxContainer/HBoxContainer5" unique_id=876805018]
+[node name="Robot" type="Button" parent="VBoxContainer/Row3"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Robot"
 
-[node name="Button8" type="Button" parent="VBoxContainer/HBoxContainer5"]
+[node name="Row4" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Innovator" type="Button" parent="VBoxContainer/Row4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Innovator"
+
+[node name="Chef" type="Button" parent="VBoxContainer/Row4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Chef"
+
+[node name="Row5" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="NuclearEngineer" type="Button" parent="VBoxContainer/Row5"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Nuclear
 Engineer"
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="Button9" type="Button" parent="VBoxContainer/HBoxContainer6"]
+[node name="Captain" type="Button" parent="VBoxContainer/Row5"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Captain"
