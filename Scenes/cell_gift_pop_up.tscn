@@ -1,0 +1,86 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://Scenes/cell_gift_pop_up.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="2_crt"]
+[ext_resource type="Texture2D" uid="uid://c5edjynbhxjh1" path="res://Assets/Screen.png" id="9_screen"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("2_crt")
+shader_parameter/flicker_strength = 0.06
+shader_parameter/flicker_speed = 18.0
+shader_parameter/jitter_strength = 0.002
+shader_parameter/roll_strength = 0.004
+shader_parameter/roll_speed = 0.15
+shader_parameter/scanline_strength = 0.12
+shader_parameter/scanline_count = 480.0
+shader_parameter/chroma_offset = 0.0015
+
+[node name="CellGiftPopUp" type="Control" node_paths=PackedStringArray("button1", "button2", "button3", "close_button", "text_label")]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("1_script")
+button1 = NodePath("Offer1")
+button2 = NodePath("Offer2")
+button3 = NodePath("Offer3")
+close_button = NodePath("OkayButton")
+text_label = NodePath("TextLabel")
+
+[node name="Screen" type="NinePatchRect" parent="."]
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 0
+offset_left = 175.0
+offset_top = 66.0
+offset_right = 998.0
+offset_bottom = 578.0
+texture_filter = 1
+texture = ExtResource("9_screen")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="TextLabel" type="Label" parent="."]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = 327.0
+offset_top = 209.0
+offset_right = 851.0
+offset_bottom = 284.0
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Offer1" type="Button" parent="."]
+layout_mode = 0
+offset_left = 301.0
+offset_top = 354.0
+offset_right = 473.0
+offset_bottom = 400.0
+
+[node name="Offer2" type="Button" parent="."]
+layout_mode = 0
+offset_left = 492.0
+offset_top = 354.0
+offset_right = 664.0
+offset_bottom = 400.0
+
+[node name="Offer3" type="Button" parent="."]
+layout_mode = 0
+offset_left = 698.0
+offset_top = 354.0
+offset_right = 870.0
+offset_bottom = 400.0
+
+[node name="OkayButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 493.0
+offset_top = 454.0
+offset_right = 665.0
+offset_bottom = 500.0
+text = "Return To Ship"

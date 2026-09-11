@@ -12,8 +12,26 @@ var ui: UIController
 #monster, a wall or already gone. Turning into Life is ascension, not death, and neither
 #is mortal -> mortal (Alive -> Revolutionary, Alive -> Chef), so neither shows a skull.
 const MORTAL := ["Alive", "Chef", "Innovator", "Mechanic", "Revolutionary",
-		"Sandshark", "Plorian", "Dog"]
+		"Sandshark", "Plorian", "Dog", "TotallyAlive", "Doctor", "NuclearEngineer",
+		"Captain"]
 const FATAL := ["Dead", "Corpse", "Zombie", "Fire"]
+
+#Who counts as crew when a neighbour looks at you. Every rule in Classes/ used to spell
+#this as `id == "Alive"`, which meant TotallyAlive - a cell whose whole point is to read as
+#crew - would have had to be added to eight separate comparisons. One table instead.
+#Robot is here and NOT in HUMAN: it props up the cells around it like a crewmate, but
+#it is machinery, so a Dog will not live on its company.
+const CREW := ["Alive", "TotallyAlive", "Doctor", "Robot", "NuclearEngineer", "Captain"]
+#The trained jobs. Knowledge Collapse strips these back to plain crew, and a new
+#profession must be listed here as well as in HUMAN below.
+const PROFESSIONS := ["Chef", "Innovator", "Mechanic", "Doctor", "NuclearEngineer",
+		"Captain"]
+#Who counts as a person: crew, the trained jobs, and the Revolutionary - which is a cause
+#rather than a job, which is why it is here but not in PROFESSIONS. Pets (Sandshark,
+#Plorian, Dog) are company, not crew, and the Dog will not stay alive on their company
+#alone.
+const HUMAN := ["Alive", "TotallyAlive", "Doctor", "Chef", "Innovator", "Mechanic",
+		"NuclearEngineer", "Captain", "Revolutionary"]
 
 #Run pacing. These were bare numbers inside do_next_round(); the HUD reads them too, so a
 #counter can never disagree with the rule it is counting down to.
@@ -21,6 +39,11 @@ const EVENT_INTERVAL := 25      #a random event fires on every round_count multi
 const CUTSCENE_INTERVAL := 20   #each cutscene needs this many more rounds than the last
 const MAX_CUTSCENE := 5         #Scenes/Cutscene1..5 exist; there is no Cutscene6
 const LIFE_EVENT_ID := 3        #RandomEvents/FindingMeaningOfLife.tres
+const SOLAR_FLARE_ROUNDS := 4   #rounds the shields stay up, and the grid stays locked
+const BIRTHDAY_ROUNDS := 5      #rounds the party runs, and overcrowding is suspended
+const OVERHEAT_PRESSES := 10    #advance attempts swallowed by Overheating - half of them
+const SALVAGE_MONEY := 100      #Fortunate Space Junk, in one payment
+const SALVAGE_RESOURCE := 15
 #The round that unlocks the final chapter.
 const LIFE_EVENT_ROUND := MAX_CUTSCENE * CUTSCENE_INTERVAL
 
@@ -86,9 +109,18 @@ var current_cutscene_index:int = 0
 #Event Variables
 var event_popup_precon_scene = preload("res://Scenes/event_pop_up.tscn")
 var pet_store_popup_scene = preload("res://Scenes/pet_store_pop_up.tscn")
+var cell_gift_popup_scene = preload("res://Scenes/cell_gift_pop_up.tscn")
 var spaceship_upgrade_bay_popup_scene = preload("res://Scenes/spaceship_upgrade_bay_pop_up.tscn")
 var num_remaining_astroids = 0
 var num_remaining_ecodeadzone = 0
+#Rounds of Solar Flare left to ride out. While this is above zero the shields are up: the
+#board keeps running and stays visible, but the player cannot touch it.
+var solar_flare_rounds: int = 0
+#Rounds of the Captain's Birthday Party left to run, during which no crowd is too big.
+var birthday_rounds: int = 0
+#Advance attempts left under Overheating. Every other one is swallowed while the boosters
+#cool, so OVERHEAT_PRESSES presses buy the player half that many generations.
+var overheat_presses: int = 0
 #Shared budget of extra fires the Spaceship Attack outbreak may still create by spreading.
 var fire_spreads_remaining: int = 0
 var done_rewinds: int = 0
@@ -99,6 +131,7 @@ func reset_stats():
 	starting_money_increase = 0
 	starting_alive_chance = 0.5
 	starting_slots = 0
+	slots.clear()
 	rewind_number = 0
 	
 	
@@ -107,6 +140,19 @@ func _ready() -> void:
 	add_child(renderer)
 	round_count = 0
 	init_history()
+
+#Everything an event leaves ticking. GameManager is an autoload, so without this a run
+#that ended mid-event carried the remainder into the next one: leftover astroids fell on a
+#fresh board, a half-finished dead zone decremented min_number_of_surrounding_alives on a
+#GameState that never had it raised, and a solar flare locked a grid nobody had shielded.
+func clear_event_effects() -> void:
+	num_remaining_astroids = 0
+	num_remaining_ecodeadzone = 0
+	fire_spreads_remaining = 0
+	solar_flare_rounds = 0
+	birthday_rounds = 0
+	overheat_presses = 0
+
 
 func _process(delta: float) -> void:
 	if autoplay_enabled:
@@ -122,6 +168,7 @@ func reset() -> void:
 	state = GameState.new()
 	renderer.redraw()
 	round_count = 0
+	clear_event_effects()
 	#Loop detection is per-run. Left uncleared it grows for the whole session and a new
 	#run can be ended by a board the previous run already visited.
 	prev_states.clear()
@@ -149,6 +196,18 @@ func replace_cell(cell: Cell, new_contains: Class, grid_index: int = -1) -> void
 
 
 func do_next_round():
+	#Overheating swallows every other attempt to advance. Checked here rather than in the
+	#button handler because autoplay drives this same function, and a player who could
+	#switch autoplay on to coast through the cooldown would not be slowed by it at all.
+	if overheat_presses > 0:
+		overheat_presses -= 1
+		if overheat_presses % 2 == 1:
+			#The same "that did nothing" cue the rest of the UI uses. Skipped under
+			#autoplay, which would otherwise fire it several times a second.
+			if not autoplay_enabled:
+				GameOfLifeAudio.play_ui_disabled()
+			return
+
 	var copy_array = []
 	
 	for i in range(len(state.cells)):
@@ -173,9 +232,20 @@ func do_next_round():
 	if num_remaining_ecodeadzone > 0:
 		num_remaining_ecodeadzone -= 1
 		if num_remaining_ecodeadzone == 0:
-			state.min_number_of_surrounding_alives -= 1
+			state.min_number_of_surrounding_alives = GameState.DEFAULT_MIN_ALIVES
+
+	if birthday_rounds > 0:
+		birthday_rounds -= 1
+		if birthday_rounds == 0:
+			state.max_number_of_surrounding_alives = GameState.DEFAULT_MAX_ALIVES
+
+	if solar_flare_rounds > 0:
+		solar_flare_rounds -= 1
+		renderer.queue_redraw()
 
 	spread_fire()
+	move_plorians()
+	revive_corpses()
 
 	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
@@ -227,6 +297,118 @@ func do_next_round():
 		do_random_event()
 	
 
+#True while an event has taken the board away from the player. The renderer asks this
+#before it will open a cell popup, and draws the shield overlay from it.
+#Ecological Dead Zone: crew need one more neighbour than usual to make it through a round.
+#The floor is SET, not nudged up - a second dead zone starting before the first expires
+#used to raise it twice and lower it once, leaving the run permanently harder.
+#Turns random Alive cells into the given professions, one cell per entry, and hands back
+#how many it managed. Shuffling the crew and walking that list is what makes this safe on a
+#thin board: Religious Reform used to pick at random until three had landed, which never
+#terminated once fewer than three Alive cells were left, and the game simply froze. Now a
+#board with one spare crewmate converts one and returns.
+#Religious Reform: three of the crew take up the cause.
+func religious_reform() -> int:
+	return convert_alive_cells([Revolutionary.new(), Revolutionary.new(),
+			Revolutionary.new()])
+
+
+#Job Fair: three of the crew pick up a trade, one of each.
+func job_fair() -> int:
+	return convert_alive_cells([Innovator.new(), Mechanic.new(), Chef.new()])
+
+
+#Enemy Spaceship Appears: the ship fights it off and three of the crew do not come back.
+#These are real deaths - Alive is MORTAL and Corpse is FATAL - so each floats a skull.
+func enemy_spaceship_attack() -> int:
+	return convert_alive_cells([Corpse.new(), Corpse.new(), Corpse.new()])
+
+
+func convert_alive_cells(new_classes: Array) -> int:
+	var candidates: Array = []
+	for cell in state.cells:
+		if cell.contains is Alive:
+			candidates.append(cell)
+	candidates.shuffle()
+
+	var converted: int = 0
+	for new_class in new_classes:
+		if converted >= candidates.size():
+			break
+		#Through replace_cell so the transition gets the usual bookkeeping, which includes
+		#deciding whether it was a death: a Job Fair promotion floats nothing, while the
+		#corpses an Enemy Spaceship leaves behind each get their skull.
+		replace_cell(candidates[converted], new_class)
+		converted += 1
+	return converted
+
+
+#Fortunate Space Junk: a one-off windfall in both currencies. Paid through the normal
+#change_ calls so the HUD refreshes itself; there is no cell involved, so nothing floats.
+#Knowledge Collapse: every trained job on the ship forgets it and goes back to being plain
+#crew. Sweeps the subships too - the player can post professions there, and a collapse that
+#spared them would be a hiding place rather than a setback. Hands back how many it undid.
+#Every berth on every ship, main grid first. One flat list, so anything that works across
+#the whole vessel does not have to repeat the subship walk.
+func all_cells() -> Array:
+	var every: Array = []
+	every.append_array(state.cells)
+	for subgrid in state.subgrids:
+		every.append_array(subgrid)
+	return every
+
+
+#Faulty Warp Drive: everyone and everything aboard comes out of the jump in someone else's
+#berth. The occupants are pooled across the main grid AND the subships before shuffling, so
+#a crewmate can land on a different ship entirely - which is the point of the event.
+#
+#Occupants are moved rather than rebuilt, so whatever state they carry (a Fire's age, a
+#Springtrap's night count, a Plorian's step counter) rides along with them. The assignment
+#is done by hand instead of through replace_cell(): being flung across the ship is not
+#dying, and replace_cell would read an Alive berth receiving a Dead as a death and float a
+#skull for a crewmate who merely moved.
+func scramble_ships() -> void:
+	var berths: Array = all_cells()
+	var occupants: Array = []
+	for cell in berths:
+		occupants.append(cell.contains)
+	occupants.shuffle()
+
+	for i in range(berths.size()):
+		berths[i].contains = occupants[i]
+		occupants[i].cell = berths[i]
+
+
+func knowledge_collapse() -> int:
+	var reverted: int = 0
+	for cell in state.cells:
+		if cell.contains.id in PROFESSIONS:
+			#Not a death - a professional turning back into crew is a demotion, and Alive
+			#is not in FATAL, so replace_cell floats nothing for it.
+			replace_cell(cell, Alive.new())
+			reverted += 1
+	for i in range(len(state.subgrids)):
+		for cell in state.subgrids[i]:
+			if cell.contains.id in PROFESSIONS:
+				replace_cell(cell, Alive.new(), i)
+				reverted += 1
+	return reverted
+
+
+func salvage_space_junk() -> void:
+	state.change_money(SALVAGE_MONEY)
+	change_resource(SALVAGE_RESOURCE)
+
+
+func start_dead_zone() -> void:
+	state.min_number_of_surrounding_alives = GameState.DEFAULT_MIN_ALIVES + 1
+	num_remaining_ecodeadzone += (randi() % 15) + 5
+
+
+func grid_locked() -> bool:
+	return solar_flare_rounds > 0
+
+
 func load_resources_from_folder(path: String) -> Array[Resource]:
 	var resources: Array[Resource] = []
 	var file_names = DirAccess.get_files_at(path)
@@ -273,19 +455,33 @@ func trigger_meaning_of_life() -> void:
 	renderer.redraw()
 
 
+#Everything the player is currently allowed to draw. Filtering up front replaces a
+#pick-until-enabled loop that spun forever if nothing in the folder was drawable, and it
+#is the single place the chapter gate is applied - see random_event.required_cutscene.
+func drawable_events(all_events: Array) -> Array:
+	var pool := []
+	for e in all_events:
+		if e.enabled and current_cutscene_index >= e.required_cutscene:
+			pool.append(e)
+	return pool
+
+
 func do_random_event():
-	#An event permanently changes the board this run; block rewinding past it.
-	rewind_blocked = true
-	
 	var list_of_events:Array = load_resources_from_folder("res://RandomEvents")
 
 	#The Meaning Of Life is kept OUT of this pool - FindingMeaningOfLife.tres is
-	#`enabled = false` and the loop below skips disabled events, so it can never be drawn
+	#`enabled = false` and drawable_events() skips disabled events, so it can never be drawn
 	#at random and spoil the ending. It has its own guaranteed trigger at
 	#LIFE_EVENT_ROUND in do_next_round().
-	var chosen_event: random_event = list_of_events.pick_random()
-	while chosen_event.enabled == false:
-		chosen_event = list_of_events.pick_random()
+	var pool := drawable_events(list_of_events)
+	#Nothing drawable means nothing happened, so leave rewinding alone - the block below
+	#is the price of an event actually landing.
+	if pool.is_empty():
+		return
+	var chosen_event: random_event = pool.pick_random()
+
+	#An event permanently changes the board this run; block rewinding past it.
+	rewind_blocked = true
 
 
 	var event_popup = show_event_popup(chosen_event)
@@ -313,20 +509,10 @@ func do_random_event():
 			num_remaining_astroids =  (randi() % 15 )+ 5 #Random 5-20
 
 		5:#Eco Dead Zone
-			#Affect Alive cells to have a lower number of guys required. 
-			state.min_number_of_surrounding_alives += 1
-			num_remaining_ecodeadzone += (randi() % 15 )+ 5
+			start_dead_zone()
 			
 		6:#Religious Reform
-			var num_of_revolutionaries = 3
-			var i = 0
-			while i < num_of_revolutionaries:
-				var chosen_cell = state.cells.pick_random()
-				if chosen_cell.contains is Alive:
-					chosen_cell.contains = Revolutionary.new()
-					chosen_cell.contains.cell = chosen_cell
-					i += 1
-				
+			religious_reform()
 		7: #Spaceship Upgrade Bay
 			var upgrade_bay_popup = spaceship_upgrade_bay_popup_scene.instantiate()
 			event_popup.okay_button.pressed.connect(func():
@@ -345,7 +531,42 @@ func do_random_event():
 					break
 				var chosen_cell = flammable.pick_random()
 				replace_cell(chosen_cell, Fire.new())
-	
+		9: #Solar Flare
+			solar_flare_rounds = SOLAR_FLARE_ROUNDS
+			#The shields come up under whatever the player was in the middle of doing.
+			#Without this a popup opened just before the flare stays live and buys them
+			#one placement the lockout is supposed to deny.
+			renderer.dismiss_popup()
+		10: #Captain's Birthday Party
+			birthday_rounds = BIRTHDAY_ROUNDS
+			state.max_number_of_surrounding_alives = GameState.NO_CROWDING
+		11: #Job Fair
+			job_fair()
+		12: #Fortunate Space Junk
+			salvage_space_junk()
+		13: #Knowledge Collapse
+			knowledge_collapse()
+		14: #Faulty Warp Drive
+			scramble_ships()
+		15: #Trading Outpost
+			var outpost_popup = cell_gift_popup_scene.instantiate()
+			outpost_popup.configure(
+					"The foremen of the outpost line up at your airlock.
+Take your pick, the contract is already paid.",
+					["Chef", "Innovator", "Mechanic"])
+			event_popup.okay_button.pressed.connect(func():
+															get_tree().root.add_child(outpost_popup)
+															event_popup.close())
+		16: #Enemy Spaceship Appears
+			enemy_spaceship_attack()
+		17: #Overheating
+			overheat_presses = OVERHEAT_PRESSES
+
+	#do_random_event() runs at the very END of do_next_round(), after that round has already
+	#redrawn. Without this every board-changing event - rocks, fires, the scramble - sat
+	#invisible until the player advanced another round.
+	renderer.redraw()
+
 # Every fire that has just burned for SPREAD_AGE rounds ignites one random non-burning
 # neighbour, until the outbreak's shared spread budget runs out. Runs after the round's
 # double-buffered pass so a new fire can't clobber a cell that pass is still reading.
@@ -371,6 +592,132 @@ func spread_fire() -> void:
 		var target = targets.pick_random()
 		replace_cell(target, Fire.new())
 		fire_spreads_remaining -= 1
+
+
+#Chebyshev distance between two main-grid cell indices. Neighbours include diagonals, so a
+#diagonal step covers exactly as much ground as a straight one.
+func _grid_distance(a: int, b: int, size: int) -> int:
+	@warning_ignore("integer_division")
+	var ay: int = a / size
+	@warning_ignore("integer_division")
+	var by: int = b / size
+	return max(abs(a % size - b % size), abs(ay - by))
+
+
+#The Plorian's pilgrimage: it creeps one berth at a time toward the nearest corpse, and on
+#reaching one it consumes the corpse and becomes a TotallyAlive.
+#Runs after the round's double-buffered pass, like spread_fire(), because a cell may not
+#write to a neighbour that pass is still reading - and taking the corpse away is exactly
+#such a write, which is why arriving is settled here and not in Plorian itself. Main grid
+#only: pets are only ever dropped into state.cells, never into a subship.
+func move_plorians() -> void:
+	var size: int = state.full_grid_size
+
+	#Arrivals first, so a Plorian already touching a corpse takes it rather than stepping
+	#somewhere else, and so the corpses gathered below are the ones still on the board.
+	for cell in state.cells:
+		if not (cell.contains is Plorian):
+			continue
+		for neighbour in cell.neighbours:
+			if neighbour.contains.id != "Corpse":
+				continue
+			#Corpse is not in MORTAL and Plorian -> TotallyAlive is not a FATAL end, so
+			#neither of these reads as a death and no skull is floated for either.
+			replace_cell(neighbour, Dead.new())
+			replace_cell(cell, TotallyAlive.new())
+			break
+
+	var corpses: Array = []
+	for cell in state.cells:
+		if cell.contains.id == "Corpse":
+			corpses.append(cell.id)
+	if corpses.is_empty():
+		return
+
+	#Collected before any of them move, so a Plorian that steps into a berth further down
+	#state.cells is not picked up again and walked twice in the one round.
+	var movers: Array = []
+	for cell in state.cells:
+		if cell.contains is Plorian and cell.contains.ready_to_step():
+			movers.append(cell)
+
+	for cell in movers:
+		var target: int = corpses[0]
+		for c in corpses:
+			if _grid_distance(cell.id, c, size) < _grid_distance(cell.id, target, size):
+				target = c
+
+		#It only ever steps into an empty berth, so the walk can never trample the crew,
+		#push through a wall, or wander into a fire.
+		var best: Cell = null
+		var best_distance: int = _grid_distance(cell.id, target, size)
+		for neighbour in cell.neighbours:
+			if neighbour.contains.id != "Dead":
+				continue
+			var d: int = _grid_distance(neighbour.id, target, size)
+			if d < best_distance:
+				best = neighbour
+				best_distance = d
+		if best == null:
+			continue
+
+		#A step is not a death. replace_cell() would read this Plorian -> Dead as one and
+		#float a skull off the berth it just walked out of, so the swap is done by hand.
+		var walker: Class = cell.contains
+		cell.contains = Dead.new()
+		cell.contains.cell = cell
+		best.contains = walker
+		walker.cell = best
+
+
+#Doctors put the dead back on their feet: every corpse beside one gets up as crew. Runs
+#after the round's double-buffered pass, like spread_fire() and move_plorians(), because
+#reviving is a write to a NEIGHBOUR cell and the pass may not do that.
+#
+#Deliberately after move_plorians(), so a Plorian that reached a corpse this round consumes
+#it first. The pilgrimage is the rarer thing and a doctor has no shortage of other work.
+#True while at least one Mechanic is aboard, anywhere on any ship. Robots ask this every
+#round to know whether they are still being maintained.
+func has_mechanic() -> bool:
+	return crew_aboard("Mechanic")
+
+
+#True while at least one Captain is aboard, anywhere on any ship. Read once per crew member
+#per round by Alive.crew_round().
+func has_captain() -> bool:
+	return crew_aboard("Captain")
+
+
+#ponytail: rescans every berth per call, and crew_round() calls it for every crew member in
+#the round. Fine at this board size; if it ever shows up in the profiler, work both answers
+#out once at the top of do_next_round() and cache them for the pass.
+func crew_aboard(id: String) -> bool:
+	for cell in all_cells():
+		if cell.contains.id == id:
+			return true
+	return false
+
+
+func revive_corpses() -> int:
+	var revived: int = 0
+	for cell in state.cells:
+		revived += _revive_around(cell, -1)
+	for i in range(len(state.subgrids)):
+		for cell in state.subgrids[i]:
+			revived += _revive_around(cell, i)
+	return revived
+
+
+func _revive_around(cell: Cell, grid_index: int) -> int:
+	if cell.contains.id != "Doctor":
+		return 0
+	var revived: int = 0
+	for neighbour in cell.neighbours:
+		if neighbour.contains.id == "Corpse":
+			#Corpse is not in MORTAL, so getting back up is never read as a death.
+			replace_cell(neighbour, Alive.new(), grid_index)
+			revived += 1
+	return revived
 
 
 func check_stable_state(param, subgrids) -> bool:
@@ -484,6 +831,11 @@ func id_to_class(id: String) -> Class:
 		"Sandshark": return Sandshark.new()
 		"Plorian": return Plorian.new()
 		"Dog": return Dog.new()
+		"TotallyAlive": return TotallyAlive.new()
+		"Doctor": return Doctor.new()
+		"Robot": return Robot.new()
+		"NuclearEngineer": return NuclearEngineer.new()
+		"Captain": return Captain.new()
 		"Fire": return Fire.new()
 		_: return Dead.new()
 

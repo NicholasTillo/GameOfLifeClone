@@ -3,59 +3,24 @@
 [ext_resource type="Script" uid="uid://c2juei2mhu25d" path="res://popup_clone.gd" id="1_alrux"]
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_idwyy"]
 
-[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("button1", "button2", "button3", "button4")]
+[node name="Control" type="Control" unique_id=299765366 node_paths=PackedStringArray("background", "buttons")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_idwyy")
 script = ExtResource("1_alrux")
-button1 = NodePath("Button")
-button2 = NodePath("Button2")
-button3 = NodePath("Button3")
-button4 = NodePath("Button4")
+background = NodePath("BackgroundRect")
+buttons = NodePath("Buttons")
 
 [node name="BackgroundRect" type="ColorRect" parent="." unique_id=1278243861]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 3.0
-offset_right = 268.0
-offset_bottom = 195.0
+offset_right = 168.0
+offset_bottom = 160.0
 
-[node name="Button" type="Button" parent="." unique_id=1240488209]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 8.5
-anchor_top = 1.9750001
-anchor_right = 8.5
-anchor_bottom = 1.9750001
-offset_left = -295.0
-offset_top = -46.000008
-offset_right = -238.0
-offset_bottom = -5.0000076
-text = "Alive"
-
-[node name="Button2" type="Button" parent="." unique_id=536445502]
+[node name="Buttons" type="GridContainer" parent="."]
 layout_mode = 0
-offset_left = 158.0
-offset_top = 34.0
-offset_right = 221.0
-offset_bottom = 74.0
-text = "Dead"
-
-[node name="Button3" type="Button" parent="." unique_id=1609059624]
-layout_mode = 0
-offset_left = 160.0
-offset_top = 114.0
-offset_right = 226.0
-offset_bottom = 156.0
-text = "Zombie
-"
-
-[node name="Button4" type="Button" parent="." unique_id=1181688847]
-layout_mode = 0
-offset_left = 45.0
-offset_top = 116.0
-offset_right = 102.0
-offset_bottom = 158.0
-text = "Innovator"
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 158.0
+offset_bottom = 150.0

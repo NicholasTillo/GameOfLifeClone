@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://chl45rifasmu2" path="res://Theme/OverallTheme.tres" id="1_1ywly"]
 [ext_resource type="Script" path="res://Scenes/spaceship_upgrade_bay_pop_up.gd" id="1_uv77l"]
 [ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="3_42b37"]
+[ext_resource type="Texture2D" uid="uid://c5edjynbhxjh1" path="res://Assets/Screen.png" id="9_screen"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sxblv"]
 shader = ExtResource("3_42b37")
@@ -14,15 +15,6 @@ shader_parameter/roll_speed = 0.15
 shader_parameter/scanline_strength = 0.12
 shader_parameter/scanline_count = 480.0
 shader_parameter/chroma_offset = 0.0015
-
-[sub_resource type="Gradient" id="Gradient_84x2m"]
-offsets = PackedFloat32Array(0, 0.44578314, 0.96385545)
-colors = PackedColorArray(0, 0, 0, 1, 3.85046e-06, 0.83195215, 0.83632576, 1, 5.7275593e-06, 0.56127995, 0.56431866, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mfqfy"]
-gradient = SubResource("Gradient_84x2m")
-fill_from = Vector2(1, 0.8913044)
-fill_to = Vector2(0, 0.83913046)
 
 [node name="SpaceshipUpgradeBayPopUp" type="Control" node_paths=PackedStringArray("button1", "button2", "button3", "close_button")]
 z_index = 10
@@ -45,14 +37,19 @@ offset_right = 1152.0
 offset_bottom = 648.0
 color = Color(0.73333335, 0.6313726, 0.50980395, 0)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="NinePatchRect" parent="."]
 material = SubResource("ShaderMaterial_sxblv")
 layout_mode = 0
 offset_left = 175.0
 offset_top = 66.0
 offset_right = 998.0
 offset_bottom = 578.0
-texture = SubResource("GradientTexture2D_mfqfy")
+texture_filter = 1
+texture = ExtResource("9_screen")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
 
 [node name="NameLabel" type="Label" parent="."]
 modulate = Color(0, 0, 0, 1)

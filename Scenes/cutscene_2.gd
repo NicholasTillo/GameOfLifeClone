@@ -9,9 +9,9 @@ var culm_time = 0
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain Glart \n My son, I'm about to die, carry on my legacy, tell what it truly means to live when we meet in heaven.", 
-							"Captain Kele. \n I will keep your legacy going dad. ", 
-							"Captain Glart \n *dies*. "])
+	Text_Maker.list_of_text(["Captain Glart \n My son, I'm about to die, carry on my legacy, find the signal.", 
+							"Lieutenant Kele. \n I will keep your legacy going dad. I will search for her.", 
+							"Captain Glart \n I have enjoyed my time as captian of this ship, meeting all these people. I regret nothing, live on as I have"])
 	Text_Maker.display_text("2084CE - Outside of the Skoopa Galaxy - Medical Bay")
 
 	fade_in(audioPlayer, -20.0, 4.0)

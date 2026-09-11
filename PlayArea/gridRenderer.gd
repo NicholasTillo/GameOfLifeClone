@@ -49,6 +49,9 @@ const BORDER := 30.0
 #The nine-patch middle is hollow, so it gets filled with this first - otherwise the
 #gaps between cells are transparent and show whatever is behind the play area.
 const BACKGROUND_COLOR := Color.BLACK
+#Radiation shielding, drawn over the cells while the grid is locked. Kept translucent on
+#purpose: opaque enough to read as "hands off", thin enough to watch the board through.
+const SHIELD_COLOR := Color(1.0, 0.72, 0.20, 0.28)
 
 #Little 8x8 markers that float up off a cell and fade: a skull where somebody died, a green
 #$ where somebody got paid, an orange triangle where resource was produced. Eyeball knobs.
@@ -122,11 +125,21 @@ Burns for a while, catches on whatever is beside it, and leaves an empty berth."
 	"Life": "Life
 It gets into everything it touches, and it does not stop.",
 	"Sandshark": "Sandshark
-An exotic pet, perfectly happy doing nothing at all in the berth it occupies.",
+An exotic pet with an expensive appetite, and it leaves something useful behind.",
 	"Plorian": "Plorian
-An exotic pet, perfectly happy doing nothing at all in the berth it occupies.",
+An exotic pet that will not settle. It has somewhere to be, and it knows the dead.",
 	"Dog": "Dog
-A loyal pet, perfectly happy doing nothing at all in the berth it occupies.",
+A loyal pet. The crew beside it work twice as hard, and it pines away without people.",
+	"TotallyAlive": "Totally Alive
+Crew, as far as anything around it can tell, and nothing aboard can take it.",
+	"Doctor": "Doctor
+Works like any crew member, and puts the bodies beside it back on their feet.",
+	"Robot": "Robot
+Props up the crew around it and asks nothing of the room, but it seizes up with no Mechanic aboard.",
+	"NuclearEngineer": "Nuclear Engineer
+Crew like any other, until you stand it next to the machines. Then it makes resource, and more of it the more machines there are.",
+	"Captain": "Captain
+While one is aboard the whole crew is paid better, and some of those who should be lost are not.",
 }
 
 #Hint panel geometry. HINT_WIDTH is what the text wraps at; the offset keeps the panel
@@ -335,6 +348,7 @@ func _draw() -> void:
 			var color = state.get_cell(x, y).contains.color
 			var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 			draw_rect(rect, color)
+	draw_shield(offset, state.full_grid_size * CELL_SIZE)
 
 
 	#Draw Subships
@@ -346,6 +360,16 @@ func _draw() -> void:
 				var color = state.get_subship_cell(x, y, i).contains.color
 				var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 				draw_rect(rect, color)
+		draw_shield(offset, state.subgrid_sizes[i] * CELL_SIZE)
+
+
+#Radiation shielding over a grid while an event has the board locked. Drawn after the
+#cells and only over them, so the board stays readable through it - the player can watch
+#the round play out, they just cannot reach it. The hull frame is left clear.
+func draw_shield(offset: Vector2, grid_px: float) -> void:
+	if not GameManager.grid_locked():
+		return
+	draw_rect(Rect2(offset, Vector2(grid_px, grid_px)), SHIELD_COLOR)
 
 
 #Booster centred below the bottom of a grid.
@@ -437,8 +461,22 @@ func changeable_cell(location: int, grid_index: int = -1) -> bool:
 	#cannot be cleared away. "Pet1"/"Pet2"/"Pet3" used to be listed here and matched
 	#nothing; the pets' real ids are below.
 	var valid_classes = ["Alive", "Dead", "Wall", "Chef", "Innovator", "Mechanic",
-			"Sandshark", "Plorian", "Dog"]
+			"Sandshark", "Plorian", "Dog", "TotallyAlive", "Doctor",
+			"Robot", "NuclearEngineer", "Captain"]
+	#An event can take the whole board away for a few rounds (Solar Flare). Asked here
+	#rather than in _input_event because this is the one gate every click path goes
+	#through, main grid and subships alike.
+	if GameManager.grid_locked():
+		return false
 	return cell_at_index(location, grid_index).contains.id in valid_classes
+
+
+#Closes any open cell popup. Used when an event shuts the board down underneath one.
+func dismiss_popup() -> void:
+	if popup_enabled:
+		popup_enabled = false
+		if is_instance_valid(popup):
+			popup.queue_free()
 
 #--- Hover hint. A small panel naming the cell the cursor has come to rest on.
 

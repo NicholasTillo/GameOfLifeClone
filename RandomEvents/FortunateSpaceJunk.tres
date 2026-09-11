@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://bsewo7uob47pj"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Fortunate Space Junk"
+text = "The crew manages to salvage a large fortune from surrounding space junk."
+id = 12
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

@@ -9,7 +9,8 @@ var culm_time = 0
 @export var audioPlayer: AudioStreamPlayer
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain Cup \n Captain Marque gave up on the mission that I will resume, buried it for thousands of years, For those who come after us, We are going across the edge of the universe.", 
+	Text_Maker.list_of_text(["Captain Cup \n Captain Marque gave up on the mission that I will resume, buried it for thousands of years, thousands of years of darkness, wars, revolutions, pirates",
+							 "Captain Cup \n For those who come after us, We are going across the edge of the universe. Follow in our footsteps, find hope, do not give up.", 
 							"Captain Cup \n There is no way to know what lies beyond, but we shall find out in memory of those who came before us. "])
 	Text_Maker.display_text("~5230CE - The Edge Of The Universe")
 

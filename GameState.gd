@@ -16,7 +16,17 @@ var moneyAmount = 5 + GameManager.starting_money_increase
 var subgrids: Array = []
 var subgrid_sizes: Array = []
 var sub_ship_index = 0
-var min_number_of_surrounding_alives = 2
+#The crowding rule's bounds: an Alive cell needs at least MIN and at most MAX live
+#neighbours to see the next round. Events move these and put them back afterwards, and they
+#set absolute values rather than nudging with +=/-=, so two overlapping events cannot leave
+#the board permanently skewed when only one of them expires.
+const DEFAULT_MIN_ALIVES := 2
+const DEFAULT_MAX_ALIVES := 3
+#Eight is every neighbour a cell has, so nothing can ever be too crowded at this setting.
+const NO_CROWDING := 8
+
+var min_number_of_surrounding_alives = DEFAULT_MIN_ALIVES
+var max_number_of_surrounding_alives = DEFAULT_MAX_ALIVES
 
 
 func _init() -> void:

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://dhw1xip74foaw"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Faulty Warp Drive"
+text = "A hyperspace jump goes awry, and the ship's insides are all jumbled around."
+id = 14
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

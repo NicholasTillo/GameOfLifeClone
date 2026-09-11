@@ -301,10 +301,10 @@ text = "1"
 
 [node name="ResetButton" type="Button" parent="." unique_id=79857208 node_paths=PackedStringArray("button")]
 layout_mode = 0
-offset_left = 523.0
-offset_top = 502.0
-offset_right = 608.0
-offset_bottom = 555.0
+offset_left = 532.0
+offset_top = 547.0
+offset_right = 617.0
+offset_bottom = 600.0
 theme_override_font_sizes/font_size = 32
 text = "Back"
 script = ExtResource("1_4li1v")

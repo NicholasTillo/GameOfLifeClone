@@ -20,7 +20,7 @@ func _process_next_round():
 			chef_nearby = true
 		elif i.contains.id == "Dead":
 			dead_count += 1
-		elif i.contains.id == "Alive" || i.contains.id == "Revolutionary":
+		elif i.contains.id in GameManager.CREW || i.contains.id == "Revolutionary":
 			alive_count += 1
 		elif i.contains.id == "Zombie":
 			if i.contains.threatening():

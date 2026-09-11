@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://nvomfms376rl"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Enemy Spaceship Appears"
+text = "War has ravaged the space system for years. The ship has the means for defence, but not without some casualties."
+id = 16
+enabled = true
+required_cutscene = 3
+metadata/_custom_type_script = "uid://cmshelun5apk1"

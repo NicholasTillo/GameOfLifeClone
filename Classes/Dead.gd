@@ -15,7 +15,7 @@ func _process_next_round():
 	for i in cell.neighbours:
 		if i.contains.id == "Dead":
 			dead_count += 1
-		elif i.contains.id == "Alive":
+		elif i.contains.id in GameManager.CREW:
 			alive_count += 1
 	if alive_count == 3:
 		return Alive.new()

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://c3a7fw2rsbmkf"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Knowledge Collapse"
+text = "The seasoned workers lose all their tools and databases, crushing all their work."
+id = 13
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

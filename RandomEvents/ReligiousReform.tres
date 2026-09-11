@@ -8,4 +8,5 @@ name = "Revolutionary Reform"
 text = "Revolutionaries appear on the lower decks. Power to the people, and the people have stopped paying. It spreads the way an idea does, to whoever is standing closest."
 id = 6
 enabled = true
+required_cutscene = 3
 metadata/_custom_type_script = "uid://cmshelun5apk1"

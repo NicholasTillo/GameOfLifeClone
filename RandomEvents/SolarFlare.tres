@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://bdmkhrl7nabyd"]
+
+[ext_resource type="Script" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Solar Flare"
+text = "A flare up from a nearby star causes the ships to protect themselves from large amounts of solar radiation."
+id = 9
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

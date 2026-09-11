@@ -36,6 +36,8 @@ extends Node
 
 @onready var unlock_chef_upgrade: Upgrade = load("res://Upgrades/UnlockChef.tres")
 @onready var unlock_innovator_upgrade: Upgrade = load("res://Upgrades/UnlockInnovator.tres")
+@onready var unlock_nuclear_engineer_upgrade: Upgrade = load("res://Upgrades/UnlockNuclearEngineer.tres")
+@onready var unlock_captain_upgrade: Upgrade = load("res://Upgrades/UnlockCaptain.tres")
 
 @onready var unlock_rewind_upgrade: Upgrade = load("res://Upgrades/unlock_rewind.tres")
 @onready var unlock_rewind_upgrade2: Upgrade = load("res://Upgrades/unlock_rewind2.tres")
@@ -50,7 +52,8 @@ extends Node
 									starting_cell_1,starting_cell_2,starting_cell_3,starting_cell_4,starting_cell_5,
 									max_ship_size_upgrade_1,max_ship_size_upgrade_2,max_ship_size_upgrade_3,max_ship_size_upgrade_4,max_ship_size_upgrade_5,
 									starter_ship_size_upgrade_1,starter_ship_size_upgrade_2,starter_ship_size_upgrade_3,starter_ship_size_upgrade_4,starter_ship_size_upgrade_5,
-									unlock_chef_upgrade,unlock_innovator_upgrade,
+									unlock_chef_upgrade,unlock_innovator_upgrade,unlock_nuclear_engineer_upgrade,
+									unlock_captain_upgrade,
 									unlock_rewind_upgrade, unlock_rewind_upgrade2, unlock_rewind_upgrade3,unlock_rewind_upgrade4,unlock_rewind_upgrade5]
 
 
@@ -179,6 +182,26 @@ func purchase_max_ship_size_upgrade(upgrade:Upgrade):
 func purchase_starter_ship_size_upgrade(upgrade:Upgrade):
 	GameManager.chosen_upgrades["starter_ship_size_upgrade"].append(upgrade)
 	GameManager.state.starter_grid_size += 1
+
+#Every cell type a Shop unlock grants, keyed by Class id, in Shop order. This is the one
+#list: the in-run build menu, the starter-slot picker and anything else that asks "may the
+#player use this?" all read it, so they cannot disagree about what is unlocked. A new
+#unlockable cell is one line here plus its Upgrade resource.
+func unlockable_cells() -> Dictionary:
+	return {
+		"Chef": unlock_chef_upgrade,
+		"Innovator": unlock_innovator_upgrade,
+		"NuclearEngineer": unlock_nuclear_engineer_upgrade,
+		"Captain": unlock_captain_upgrade,
+	}
+
+
+#True when this cell is available to the player: either it never needed an unlock, or the
+#unlock has been bought.
+func cell_unlocked(id: String) -> bool:
+	var upgrade = unlockable_cells().get(id)
+	return upgrade == null or upgrade in GameManager.chosen_upgrades["unlock_cells"]
+
 
 func purchase_unlock_cell(upgrade:Upgrade):
 	GameManager.chosen_upgrades["unlock_cells"].append(upgrade)

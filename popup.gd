@@ -14,6 +14,10 @@ var grid_index: int = -1
 @export var wall_button:Button
 @export var life_button:Button
 @export var revolutionary_button:Button
+@export var doctor_button:Button
+@export var robot_button:Button
+@export var nuclear_engineer_button:Button
+@export var captain_button:Button
 
 
 var stored_popup_value: bool
@@ -26,27 +30,48 @@ const COST_WALL := 10
 const COST_LIFE := 10
 const COST_REVOLUTIONARY := 10
 const COST_CHEF := 50
+const COST_DOCTOR := 25
+const COST_ROBOT := 30
+const COST_NUCLEAR_ENGINEER := 50
+const COST_CAPTAIN := 150
 const REFUND_DEAD := 10             #clearing a cell pays this back
 const COST_MECHANIC_RESOURCE := 1
 const COST_INNOVATOR_RESOURCE := 1
+
+#Every cell the player can put on the board, in build-menu order. The starter-slot picker
+#offers exactly this list, so the two menus cannot drift apart - a cell added to one shows
+#up in the other. Dead is deliberately absent: it is the clear-this-berth action, and an
+#unfilled starter slot already holds one.
+const PLACEABLE := ["Alive", "Mechanic", "Doctor", "Robot", "Innovator", "Chef",
+		"NuclearEngineer", "Captain", "Wall", "Springtrap", "Life", "Revolutionary"]
 
 
 func _ready() -> void:
 	alive_button.pressed.connect(_button_pressed_alive)
 	dead_button.pressed.connect(_button_pressed_dead)
 	mechanic_button.pressed.connect(_button_pressed_mechanic)
-	if PlayerController.unlock_innovator_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+	if PlayerController.cell_unlocked("Innovator"):
 		innovator_button.pressed.connect(_button_pressed_innovator)
 	else:
 		innovator_button.text = "locked"
-	if PlayerController.unlock_chef_upgrade in GameManager.chosen_upgrades["unlock_cells"]:
+	if PlayerController.cell_unlocked("Chef"):
 		chef_button.pressed.connect(_button_pressed_chef)
 	else:
 		chef_button.text = "locked"
+	if PlayerController.cell_unlocked("NuclearEngineer"):
+		nuclear_engineer_button.pressed.connect(_button_pressed_nuclear_engineer)
+	else:
+		nuclear_engineer_button.text = "locked"
+	if PlayerController.cell_unlocked("Captain"):
+		captain_button.pressed.connect(_button_pressed_captain)
+	else:
+		captain_button.text = "locked"
 	springtrap_button.pressed.connect(_button_pressed_springtrap)
 	wall_button.pressed.connect(_button_pressed_wall)
 	life_button.pressed.connect(_button_pressed_life)
 	revolutionary_button.pressed.connect(_button_pressed_revolutionary)
+	doctor_button.pressed.connect(_button_pressed_doctor)
+	robot_button.pressed.connect(_button_pressed_robot)
 	stored_popup_value = GameManager.autoplay_enabled
 	_set_tooltips()
 
@@ -56,16 +81,26 @@ func _ready() -> void:
 func _set_tooltips() -> void:
 	alive_button.tooltip_text = "Alive - %d money\nA crew member. Pays you every round it survives." % COST_ALIVE
 	dead_button.tooltip_text = "Clear - refunds %d money\nEmpties the cell. Anyone there is gone." % REFUND_DEAD
-	mechanic_button.tooltip_text = "Mechanic - %d resource\nEarns +1 resource a round. Dies with no crew beside it." % COST_MECHANIC_RESOURCE
+	mechanic_button.tooltip_text = "Mechanic - %d resource\nEarns +%d resource a round. Dies with no crew beside it." % [COST_MECHANIC_RESOURCE, Mechanic.PAYOUT]
 	wall_button.tooltip_text = "Wall - %d money\nNever changes. Shapes patterns and blocks fire." % COST_WALL
 	springtrap_button.tooltip_text = "Springtrap - %d money\nKills crew around it for 7 rounds, then dies." % COST_SPRINGTRAP
 	life_button.tooltip_text = "Life - %d money\nSpreads to every neighbour, forever." % COST_LIFE
 	revolutionary_button.tooltip_text = "Revolutionary - %d money\nPays nothing, and converts the crew beside it." % COST_REVOLUTIONARY
+	doctor_button.tooltip_text = "Doctor - %d money\nLives and earns like crew, and raises the bodies beside it." % COST_DOCTOR
+	robot_button.tooltip_text = "Robot - %d money\nCounts as crew to its neighbours, and seizes up with no Mechanic aboard." % COST_ROBOT
 
 	if innovator_button.pressed.is_connected(_button_pressed_innovator):
-		innovator_button.tooltip_text = "Innovator - %d resource\nEarns +1 money a round. Dies with no crew beside it." % COST_INNOVATOR_RESOURCE
+		innovator_button.tooltip_text = "Innovator - %d resource\nEarns +%d money a round. Dies with no crew beside it." % [COST_INNOVATOR_RESOURCE, Innovator.PAYOUT]
 	else:
 		innovator_button.tooltip_text = "Locked - unlock the Innovator in the Shop between runs."
+	if captain_button.pressed.is_connected(_button_pressed_captain):
+		captain_button.tooltip_text = "Captain - %d money\nWhile one is aboard every crew member earns +%d, and a doomed one in four is spared." % [COST_CAPTAIN, Captain.MONEY_BONUS]
+	else:
+		captain_button.tooltip_text = "Locked - unlock the Captain in the Shop between runs."
+	if nuclear_engineer_button.pressed.is_connected(_button_pressed_nuclear_engineer):
+		nuclear_engineer_button.tooltip_text = "Nuclear Engineer - %d money\nCrew, and earns %d resource a round for every Robot beside it." % [COST_NUCLEAR_ENGINEER, NuclearEngineer.RESOURCE_PER_ROBOT]
+	else:
+		nuclear_engineer_button.tooltip_text = "Locked - unlock the Nuclear Engineer in the Shop between runs."
 	if chef_button.pressed.is_connected(_button_pressed_chef):
 		chef_button.tooltip_text = "Chef - %d money\nKeeps every neighbour alive, but eats %d money a round." % [COST_CHEF, Chef.UPKEEP]
 	else:
@@ -159,5 +194,41 @@ func _button_pressed_chef():
 	if cell.contains.id  != "Chef" and GameManager.state.how_much_money() >= COST_CHEF:
 		GameManager.state.change_money(-COST_CHEF)
 		change_parent(Chef.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
+
+
+func _button_pressed_doctor():
+	var cell = _get_cell()
+	if cell.contains.id  != "Doctor" and GameManager.state.how_much_money() >= COST_DOCTOR:
+		GameManager.state.change_money(-COST_DOCTOR)
+		change_parent(Doctor.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
+
+
+func _button_pressed_robot():
+	var cell = _get_cell()
+	if cell.contains.id  != "Robot" and GameManager.state.how_much_money() >= COST_ROBOT:
+		GameManager.state.change_money(-COST_ROBOT)
+		change_parent(Robot.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
+
+
+func _button_pressed_nuclear_engineer():
+	var cell = _get_cell()
+	if cell.contains.id  != "NuclearEngineer" and GameManager.state.how_much_money() >= COST_NUCLEAR_ENGINEER:
+		GameManager.state.change_money(-COST_NUCLEAR_ENGINEER)
+		change_parent(NuclearEngineer.new())
+	else:
+		GameOfLifeAudio.play_ui_disabled()
+
+
+func _button_pressed_captain():
+	var cell = _get_cell()
+	if cell.contains.id  != "Captain" and GameManager.state.how_much_money() >= COST_CAPTAIN:
+		GameManager.state.change_money(-COST_CAPTAIN)
+		change_parent(Captain.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()

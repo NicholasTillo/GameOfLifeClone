@@ -108,11 +108,14 @@ func update_shop_ui():
 
 	update_button(PlayerController.unlock_chef_upgrade, button26, "unlock_cells", "Chef")
 	update_button(PlayerController.unlock_innovator_upgrade, button27, "unlock_cells", "Innovator")
+	update_button(PlayerController.unlock_nuclear_engineer_upgrade, button28, "unlock_cells",
+			"Nuclear
+Engineer")
 
-	#Only Chef and Innovator exist as profession upgrades; the remaining slots have no
-	#Upgrade resource behind them, so don't show buttons that can't do anything.
-	button28.visible = false
-	button29.visible = false
+	update_button(PlayerController.unlock_captain_upgrade, button29, "unlock_cells", "Captain")
+
+	#The remaining slot has no Upgrade resource behind it, so don't show a button that
+	#can't do anything.
 	button30.visible = false
 
 	update_button(PlayerController.unlock_rewind_upgrade, button31, "unlock_rewind")
@@ -160,6 +163,8 @@ func connect_buttons():
 	
 	button26.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_chef_upgrade, button26))
 	button27.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_innovator_upgrade, button27))
+	button28.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_nuclear_engineer_upgrade, button28))
+	button29.pressed.connect(purchase_new_cell.bind(PlayerController.unlock_captain_upgrade, button29))
 
 	button31.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade, button31))
 	button32.pressed.connect(purchase_rewind.bind(PlayerController.unlock_rewind_upgrade2, button32))

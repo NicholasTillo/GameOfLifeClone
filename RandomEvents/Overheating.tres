@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="random_event" format=3 uid="uid://bvf5hjj2vlhwo"]
+
+[ext_resource type="Script" uid="uid://cmshelun5apk1" path="res://random_event.gd" id="1_ml75k"]
+
+[resource]
+script = ExtResource("1_ml75k")
+name = "Overheating"
+text = "The ship's boosters have run for too long, and need time to cool down. The ship's travel has slowed."
+id = 17
+enabled = true
+metadata/_custom_type_script = "uid://cmshelun5apk1"

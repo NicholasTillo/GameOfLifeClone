@@ -60,12 +60,14 @@ offset_left = 65.0
 offset_top = 75.0
 offset_right = 440.0
 offset_bottom = 497.0
+theme_override_constants/separation = 13
 
 [node name="Title" type="Label" parent="Control/Total Menu" unique_id=922234526]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
-text = "Game Of Life Ripoff
-"
+text = "The Game Of 
+The Meaning Of Life"
+horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="Control/Total Menu" unique_id=369781049 node_paths=PackedStringArray("button")]
 layout_mode = 2
