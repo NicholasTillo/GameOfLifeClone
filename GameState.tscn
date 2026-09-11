@@ -7,8 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://uqcu2jy0vxci" path="res://new_gradient_texture_1d.tres" id="3_licig"]
 [ext_resource type="Script" uid="uid://bdt7crlrq6wkh" path="res://Shop/shop_button.gd" id="4_8bu60"]
 [ext_resource type="Shader" uid="uid://d1glub2hpedxa" path="res://Background.gdshader" id="5_6dwkx"]
-[ext_resource type="Shader" uid="uid://sqfsyducou22" path="res://Scenes/DeadScene.gdshader" id="5_8o48q"]
-[ext_resource type="Texture2D" uid="uid://oky1w48px7xi" path="res://screentexture.jpg" id="7_m4bkb"]
+[ext_resource type="Shader" uid="uid://bneou8xinaoao" path="res://PanelMetal.gdshader" id="5_8o48q"]
 [ext_resource type="AudioStream" uid="uid://s8m4ltibxl3e" path="res://the_mountain-sci-fi-512284.mp3" id="8_ti75m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_licig"]
@@ -24,18 +23,26 @@ shader_parameter/star_scroll_speed = Vector2(0.01, 0.005)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_frrfw"]
 shader = ExtResource("5_8o48q")
-shader_parameter/flicker_strength = 0.06
-shader_parameter/flicker_speed = 18.0
-shader_parameter/jitter_strength = 0.002
-shader_parameter/roll_strength = 0.004
-shader_parameter/roll_speed = 0.15
-shader_parameter/scanline_strength = 0.12
-shader_parameter/scanline_count = 480.0
-shader_parameter/chroma_offset = 0.0015
+shader_parameter/tint = Color(1, 1, 1, 1)
+shader_parameter/brush_strength = 0.07
+shader_parameter/brush_frequency = 320.0
+shader_parameter/grain_strength = 0.035
+shader_parameter/sheen_strength = 0.16
+shader_parameter/sheen_width = 0.55
+shader_parameter/sheen_position = 0.3
+shader_parameter/edge_shade = 0.3
+shader_parameter/edge_width = 0.1
+
+[sub_resource type="Gradient" id="Gradient_panel"]
+colors = PackedColorArray(0.18, 0.2, 0.24, 1, 0.18, 0.2, 0.24, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_panel"]
+gradient = SubResource("Gradient_panel")
+fill_to = Vector2(1, 0.24782608)
 
 [node name="Root" type="Node2D" unique_id=858420152]
 
-[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "buy_supship_one_taxes_upgrade_button", "buy_supship_two_taxes_upgrade_button", "buy_ship_taxes_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
+[node name="UI" type="Control" parent="." unique_id=1751157619 node_paths=PackedStringArray("texty", "resource_text", "generation_label", "milestone_label", "buy_supship_one_button", "buy_supship_one_size_upgrade_button", "buy_supship_two_button", "buy_supship_two_size_upgrade_button", "buy_supship_one_taxes_upgrade_button", "buy_supship_two_taxes_upgrade_button", "buy_ship_taxes_upgrade_button", "do_rewind_button", "vbox_ship_one", "vbox_ship_two")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -1.0
@@ -44,6 +51,8 @@ theme = ExtResource("1_xsja8")
 script = ExtResource("1_mmopi")
 texty = NodePath("MoneyLabel")
 resource_text = NodePath("ResourceLabel")
+generation_label = NodePath("GenerationLabel")
+milestone_label = NodePath("MilestoneLabel")
 buy_supship_one_button = NodePath("ShopHBox/PurchaseSubship1")
 buy_supship_one_size_upgrade_button = NodePath("ShopHBox/SubshipOneContainer/Subship1SizeUpgrade")
 buy_supship_two_button = NodePath("ShopHBox/PurchaseSubship2")
@@ -60,10 +69,10 @@ light_mask = 0
 z_index = -50
 material = SubResource("ShaderMaterial_licig")
 layout_mode = 0
-offset_left = 2.2819602
-offset_top = 647.1698
-offset_right = 647.85187
-offset_bottom = 1377.3441
+offset_left = 1.0842122
+offset_top = 647.90686
+offset_right = 649.0302
+offset_bottom = 1379.6475
 rotation = -1.5707964
 mouse_filter = 2
 texture = ExtResource("3_licig")
@@ -75,7 +84,7 @@ layout_mode = 0
 offset_left = 731.0
 offset_right = 1153.0
 offset_bottom = 648.0
-texture = ExtResource("7_m4bkb")
+texture = SubResource("GradientTexture2D_panel")
 expand_mode = 1
 
 [node name="MoneyLabel" type="Label" parent="UI" unique_id=795344317]
@@ -116,16 +125,36 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.2294173, 0.36854005, 0.23573908, 1)
+color = Color(0.32630712, 0.50201887, 0.33102176, 1)
+
+[node name="GenerationLabel" type="Label" parent="UI" unique_id=771002311]
+layout_mode = 0
+offset_left = 752.0
+offset_top = 68.0
+offset_right = 1119.0
+offset_bottom = 105.0
+theme_override_font_sizes/font_size = 28
+text = "Generation 0"
+horizontal_alignment = 1
+
+[node name="MilestoneLabel" type="Label" parent="UI" unique_id=771002312]
+layout_mode = 0
+offset_left = 752.0
+offset_top = 105.0
+offset_right = 1119.0
+offset_bottom = 128.0
+theme_override_font_sizes/font_size = 13
+text = "20 generations to the next chapter"
+horizontal_alignment = 1
 
 [node name="ShopHeaderLabel" type="Label" parent="UI" unique_id=1790248283]
 layout_mode = 0
-offset_left = 886.0
-offset_top = 145.0
-offset_right = 995.0
-offset_bottom = 208.0
+offset_left = 785.0
+offset_top = 158.0
+offset_right = 1107.0
+offset_bottom = 221.0
 theme_override_font_sizes/font_size = 40
-text = "Shop"
+text = "Upgrade Seletion"
 horizontal_alignment = 1
 
 [node name="MoneyColorRect" type="ColorRect" parent="UI/ShopHeaderLabel" unique_id=1419304000]
@@ -143,6 +172,7 @@ offset_left = 752.0
 offset_top = 249.0
 offset_right = 1123.0
 offset_bottom = 377.0
+theme_override_constants/separation = 20
 alignment = 1
 
 [node name="MainShipVBox" type="VBoxContainer" parent="UI/ShopHBox" unique_id=1743948213]
@@ -203,14 +233,14 @@ Subship:
 
 [node name="PurchaseSubship2" type="Button" parent="UI/ShopHBox" unique_id=1140838289]
 layout_mode = 2
-text = "LOCKED"
+text = " LOCKED "
 
 [node name="AutoPlayButton" type="Button" parent="UI" unique_id=689869946 node_paths=PackedStringArray("button", "ui_Controller")]
 layout_mode = 0
-offset_left = 779.0
-offset_top = 523.0
-offset_right = 851.0
-offset_bottom = 596.0
+offset_left = 1043.0
+offset_top = 521.0
+offset_right = 1115.0
+offset_bottom = 594.0
 text = "Play"
 script = ExtResource("3_8bu60")
 button = NodePath(".")
@@ -218,10 +248,10 @@ ui_Controller = NodePath("..")
 
 [node name="NextRoundButton" type="Button" parent="UI" unique_id=1438485095 node_paths=PackedStringArray("button", "ui_Controller")]
 layout_mode = 0
-offset_left = 1043.0
-offset_top = 521.0
-offset_right = 1115.0
-offset_bottom = 594.0
+offset_left = 779.0
+offset_top = 523.0
+offset_right = 851.0
+offset_bottom = 596.0
 text = "Do One
 "
 script = ExtResource("3_krv0r")
@@ -243,9 +273,9 @@ text = "Rewind
 [node name="ColorRect" type="ColorRect" parent="UI" unique_id=112272859]
 layout_mode = 0
 offset_left = 730.0
-offset_top = 4.0
-offset_right = 732.0
-offset_bottom = 649.0
+offset_top = -24.0
+offset_right = 740.0
+offset_bottom = 659.0
 color = Color(0.7666196, 0.76661956, 0.76661956, 0.88235295)
 
 [node name="BackgroundMusicPlayer" type="AudioStreamPlayer" parent="." unique_id=105109344]

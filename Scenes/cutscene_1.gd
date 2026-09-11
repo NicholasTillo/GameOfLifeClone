@@ -9,9 +9,9 @@ var culm_time = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain \n Hello Mr. Engineer, how is the construction coming along?", 
-							"Cube 2 \n just working on the radar scanner now, it will be done within the year. ", 
-							"Captain \n Take this, this is the signal we are looking for, load this, this is the signature we are looking for. "])
+	Text_Maker.list_of_text(["Captain Glart \n Hello Mr. Engineer, how is the construction coming along?", 
+							"Mechanic Kuji \n just working on the radar scanner now, it will be done within the year. ", 
+							"Captain Glart \n Take this, this is the signal we are looking for, load this, this is the signature we are looking for. "])
 	  
 	Text_Maker.display_text("2026CE - Earth")
 

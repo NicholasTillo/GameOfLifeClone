@@ -1,7 +1,6 @@
 extends Class
 class_name Springtrap
 
-var alive_count:int = 0
 var night_count:int = 0
 
 func _init():
@@ -35,11 +34,8 @@ func _process_next_round():
 		
 
 func threatening():
+	var alive_count = 0
 	for i in cell.neighbours:
 		if i.contains.id == "Alive":
 			alive_count += 1
-			
-	if alive_count > 1:
-		return false
-	else:
-		return true
+	return alive_count <= 1

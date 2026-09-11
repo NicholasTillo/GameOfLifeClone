@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="Upgrade" format=3 uid="uid://27srls88xpe7"]
+[gd_resource type="Resource" script_class="Upgrade" format=3 uid="uid://btk6dbh34ljml"]
 
 [ext_resource type="Script" uid="uid://ca6j1ty6ohuk2" path="res://Upgrade.gd" id="1_bxody"]
 
 [resource]
 script = ExtResource("1_bxody")
-cost = 500
-resource_type = 1
+cost = 100
 id = "101"
-type = "money"
+type = "resource"
 metadata/_custom_type_script = "uid://ca6j1ty6ohuk2"

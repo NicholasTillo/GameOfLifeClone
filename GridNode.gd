@@ -7,6 +7,42 @@ var state: GameState
 var renderer = preload("res://Scenes/PlayARea.tscn").instantiate()
 var ui: UIController
 
+#Who can die, and what they have to become for it to count as dying. A death floats a
+#skull off the cell (see GridRenderer.spawn_death_skull). Everything not in MORTAL is a
+#monster, a wall or already gone. Turning into Life is ascension, not death, and neither
+#is mortal -> mortal (Alive -> Revolutionary, Alive -> Chef), so neither shows a skull.
+const MORTAL := ["Alive", "Chef", "Innovator", "Mechanic", "Revolutionary",
+		"Sandshark", "Plorian", "Dog"]
+const FATAL := ["Dead", "Corpse", "Zombie", "Fire"]
+
+#Run pacing. These were bare numbers inside do_next_round(); the HUD reads them too, so a
+#counter can never disagree with the rule it is counting down to.
+const EVENT_INTERVAL := 25      #a random event fires on every round_count multiple of this
+const CUTSCENE_INTERVAL := 20   #each cutscene needs this many more rounds than the last
+const MAX_CUTSCENE := 5         #Scenes/Cutscene1..5 exist; there is no Cutscene6
+const LIFE_EVENT_ID := 3        #RandomEvents/FindingMeaningOfLife.tres
+#The round that unlocks the final chapter.
+const LIFE_EVENT_ROUND := MAX_CUTSCENE * CUTSCENE_INTERVAL
+
+
+#Round the next cutscene unlocks at, or -1 once they have all been seen.
+func next_cutscene_round() -> int:
+	if current_cutscene_index >= MAX_CUTSCENE:
+		return -1
+	return (current_cutscene_index + 1) * CUTSCENE_INTERVAL
+
+
+#True when advancing one more round will trigger a random event.
+func event_next_round() -> bool:
+	return (round_count + 1) % EVENT_INTERVAL == 0
+
+
+#The Meaning Of Life belongs to the last chapter and nowhere else: it lands on the round
+#that unlocks the final cutscene, and only on a run where that cutscene is the one still to
+#come. A player still on chapter 2 who reaches round 100 gets an ordinary event instead.
+func life_event_due() -> bool:
+	return round_count == LIFE_EVENT_ROUND and current_cutscene_index == MAX_CUTSCENE - 1
+
 var sub_ships: Array
 
 var result: Class
@@ -86,6 +122,9 @@ func reset() -> void:
 	state = GameState.new()
 	renderer.redraw()
 	round_count = 0
+	#Loop detection is per-run. Left uncleared it grows for the whole session and a new
+	#run can be ended by a board the previous run already visited.
+	prev_states.clear()
 	init_history()
 	
 
@@ -93,6 +132,22 @@ func reset() -> void:
 
 		
 		
+#Every place a cell's contents change routes through here, so a death is noticed in one
+#spot instead of six. grid_index -1 is the main grid, 0/1 a subship.
+func replace_cell(cell: Cell, new_contains: Class, grid_index: int = -1) -> void:
+	if cell.contains != null and cell.contains.id in MORTAL and new_contains.id in FATAL:
+		renderer.spawn_death_skull(cell.id, grid_index)
+	else:
+		#Flags set by Class.process_next_round() when working this cell out paid the
+		#player. Not exclusive - a future cell type could earn both currencies.
+		if new_contains.earned_money:
+			renderer.spawn_money_pop(cell.id, grid_index)
+		if new_contains.earned_resource:
+			renderer.spawn_resource_pop(cell.id, grid_index)
+	cell.contains = new_contains
+	new_contains.cell = cell
+
+
 func do_next_round():
 	var copy_array = []
 	
@@ -102,18 +157,19 @@ func do_next_round():
 		
 	
 	for i in range(len(state.cells)):
-		state.cells[i].contains = copy_array[i]
-		state.cells[i].contains.cell = state.cells[i]
-	
+		replace_cell(state.cells[i], copy_array[i])
+
 	if num_remaining_astroids > 0:
-		#Do astroid Belt Stuff. 
+		#Do astroid Belt Stuff.
 		var chosen_cell = state.cells.pick_random()
 		#Play Animation Of Astroid
 		num_remaining_astroids -= 1
-		chosen_cell.contains = Dead.new() 
-		chosen_cell.contains.id = chosen_cell.id
-		
-	
+		#This used to also do `contains.id = chosen_cell.id`, overwriting the class id
+		#("Dead") with the cell's array index. That corrupted every id comparison and
+		#the state hash for that cell, so it is gone.
+		replace_cell(chosen_cell, Dead.new())
+
+
 	if num_remaining_ecodeadzone > 0:
 		num_remaining_ecodeadzone -= 1
 		if num_remaining_ecodeadzone == 0:
@@ -123,17 +179,24 @@ func do_next_round():
 
 	if check_stable_state(state.cells, state.subgrids):
 		autoplay_enabled = false
-		best_score = round_count
+		best_score = max(best_score, round_count)
 		in_gameplay = false
 		renderer.clear()
-		if round_count >= (current_cutscene_index + 1) * 20:
+		var milestone := next_cutscene_round()
+		#milestone is -1 once all five cutscenes are seen. Without that guard this walked
+		#current_cutscene_index up to 6 and tried to load a Cutscene6.tscn that does not
+		#exist, leaving the player on a dead screen.
+		if milestone >= 0 and round_count >= milestone:
 			current_cutscene_index += 1
-			print("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
 			get_tree().change_scene_to_file("res://Scenes/Cutscene"+str(current_cutscene_index)+".tscn")
 		else:
 			get_tree().change_scene_to_file("res://Scenes/DeadScene.tscn")
-		
-		
+		#change_scene_to_file is deferred, so without this the run keeps advancing:
+		#round_count ticks over and can fire a random event whose popup is parented to
+		#the tree root, leaving it floating over the death screen or cutscene.
+		return
+
+
 	for i in range(len(state.subgrids)):
 		var copy_array_1 = []
 	
@@ -142,8 +205,7 @@ func do_next_round():
 			copy_array_1.append(result)
 			
 		for j in range(len(state.subgrids[i])):
-			state.subgrids[i][j].contains = copy_array_1[j]
-			state.subgrids[i][j].contains.cell = state.subgrids[i][j]
+			replace_cell(state.subgrids[i][j], copy_array_1[j], i)
 
 	renderer.redraw()
 	round_count += 1
@@ -152,7 +214,16 @@ func do_next_round():
 	#Record this turn (board + money + resource + round_count) so it can be rewound to.
 	push_history(take_snapshot())
 
-	if round_count % 25 == 0:
+	#Refresh the HUD every round. It used to update only as a side effect of a cell
+	#earning money, so the generation counter would stall on a round where nobody got paid.
+	if ui != null:
+		ui.update_ui()
+
+	#elif, not a second if: LIFE_EVENT_ROUND is itself a multiple of EVENT_INTERVAL, so both
+	#branches would fire on the same round and stack two event popups on top of each other.
+	if life_event_due():
+		trigger_meaning_of_life()
+	elif round_count % EVENT_INTERVAL == 0:
 		do_random_event()
 	
 
@@ -171,32 +242,56 @@ func load_resources_from_folder(path: String) -> Array[Resource]:
 			
 	return resources
 
+#Shows an event's popup. Both trigger paths use this so the player sees the same card
+#however the event was reached.
+func show_event_popup(event: random_event):
+	var event_popup = event_popup_precon_scene.instantiate()
+	get_tree().root.add_child(event_popup)
+	event_popup.change_name(event.name)
+	event_popup.change_text(event.text)
+	return event_popup
+
+
+#Drops a single Life into the board. Life converts every neighbour each round (see
+#Class.process_next_round), so one seed is enough to take the whole crew.
+func seed_life() -> void:
+	var chosen_cell = state.cells.pick_random()
+	chosen_cell.contains = Life.new()
+	chosen_cell.contains.cell = chosen_cell
+
+
+#The Meaning Of Life arriving on its own, outside the random pool and the 25-round cycle:
+#its popup plus the seed. Fired from do_next_round() when life_event_due() says so.
+func trigger_meaning_of_life() -> void:
+	#An event permanently changes the board this run; block rewinding past it.
+	rewind_blocked = true
+	for e in load_resources_from_folder("res://RandomEvents"):
+		if e.id == LIFE_EVENT_ID:
+			show_event_popup(e)
+			break
+	seed_life()
+	renderer.redraw()
+
+
 func do_random_event():
 	#An event permanently changes the board this run; block rewinding past it.
 	rewind_blocked = true
 	
 	var list_of_events:Array = load_resources_from_folder("res://RandomEvents")
+
+	#The Meaning Of Life is kept OUT of this pool - FindingMeaningOfLife.tres is
+	#`enabled = false` and the loop below skips disabled events, so it can never be drawn
+	#at random and spoil the ending. It has its own guaranteed trigger at
+	#LIFE_EVENT_ROUND in do_next_round().
 	var chosen_event: random_event = list_of_events.pick_random()
-	
-	
-	#Account for Meaning Of Life
-	if round_count >= 100 && GameManager.current_cutscene_index == 4:
-		for e in list_of_events:
-			if e.id == 3:
-				chosen_event = e
-				break
-	else:
-		while chosen_event.enabled == false:
-			chosen_event = list_of_events.pick_random()
-	
-	
-	var event_popup = event_popup_precon_scene.instantiate()
-	get_tree().root.add_child(event_popup)
-	event_popup.change_name(chosen_event.name)
-	event_popup.change_text(chosen_event.text)
-	
+	while chosen_event.enabled == false:
+		chosen_event = list_of_events.pick_random()
+
+
+	var event_popup = show_event_popup(chosen_event)
+
 	#Actually Do The Thing
-	
+
 	match chosen_event.id:
 		0: #Springtrap
 			var chosen_cell = state.cells.pick_random()
@@ -206,17 +301,14 @@ func do_random_event():
 			var num_of_zombies = 5
 			for i in range(num_of_zombies):
 				var chosen_cell = state.cells.pick_random()
-				chosen_cell.contains = Zombie.new()
-				chosen_cell.contains.cell = chosen_cell
+				replace_cell(chosen_cell, Zombie.new())
 		2: #Exotic Pet Store
 			var pet_store_popup = pet_store_popup_scene.instantiate()
 			event_popup.okay_button.pressed.connect(func(): 
 															get_tree().root.add_child(pet_store_popup)
 															event_popup.close())
 		3: #Meaning Of Life
-			var chosen_cell = state.cells.pick_random()
-			chosen_cell.contains = Life.new()
-			chosen_cell.contains.cell = chosen_cell
+			seed_life()
 		4:#Astroid Belt
 			num_remaining_astroids =  (randi() % 15 )+ 5 #Random 5-20
 
@@ -252,8 +344,7 @@ func do_random_event():
 				if flammable.is_empty():
 					break
 				var chosen_cell = flammable.pick_random()
-				chosen_cell.contains = Fire.new()
-				chosen_cell.contains.cell = chosen_cell
+				replace_cell(chosen_cell, Fire.new())
 	
 # Every fire that has just burned for SPREAD_AGE rounds ignites one random non-burning
 # neighbour, until the outbreak's shared spread budget runs out. Runs after the round's
@@ -278,12 +369,11 @@ func spread_fire() -> void:
 			continue
 
 		var target = targets.pick_random()
-		target.contains = Fire.new()
-		target.contains.cell = target
+		replace_cell(target, Fire.new())
 		fire_spreads_remaining -= 1
 
 
-func check_stable_state(param, subgrids):
+func check_stable_state(param, subgrids) -> bool:
 	var hashed = hash_state(param, subgrids)
 	
 	for i in prev_states:
@@ -386,6 +476,8 @@ func id_to_class(id: String) -> Class:
 		"Corpse": return Corpse.new()
 		"Zombie": return Zombie.new()
 		"Innovator": return Innovator.new()
+		"Mechanic": return Mechanic.new()
+		"Revolutionary": return Revolutionary.new()
 		"Wall": return Wall.new()
 		"Springtrap": return Springtrap.new()
 		"Life": return Life.new()

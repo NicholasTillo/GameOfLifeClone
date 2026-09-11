@@ -69,7 +69,9 @@ func choose_upgrade(param_upgrade: Upgrade):
 #Inside Of Game Upgrades
 func purchase_grid_upgrade():
 	var grid_upgrade: Upgrade = load("res://Upgrades/GridSizeUpgrade1.tres")
-	if GameManager.state.how_much_money() > grid_upgrade.cost:
+	#>=, not >: the subship path already charges on exactly the price, and with a round
+	#cost like 50 the player lands on it exactly all the time.
+	if GameManager.state.how_much_money() >= grid_upgrade.cost:
 		if GameManager.renderer.popup_enabled:
 			GameManager.renderer.popup.queue_free()
 			GameManager.renderer.popup_enabled = false
@@ -79,6 +81,7 @@ func purchase_grid_upgrade():
 		
 		GameManager.state.change_money(-grid_upgrade.cost)
 		GameOfLifeAudio.play_purchase()
+		return 1
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 		return 0
@@ -98,7 +101,9 @@ func purchase_ship_upgrade(sub_ship_upgrade_cost):
 		#Play Sound
 
 func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
-	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost && sub_ship_size_upgrade_number[subship_num] <= 5:
+	#Subships share the main ship's size-upgrade allowance, so the Max Ship Size
+	#shop upgrades raise the cap here too.
+	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost && sub_ship_size_upgrade_number[subship_num] < GameManager.max_number_size_upgrades:
 		if GameManager.renderer.popup_enabled:
 			GameManager.renderer.popup.queue_free()
 			GameManager.renderer.popup_enabled = false
@@ -106,7 +111,7 @@ func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
 		GameManager.state.subgrids[subship_num] = GameManager.state.resize_grid(1, GameManager.state.subgrids[subship_num], GameManager.state.subgrid_sizes[subship_num])
 		GameManager.state.subgrid_sizes[subship_num] += 1
 		sub_ship_size_upgrade_number[subship_num] += 1
-		if sub_ship_size_upgrade_number[subship_num] == 5:
+		if sub_ship_size_upgrade_number[subship_num] >= GameManager.max_number_size_upgrades:
 			#Disable Button
 			UI_controller.diable_subship_size_upgrade(subship_num)
 		GameOfLifeAudio.play_purchase()
@@ -126,6 +131,7 @@ func purchase_main_ship_taxes_upgrade(upgrade_cost):
 		GameManager.money_per_alive += 0.1
 		GameManager.state.change_money(-upgrade_cost)
 		GameOfLifeAudio.play_purchase()
+		return 1
 	else:
 		GameOfLifeAudio.play_ui_disabled()
 		return 0

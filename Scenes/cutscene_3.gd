@@ -9,8 +9,8 @@ var culm_time = 0
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain \n The more we search, the more emptiness we find, we have scanned the whole observable universe, and found nothing with the meaning signature", 
-							"Captain \n I am beginning to belive that our mission is futile. "])
+	Text_Maker.list_of_text(["Captain Marque \n The more we search, the more emptiness we find, we have scanned the whole observable universe, and found nothing with the meaning signature", 
+							"Captain Marque \n I am beginning to belive that our mission is futile. "])
 	Text_Maker.display_text("3214CE")
 
 	fade_in(audioPlayer, -20.0, 4.0)

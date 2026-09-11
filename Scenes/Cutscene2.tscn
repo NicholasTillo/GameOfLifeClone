@@ -27,7 +27,7 @@ texture = ExtResource("4_g5bq5")
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=1761414170]
 layout_mode = 0
 offset_left = 211.0
-offset_top = 413.0
+offset_top = 444.0
 offset_right = 985.0
 offset_bottom = 625.0
 theme_override_font_sizes/normal_font_size = 32
@@ -36,17 +36,17 @@ metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
 
 [node name="Character1" type="ColorRect" parent="Control" unique_id=971282010]
 layout_mode = 0
-offset_left = 295.0
-offset_top = 359.0
-offset_right = 335.0
-offset_bottom = 399.0
+offset_left = 269.0
+offset_top = 393.0
+offset_right = 309.0
+offset_bottom = 433.0
 
 [node name="Character2" type="ColorRect" parent="Control" unique_id=1886753119]
 layout_mode = 0
-offset_left = 633.0
-offset_top = 359.0
-offset_right = 673.0
-offset_bottom = 399.0
+offset_left = 653.0
+offset_top = 380.0
+offset_right = 693.0
+offset_bottom = 420.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1098145960]
 stream = ExtResource("4_0h15u")

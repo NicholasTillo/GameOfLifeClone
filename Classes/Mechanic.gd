@@ -23,13 +23,3 @@ func _process_next_round():
 	else:
 		GameManager.change_resource(1)
 		return Mechanic.new()
-	
-	
-	
-func threatening():
-	var alive_count = 0
-	
-	for i in cell.neighbours:
-		if i.contains.id == "Alive":
-			alive_count += 1
-	return alive_count < 3

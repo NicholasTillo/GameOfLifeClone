@@ -114,7 +114,11 @@ func get_subship_cell(x:int, y:int, ship:int):
 
 func change_money(x: float):
 	moneyAmount += x
-	GameManager.ui.update_ui()
+	#There is no UIController outside the gameplay scene, and change_resource() already
+	#guards its own update the same way. Unguarded this threw on every money change made
+	#with no HUD present.
+	if GameManager.ui != null:
+		GameManager.ui.update_ui()
 	
 func how_much_money():
 	return moneyAmount

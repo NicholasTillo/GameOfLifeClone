@@ -7,5 +7,5 @@ script = ExtResource("1_qn2g3")
 name = "The Meaning Of Life"
 text = "After all this way, something aboard finally answers. It wears the shape of one of your crew, and everything it touches learns to wear it too."
 id = 3
-enabled = true
+enabled = false
 metadata/_custom_type_script = "uid://cmshelun5apk1"

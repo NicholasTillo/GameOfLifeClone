@@ -9,10 +9,10 @@ var culm_time = 0
 
 
 func _ready() -> void:
-	Text_Maker.list_of_text(["Captain \n Hello, I'm about to die, bring on my legacy, tell me when we meet in heaven.", 
-							"Captain 2. \n Okay I will keep your legacy going dad. ", 
-							"Captain \n *died*. "])
-	Text_Maker.display_text("2084CE - Outside of the Skoopa Galaxy")
+	Text_Maker.list_of_text(["Captain Glart \n My son, I'm about to die, carry on my legacy, tell what it truly means to live when we meet in heaven.", 
+							"Captain Kele. \n I will keep your legacy going dad. ", 
+							"Captain Glart \n *dies*. "])
+	Text_Maker.display_text("2084CE - Outside of the Skoopa Galaxy - Medical Bay")
 
 	fade_in(audioPlayer, -20.0, 4.0)
 

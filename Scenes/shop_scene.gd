@@ -52,14 +52,31 @@ func _ready() -> void:
 	connect_buttons()
 	update_shop_ui()
 	
+#What each shop column actually grants, keyed by the chosen_upgrades category. Used for the
+#hover text so a player can tell the five tiers apart before spending.
+const EFFECTS := {
+	"money_upgrades": "+10 money at the start of every run.",
+	"chance_upgrades": "+10% chance each cell starts alive.",
+	"starter_upgrades": "+1 cell slot you can pre-place before a run.",
+	"max_ship_size_upgrade": "+1 to how many Size Upgrades a ship can take in a run.",
+	"starter_ship_size_upgrade": "+1 to the size every ship starts at.",
+	"unlock_cells": "Unlocks this crew type in the in-run build menu.",
+	"unlock_rewind": "+1 rewind per run, usable until an event fires.",
+}
+
+
 func update_button(upgrade, button: Button, category: String, upgrade_name: String = ""):
 	var prefix = upgrade_name + "\n" if upgrade_name != "" else ""
+	var effect: String = EFFECTS.get(category, "")
 	if upgrade in GameManager.chosen_upgrades[category]:
 		button.text = prefix + "Sold"
 		button.disabled = true
+		button.tooltip_text = "Already bought.\n%s" % effect
 	else:
 		button.text = prefix + str(upgrade.cost)
 		button.disabled = false
+		#Cost comes off the same Upgrade resource the purchase checks against.
+		button.tooltip_text = "%d resource\n%s" % [upgrade.cost, effect]
 
 func update_shop_ui():
 	update_button(PlayerController.start_money_upgrade1, button1, "money_upgrades")
@@ -226,8 +243,8 @@ func purchase_rewind(upgrade, button: Button):
 func update_ui_shop():
 	label1.text = "Starting Money Increase: " + str(GameManager.starting_money_increase)
 	label2.text = "Starting Alive Chance Per Cell: " + str(float(GameManager.starting_alive_chance))
-	label3.text = "Starting Cell Slots: " + str(float(GameManager.starting_slots))
-	label4.text = "Max Ship Size: " + str(float(GameManager.state.starter_grid_size + GameManager.max_number_size_upgrades))
-	label5.text = "Starter Ship Size: " + str(float(GameManager.state.starter_grid_size))
+	label3.text = "Starting Cell Slots: " + str(int(GameManager.starting_slots))
+	label4.text = "Max Ship Size: " + str(GameManager.state.starter_grid_size + GameManager.max_number_size_upgrades)
+	label5.text = "Starter Ship Size: " + str(GameManager.state.starter_grid_size)
 	resource_label.update_ui()
 	

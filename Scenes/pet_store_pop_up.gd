@@ -14,14 +14,22 @@ func _ready() -> void:
 	
 
 func spawn_pet_1():
-	var chosen_cell = GameManager.state.cells.pick_random()
-	chosen_cell.contains = Sandshark.new()
-	chosen_cell.contains.cell = chosen_cell
+	_spawn_pet(Sandshark.new())
+
+
 func spawn_pet_2():
-	var chosen_cell = GameManager.state.cells.pick_random()
-	chosen_cell.contains = Plorian.new()
-	chosen_cell.contains.cell = chosen_cell
+	_spawn_pet(Plorian.new())
+
+
 func spawn_pet_3():
+	_spawn_pet(Dog.new())
+
+
+#One pet per visit: the popup closes on the pick. Without this the buttons stayed live
+#and the player could spawn unlimited permanent blockers.
+func _spawn_pet(pet: Class) -> void:
 	var chosen_cell = GameManager.state.cells.pick_random()
-	chosen_cell.contains = Dog.new()
+	chosen_cell.contains = pet
 	chosen_cell.contains.cell = chosen_cell
+	GameManager.renderer.redraw()
+	queue_free()

@@ -70,6 +70,13 @@ offset_right = 1153.0
 offset_bottom = 648.0
 texture = ExtResource("3_k6bgt")
 
+[node name="Ship1" type="Sprite2D" parent="Control" unique_id=308171218]
+texture_filter = 1
+material = SubResource("ShaderMaterial_drift")
+position = Vector2(586, 304)
+scale = Vector2(4, 4)
+texture = ExtResource("6_jeamb")
+
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=578905521]
 layout_mode = 0
 offset_left = 162.0
@@ -79,13 +86,6 @@ offset_bottom = 607.0
 theme_override_font_sizes/normal_font_size = 32
 script = ExtResource("2_epo75")
 metadata/_custom_type_script = "uid://b5v8y8a7h3y1n"
-
-[node name="Ship1" type="Sprite2D" parent="Control" unique_id=308171218]
-texture_filter = 1
-material = SubResource("ShaderMaterial_drift")
-position = Vector2(586, 304)
-scale = Vector2(4, 4)
-texture = ExtResource("6_jeamb")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Control" unique_id=1037667150]
 position = Vector2(485, 318)

@@ -33,17 +33,18 @@ texture = ExtResource("3_6xn6i")
 
 [node name="Character1" type="ColorRect" parent="Control" unique_id=2006072800]
 layout_mode = 0
-offset_left = 221.0
-offset_top = 349.0
-offset_right = 261.0
-offset_bottom = 389.0
+offset_left = 243.0
+offset_top = 345.0
+offset_right = 283.0
+offset_bottom = 385.0
 
 [node name="Character2" type="ColorRect" parent="Control" unique_id=1691542103]
 layout_mode = 0
 offset_left = 836.0
-offset_top = 363.0
+offset_top = 347.0
 offset_right = 876.0
-offset_bottom = 403.0
+offset_bottom = 387.0
+color = Color(1, 0.64705884, 0, 1)
 
 [node name="Scrolling_Text" type="RichTextLabel" parent="Control" unique_id=1462396555]
 layout_mode = 0

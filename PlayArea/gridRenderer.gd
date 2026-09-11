@@ -17,7 +17,24 @@ var booster_texture: Texture2D = preload("res://Assets/SPrite2.png")
 #SCALE sizes the 64x64 art against the grid, OFFSET_Y is how far below the hull's
 #bottom edge it sits - raise it to drop the booster further down the screen.
 const BOOSTER_SCALE := 2.0
-const BOOSTER_OFFSET_Y := 292.0
+const BOOSTER_OFFSET_Y := 40.0
+
+#Booster exhaust: the same particle system as the thruster plume in the opening cutscene
+#(Scenes/Cutscene0.tscn) - same 15x15 noise texture, same orange-to-red ramp, same spin and
+#orbit drift, same slow 20fps step - with ONE change. The cutscene pushes its particles
+#left across the screen (gravity -200 on X) because the ship is flying past; here the ship
+#is pointing up the screen, so the exhaust goes straight down instead.
+const THRUST_GRAVITY := 200.0          #pixels/sec^2. +Y is down in 2D
+const THRUST_LIFETIME := 1.72
+const THRUST_FPS := 20
+const THRUST_AMOUNT := 8               #GPUParticles2D default, kept deliberately
+const THRUST_AMOUNT_RATIO := 0.1718
+const THRUST_SPIN := 10.0              #angular_velocity, +/- this
+const THRUST_ORBIT := 0.05             #orbit_velocity, +/- this
+const THRUST_NOISE_SIZE := 15
+const THRUST_BUMP := 3.2
+const THRUST_HOT := Color(0.85490197, 0.6509804, 0.3137255, 1.0)
+const THRUST_COOL := Color(0.8039216, 0.14509805, 0.15686275, 1.0)
 
 #Hull frame drawn around every grid, from the Aseprite 9-slice in
 #Assets/ShipUpCLose1.json (slice "Slice 1"). Aseprite gives "center" relative to
@@ -33,18 +50,279 @@ const BORDER := 30.0
 #gaps between cells are transparent and show whatever is behind the play area.
 const BACKGROUND_COLOR := Color.BLACK
 
+#Little 8x8 markers that float up off a cell and fade: a skull where somebody died, a green
+#$ where somebody got paid, an orange triangle where resource was produced. Eyeball knobs.
+#
+#A skull can afford to be near-invisible because it appears over a cell that just turned
+#BLACK - all the contrast is free. Money and resource are the opposite: they fire over a
+#cell that is still ALIVE and bright (white crew, orange mechanic), so a faint marker is
+#washed out completely. That is why they are near-opaque and, more importantly, are given
+#an initial upward SPEED - gravity alone accelerates from zero, which parks the marker on
+#top of the bright cell for exactly the frames when it is at its most visible.
+const SKULL_ALPHA := 0.28       #peak opacity, before the fade to nothing
+const SKULL_LIFETIME := 1.2     #seconds from spawn to fully faded
+const SKULL_RISE := 18.0        #upward acceleration, pixels/sec^2
+const SKULL_SPEED := 0.0        #no kick; it drifts off a dark cell and reads fine
+const SKULL_CAP := 128          #max concurrent; past this the oldest is recycled
 
+#Money is far denser than death - every surviving crew member earns EVERY round, so a
+#40-strong crew on autoplay is ~160 signs/second, where deaths come in occasional bursts.
+#Hence the short life. Turn MONEY_ALPHA down if the board starts looking green.
+const MONEY_ALPHA := 0.85
+const MONEY_LIFETIME := 0.8
+const MONEY_RISE := 26.0
+const MONEY_SPEED := 34.0       #clears the white cell it was earned on within ~0.15s
+const MONEY_CAP := 128
+#Deep saturated green: a pale green is unreadable against a white living cell.
+const MONEY_COLOR := Color(0.05, 0.75, 0.15)
+
+#Resource is much rarer than money - only Mechanics make it.
+const RESOURCE_ALPHA := 0.85
+const RESOURCE_LIFETIME := 0.9
+const RESOURCE_RISE := 26.0
+const RESOURCE_SPEED := 34.0
+const RESOURCE_CAP := 64
+const RESOURCE_COLOR := Color(1.0, 0.5, 0.0)
+
+var skull_texture: Texture2D = preload("res://Assets/Skull.png")
+var money_texture: Texture2D = preload("res://Assets/Money.png")
+var resource_texture: Texture2D = preload("res://Assets/Resource.png")
+var _thrust: GPUParticles2D
+var _skulls: GPUParticles2D
+var _money: GPUParticles2D
+var _resource: GPUParticles2D
+
+
+#One vague sentence per cell type, shown when the mouse rests on a cell. Deliberately
+#imprecise about the exact counts - the player is meant to work the rules out - and keyed
+#by Class.id, so an id with no entry here simply shows no hint instead of erroring.
+const CELL_HINTS := {
+	"Alive": "Alive
+A base crew member, staying alive makes money, and it dies to overcrowding and isolation.",
+	"Dead": "Empty
+An empty berth, which fills itself with new crew when just enough of them are gathered around it.",
+	"Wall": "Wall
+Bare hull plating, it never changes and nothing spreads through it.",
+	"Chef": "Chef
+Keeps every neighbour fed and alive no matter what, for a hefty wage every round.",
+	"Innovator": "Innovator
+Tinkers away for extra money each round, but will not last without crew beside it.",
+	"Mechanic": "Mechanic
+Works the ship for resources each round, but will not last without crew beside it.",
+	"Revolutionary": "Revolutionary
+Earns you nothing, and talks the crew around it into joining the cause.",
+	"Springtrap": "Springtrap
+Something in the vents kills the crew near it for a handful of nights, then is gone.",
+	"Corpse": "Corpse
+What the vents leave behind, and it will never change again.",
+	"Zombie": "Zombie
+Spreads into the crew it touches, and cannot survive alone or in a crowd.",
+	"Fire": "Fire
+Burns for a while, catches on whatever is beside it, and leaves an empty berth.",
+	"Life": "Life
+It gets into everything it touches, and it does not stop.",
+	"Sandshark": "Sandshark
+An exotic pet, perfectly happy doing nothing at all in the berth it occupies.",
+	"Plorian": "Plorian
+An exotic pet, perfectly happy doing nothing at all in the berth it occupies.",
+	"Dog": "Dog
+A loyal pet, perfectly happy doing nothing at all in the berth it occupies.",
+}
+
+#Hint panel geometry. HINT_WIDTH is what the text wraps at; the offset keeps the panel
+#clear of the cursor so it never covers the cell being asked about.
+const HINT_WIDTH := 300.0
+const HINT_OFFSET := Vector2(16.0, 16.0)
+#How long the cursor has to sit still before the hint appears. A hint that tracked the
+#mouse live flickered through a cell type per pixel and was pure noise.
+const HINT_DELAY := 1.0
+
+var _hint: PanelContainer
+var _hint_label: RichTextLabel
+var _hint_timer: Timer
+var _hint_pos: Vector2
+
+
+func _ready() -> void:
+	_skulls = _build_pop_emitter(skull_texture, Color.WHITE, SKULL_ALPHA,
+			SKULL_LIFETIME, SKULL_RISE, SKULL_SPEED, SKULL_CAP)
+	_money = _build_pop_emitter(money_texture, MONEY_COLOR, MONEY_ALPHA,
+			MONEY_LIFETIME, MONEY_RISE, MONEY_SPEED, MONEY_CAP)
+	_resource = _build_pop_emitter(resource_texture, RESOURCE_COLOR, RESOURCE_ALPHA,
+			RESOURCE_LIFETIME, RESOURCE_RISE, RESOURCE_SPEED, RESOURCE_CAP)
+	add_child(_skulls)
+	add_child(_money)
+	add_child(_resource)
+	_thrust = _build_thrust()
+	add_child(_thrust)
+	_build_hint()
+	mouse_exited.connect(_hide_hint)
+
+
+#One emitter per effect, shared by every instance of it. Particles are pushed in one at a
+#time with emit_particle(), so `amount` doubles as the concurrency cap for free - no
+#bookkeeping, and a burst past the limit just recycles the oldest.
+func _build_pop_emitter(texture: Texture2D, tint: Color, alpha: float,
+		life: float, rise: float, speed: float, cap: int) -> GPUParticles2D:
+	var mat := ParticleProcessMaterial.new()
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_POINT
+	#ParticleProcessMaterial.gravity is a Vector3 even in 2D. Negative Y is up.
+	mat.gravity = Vector3(0.0, -rise, 0.0)
+	#Straight up, no fan-out, so the initial speed below is entirely vertical.
+	mat.direction = Vector3(0.0, -1.0, 0.0)
+	mat.spread = 0.0
+	mat.initial_velocity_min = speed
+	mat.initial_velocity_max = speed
+	mat.scale_min = 1.0
+	mat.scale_max = 1.0
+
+	#The textures are white, so the ramp carries both the tint and the fade-out.
+	var ramp := Gradient.new()
+	ramp.offsets = PackedFloat32Array([0.0, 1.0])
+	ramp.colors = PackedColorArray([
+			Color(tint.r, tint.g, tint.b, alpha),
+			Color(tint.r, tint.g, tint.b, 0.0)])
+	#color_ramp wants a texture, not the Gradient itself.
+	var ramp_texture := GradientTexture1D.new()
+	ramp_texture.gradient = ramp
+	mat.color_ramp = ramp_texture
+
+	var emitter := GPUParticles2D.new()
+	emitter.process_material = mat
+	emitter.texture = texture
+	emitter.amount = cap
+	emitter.lifetime = life
+	emitter.one_shot = false
+	#Nothing emits on its own; every particle comes from an explicit spawn_* call.
+	emitter.emitting = false
+	#Particles stay where they were spawned rather than riding the emitter.
+	emitter.local_coords = false
+	#Without a visibility_rect covering the board, 2D particles are culled and invisible.
+	emitter.visibility_rect = Rect2(Vector2.ZERO, get_viewport_rect().size)
+	return emitter
+
+
+#The booster plume. Unlike the pop emitters this one runs continuously and is positioned
+#from draw_booster(), because where the booster sits depends on the grid's current size.
+func _build_thrust() -> GPUParticles2D:
+	#Two stops at the Gradient's default 0.0/1.0 offsets: hot inner flame to cooler outer.
+	var ramp := Gradient.new()
+	ramp.colors = PackedColorArray([THRUST_HOT, THRUST_COOL])
+
+	var noise := NoiseTexture2D.new()
+	noise.width = THRUST_NOISE_SIZE
+	noise.height = THRUST_NOISE_SIZE
+	noise.noise = FastNoiseLite.new()
+	noise.color_ramp = ramp
+	noise.bump_strength = THRUST_BUMP
+
+	var mat := ParticleProcessMaterial.new()
+	#orbit_velocity is 2D-only and needs Z motion switched off to do anything.
+	mat.particle_flag_disable_z = true
+	mat.angular_velocity_min = -THRUST_SPIN
+	mat.angular_velocity_max = THRUST_SPIN
+	mat.orbit_velocity_min = -THRUST_ORBIT
+	mat.orbit_velocity_max = THRUST_ORBIT
+	#The one difference from the cutscene, whose gravity is Vector3(-200, 0, 0).
+	mat.gravity = Vector3(0.0, THRUST_GRAVITY, 0.0)
+
+	var emitter := GPUParticles2D.new()
+	emitter.process_material = mat
+	emitter.texture = noise
+	emitter.amount = THRUST_AMOUNT
+	emitter.amount_ratio = THRUST_AMOUNT_RATIO
+	emitter.lifetime = THRUST_LIFETIME
+	emitter.fixed_fps = THRUST_FPS
+	#Starts mid-plume instead of coughing into life on the first frame of a run.
+	emitter.preprocess = THRUST_LIFETIME
+	#A particle falls THRUST_GRAVITY * lifetime^2 / 2 before it dies, so the default
+	#200x200 rect would cull the plume the moment it left the booster.
+	emitter.visibility_rect = Rect2(Vector2(-200.0, -200.0),
+			Vector2(400.0, 400.0 + THRUST_GRAVITY * THRUST_LIFETIME * THRUST_LIFETIME))
+	#Hidden until draw_booster() has somewhere to put it.
+	emitter.hide()
+	return emitter
+
+
+#A skull at the centre of a cell that just lost somebody. Called by GridNode, which is the
+#only place that knows a death happened. grid_index -1 is the main grid, 0/1 a subship.
+func spawn_death_skull(cell_index: int, grid_index: int) -> void:
+	_emit_pop(_skulls, cell_index, grid_index)
+
+
+#A green $ over a cell that just got paid this round.
+func spawn_money_pop(cell_index: int, grid_index: int) -> void:
+	_emit_pop(_money, cell_index, grid_index)
+
+
+#An orange triangle over a cell that just produced resource.
+func spawn_resource_pop(cell_index: int, grid_index: int) -> void:
+	_emit_pop(_resource, cell_index, grid_index)
+
+
+func _emit_pop(emitter: GPUParticles2D, cell_index: int, grid_index: int) -> void:
+	#_should_draw is false before the first draw and after clear() at the end of a run -
+	#either way there is no board on screen to put a marker on.
+	if emitter == null or not _should_draw:
+		return
+	emitter.emit_particle(
+			Transform2D(0.0, cell_centre(cell_index, grid_index)),
+			Vector2.ZERO, Color.WHITE, Color.WHITE,
+			GPUParticles2D.EMIT_FLAG_POSITION)
+
+
+#--- Grid geometry. Single source of truth: _draw(), _input_event() and the skull
+#--- spawner all place cells through these. grid_index -1 means the main grid.
+#--- These return coordinates in this node's own space. The Area2D sits at the origin
+#--- with no transform, so that is also screen space - which is why cell_at() can be
+#--- handed a raw global event.position. Move or scale the Area2D and all three break
+#--- together, not one at a time.
+
+func grid_cells_across(grid_index: int) -> int:
+	var state = GameManager.state
+	return state.full_grid_size if grid_index < 0 else state.subgrid_sizes[grid_index]
+
+
+func grid_offset(grid_index: int) -> Vector2:
+	var span := grid_cells_across(grid_index) * CELL_SIZE
+	var free_space := get_viewport_rect().size * Vector2(0.66, 1) - Vector2(span, span)
+	if grid_index < 0:
+		return free_space / 2.0
+	elif grid_index == 0:
+		return free_space * Vector2(0.80, 0.20)
+	else:
+		return free_space * Vector2(0.20, 0.80)
+
+
+func cell_centre(index: int, grid_index: int) -> Vector2:
+	var across := grid_cells_across(grid_index)
+	return grid_offset(grid_index) \
+			+ Vector2(index % across + 0.5, index / across + 0.5) * CELL_SIZE
+
+
+#Which cell a screen position falls on, or -1 if it misses this grid.
+func cell_at(pos: Vector2, grid_index: int) -> int:
+	var across := grid_cells_across(grid_index)
+	var local := (pos - grid_offset(grid_index)) / CELL_SIZE
+	var x := int(local.x)
+	var y := int(local.y)
+	if local.x < 0 or local.y < 0 or x >= across or y >= across:
+		return -1
+	return y * across + x
 
 
 func clear():
 	_should_draw = false
+	_hide_hint()
+	#The run is over and the ship is gone; the booster stops with it.
+	if _thrust != null:
+		_thrust.hide()
 	redraw()
-	
+
 func _draw() -> void:
 	var state = GameManager.state
-	var grid_pixel_size = state.full_grid_size * CELL_SIZE
-	var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
-	
+	var offset := grid_offset(-1)
+
 	if not _should_draw:
 		_should_draw = true
 		return
@@ -57,15 +335,11 @@ func _draw() -> void:
 			var color = state.get_cell(x, y).contains.color
 			var rect  = Rect2(x * CELL_SIZE + offset.x, y * CELL_SIZE + offset.y, CELL_SIZE - 1, CELL_SIZE - 1)
 			draw_rect(rect, color)
-	
-	
+
+
 	#Draw Subships
 	for i in range(len(state.subgrids)):
-		if i == 0:
-			offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.80,0.20)
-		else: 
-			offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.20,0.80)
-			
+		offset = grid_offset(i)
 		draw_frame(offset, state.subgrid_sizes[i] * CELL_SIZE)
 		for y in range(state.subgrid_sizes[i]):
 			for x in range(state.subgrid_sizes[i]):
@@ -81,6 +355,12 @@ func draw_booster(offset: Vector2, grid_px: float) -> void:
 			offset.x + grid_px * 0.5 - size.x * 0.5,
 			offset.y + grid_px + BORDER + BOOSTER_OFFSET_Y)
 	draw_texture_rect(booster_texture, Rect2(pos, size), false)
+
+	#Exhaust leaves the bottom edge of the booster art, centred on it. Set here rather
+	#than in _ready() because the booster moves whenever the grid is upgraded.
+	if _thrust != null:
+		_thrust.position = pos + Vector2(size.x * 0.5, size.y)
+		_thrust.show()
 
 
 #One nine-patch hull frame around a grid, hollow in the middle so the cells show
@@ -111,39 +391,31 @@ func draw_frame(offset: Vector2, grid_px: float) -> void:
 		
 		
 func _input_event(port, event, ints):
+	if event is InputEventMouseMotion:
+		_update_hint(event.position)
+		return
 	if event is InputEventMouseButton and event.pressed:
 		if popup_enabled: 
 			popup_enabled = false
 			popup.queue_free()
-		else: 
+		else:
 			var state = GameManager.state
-			
+
 			# Check Main Grid
-			var grid_pixel_size = state.full_grid_size * CELL_SIZE
-			var offset = (get_viewport_rect().size * Vector2(0.66,1) - Vector2(grid_pixel_size, grid_pixel_size)) / 2.0
-			
-			var x = int((event.position.x - offset.x )/ CELL_SIZE)
-			var y = int((event.position.y - offset.y )/ CELL_SIZE)
-			if x >= 0 and x < state.full_grid_size and y >= 0 and y < state.full_grid_size and changeable_cell(y * state.full_grid_size + x):
-				_spawn_popup(event.position, y * state.full_grid_size + x, -1)
+			var hit := cell_at(event.position, -1)
+			if hit >= 0 and changeable_cell(hit):
+				_spawn_popup(event.position, hit, -1)
 				return
 
 			# Check Subgrids
 			for i in range(len(state.subgrids)):
-				var sub_offset: Vector2
-				if i == 0:
-					sub_offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.80,0.20)
-				else: 
-					sub_offset = (get_viewport_rect().size * Vector2(0.66, 1) - Vector2(state.subgrid_sizes[i] * CELL_SIZE, state.subgrid_sizes[i] * CELL_SIZE)) * Vector2(0.20,0.80)
-				
-				var sx = int((event.position.x - sub_offset.x) / CELL_SIZE)
-				var sy = int((event.position.y - sub_offset.y) / CELL_SIZE)
-				
-				if sx >= 0 and sx < state.subgrid_sizes[i] and sy >= 0 and sy < state.subgrid_sizes[i] and changeable_cell(sy * state.subgrid_sizes[i] + sx, i):
-					_spawn_popup(event.position, sy * state.subgrid_sizes[i] + sx, i)
+				var sub_hit := cell_at(event.position, i)
+				if sub_hit >= 0 and changeable_cell(sub_hit, i):
+					_spawn_popup(event.position, sub_hit, i)
 					return
 
 func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
+	_hide_hint()
 	popup = popup_scene.instantiate()
 	popup.position = pos
 	popup.cell_num = cell_idx
@@ -152,9 +424,109 @@ func _spawn_popup(pos: Vector2, cell_idx: int, g_idx: int):
 	queue_redraw()
 	popup_enabled = true
 
+#The Cell at an index. grid_index -1 is the main grid, 0/1 a subship. Its occupant is
+#cell.contains - this hands back the Cell, not the Class, so callers can reach either.
+func cell_at_index(location: int, grid_index: int = -1) -> Cell:
+	var state = GameManager.state
+	return state.subgrids[grid_index][location] if grid_index >= 0 else state.cells[location]
+
+
 func changeable_cell(location: int, grid_index: int = -1) -> bool:
-	var valid_classes = ["Alive", "Dead", "Wall", "Chef", "Innovator", "Pet1", "Pet2", "Pet3"]
-	var cell = GameManager.state.subgrids[grid_index][location] if grid_index >= 0 else GameManager.state.cells[location]
-	return cell.contains.id in valid_classes
+	#Cells the player is allowed to click and replace. Hostile/trap cells (Zombie,
+	#Springtrap, Corpse, Fire, Life, Revolutionary) are deliberately absent - they
+	#cannot be cleared away. "Pet1"/"Pet2"/"Pet3" used to be listed here and matched
+	#nothing; the pets' real ids are below.
+	var valid_classes = ["Alive", "Dead", "Wall", "Chef", "Innovator", "Mechanic",
+			"Sandshark", "Plorian", "Dog"]
+	return cell_at_index(location, grid_index).contains.id in valid_classes
+
+#--- Hover hint. A small panel naming the cell the cursor has come to rest on.
+
+func _build_hint() -> void:
+	_hint_label = RichTextLabel.new()
+	#fit_content plus a fixed width is what makes the panel size itself to the wrapped
+	#text; without it a RichTextLabel collapses to nothing inside a container.
+	_hint_label.bbcode_enabled = false
+	_hint_label.fit_content = true
+	_hint_label.scroll_active = false
+	_hint_label.custom_minimum_size = Vector2(HINT_WIDTH, 0.0)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.05, 0.08, 0.92)
+	style.border_color = Color(0.6, 0.6, 0.7, 0.8)
+	style.set_border_width_all(1)
+	style.set_content_margin_all(8.0)
+
+	_hint = PanelContainer.new()
+	_hint.add_theme_stylebox_override("panel", style)
+	#The hint must never eat a click meant for the cell underneath it.
+	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hint_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hint.add_child(_hint_label)
+	_hint.hide()
+	add_child(_hint)
+
+	#One-shot, restarted by every mouse move, so it only ever fires on a cursor that
+	#has come to rest.
+	_hint_timer = Timer.new()
+	_hint_timer.one_shot = true
+	_hint_timer.wait_time = HINT_DELAY
+	_hint_timer.timeout.connect(_show_hint)
+	add_child(_hint_timer)
+
+
+func _hide_hint() -> void:
+	if _hint != null:
+		_hint.hide()
+	#Without this a hint queued before the board was cleared still pops up afterwards.
+	if _hint_timer != null:
+		_hint_timer.stop()
+
+
+#Every mouse move drops the current hint and restarts the wait, so the hint only ever
+#shows up once the player has stopped on a cell.
+func _update_hint(pos: Vector2) -> void:
+	_hide_hint()
+	if _hint == null or not _should_draw or popup_enabled:
+		return
+	_hint_pos = pos
+	_hint_timer.start()
+
+
+#Fired by _hint_timer. The cell is looked up now rather than when the mouse stopped, so a
+#board that advanced during the wait still gets described correctly.
+func _show_hint() -> void:
+	if _hint == null or not _should_draw or popup_enabled:
+		return
+
+	var pos := _hint_pos
+	var id := ""
+	var hit := cell_at(pos, -1)
+	if hit >= 0:
+		id = cell_at_index(hit).contains.id
+	else:
+		for i in range(len(GameManager.state.subgrids)):
+			var sub_hit := cell_at(pos, i)
+			if sub_hit >= 0:
+				id = cell_at_index(sub_hit, i).contains.id
+				break
+
+	if not CELL_HINTS.has(id):
+		_hide_hint()
+		return
+
+	_hint_label.text = CELL_HINTS[id]
+	#Flip the panel back over the cursor rather than letting it run off screen.
+	var size := _hint.get_combined_minimum_size()
+	var screen := get_viewport_rect().size
+	var spot := pos + HINT_OFFSET
+	if spot.x + size.x > screen.x:
+		spot.x = pos.x - size.x - HINT_OFFSET.x
+	if spot.y + size.y > screen.y:
+		spot.y = pos.y - size.y - HINT_OFFSET.y
+	_hint.position = spot
+	_hint.show()
+
+
 func redraw():
 	queue_redraw()
