@@ -411,7 +411,10 @@ func grid_locked() -> bool:
 
 func load_resources_from_folder(path: String) -> Array[Resource]:
 	var resources: Array[Resource] = []
-	var file_names = DirAccess.get_files_at(path)
+	#Not DirAccess.get_files_at(): in an exported build that lists "AstroidBelt.tres.remap",
+	#which load() cannot open, so the web build found zero events and none ever fired.
+	#ResourceLoader.list_directory() gives the loadable names in the editor and exports alike.
+	var file_names = ResourceLoader.list_directory(path)
 	
 	for file_name in file_names:
 		# Construct the full path

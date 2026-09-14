@@ -94,9 +94,17 @@ var skull_texture: Texture2D = preload("res://Assets/Skull.png")
 var money_texture: Texture2D = preload("res://Assets/Money.png")
 var resource_texture: Texture2D = preload("res://Assets/Resource.png")
 var _thrust: GPUParticles2D
-var _skulls: GPUParticles2D
-var _money: GPUParticles2D
-var _resource: GPUParticles2D
+#The markers are drawn by hand on _pop_layer, not emitted as GPU particles. The web build runs
+#the Compatibility renderer, which ignores GPUParticles2D.emit_particle(), so every skull, $
+#and triangle silently vanished there. One Dictionary per kind (see _pop_kind), its live
+#markers in "pops" as [position, age], oldest first.
+var _skulls: Dictionary
+var _money: Dictionary
+var _resource: Dictionary
+var _pop_layer: Node2D
+#Whether the layer had anything on it last frame, so it gets one last redraw to wipe the
+#final marker off after it expires.
+var _pops_visible: bool = false
 
 
 #One vague sentence per cell type, shown when the mouse rests on a cell. Deliberately
@@ -160,62 +168,59 @@ var _hint_pos: Vector2
 
 
 func _ready() -> void:
-	_skulls = _build_pop_emitter(skull_texture, Color.WHITE, SKULL_ALPHA,
+	_skulls = _pop_kind(skull_texture, Color.WHITE, SKULL_ALPHA,
 			SKULL_LIFETIME, SKULL_RISE, SKULL_SPEED, SKULL_CAP)
-	_money = _build_pop_emitter(money_texture, MONEY_COLOR, MONEY_ALPHA,
+	_money = _pop_kind(money_texture, MONEY_COLOR, MONEY_ALPHA,
 			MONEY_LIFETIME, MONEY_RISE, MONEY_SPEED, MONEY_CAP)
-	_resource = _build_pop_emitter(resource_texture, RESOURCE_COLOR, RESOURCE_ALPHA,
+	_resource = _pop_kind(resource_texture, RESOURCE_COLOR, RESOURCE_ALPHA,
 			RESOURCE_LIFETIME, RESOURCE_RISE, RESOURCE_SPEED, RESOURCE_CAP)
-	add_child(_skulls)
-	add_child(_money)
-	add_child(_resource)
+	#Its own canvas item, so the markers can redraw every frame without the whole board
+	#redrawing with them.
+	_pop_layer = Node2D.new()
+	_pop_layer.draw.connect(_draw_pops)
+	add_child(_pop_layer)
 	_thrust = _build_thrust()
 	add_child(_thrust)
 	_build_hint()
 	mouse_exited.connect(_hide_hint)
 
 
-#One emitter per effect, shared by every instance of it. Particles are pushed in one at a
-#time with emit_particle(), so `amount` doubles as the concurrency cap for free - no
-#bookkeeping, and a burst past the limit just recycles the oldest.
-func _build_pop_emitter(texture: Texture2D, tint: Color, alpha: float,
-		life: float, rise: float, speed: float, cap: int) -> GPUParticles2D:
-	var mat := ParticleProcessMaterial.new()
-	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_POINT
-	#ParticleProcessMaterial.gravity is a Vector3 even in 2D. Negative Y is up.
-	mat.gravity = Vector3(0.0, -rise, 0.0)
-	#Straight up, no fan-out, so the initial speed below is entirely vertical.
-	mat.direction = Vector3(0.0, -1.0, 0.0)
-	mat.spread = 0.0
-	mat.initial_velocity_min = speed
-	mat.initial_velocity_max = speed
-	mat.scale_min = 1.0
-	mat.scale_max = 1.0
+#One marker kind: its look, its motion, and the markers of it currently on screen.
+func _pop_kind(texture: Texture2D, tint: Color, alpha: float,
+		life: float, rise: float, speed: float, cap: int) -> Dictionary:
+	return {"texture": texture, "tint": tint, "alpha": alpha, "life": life,
+			"rise": rise, "speed": speed, "cap": cap, "pops": []}
 
-	#The textures are white, so the ramp carries both the tint and the fade-out.
-	var ramp := Gradient.new()
-	ramp.offsets = PackedFloat32Array([0.0, 1.0])
-	ramp.colors = PackedColorArray([
-			Color(tint.r, tint.g, tint.b, alpha),
-			Color(tint.r, tint.g, tint.b, 0.0)])
-	#color_ramp wants a texture, not the Gradient itself.
-	var ramp_texture := GradientTexture1D.new()
-	ramp_texture.gradient = ramp
-	mat.color_ramp = ramp_texture
 
-	var emitter := GPUParticles2D.new()
-	emitter.process_material = mat
-	emitter.texture = texture
-	emitter.amount = cap
-	emitter.lifetime = life
-	emitter.one_shot = false
-	#Nothing emits on its own; every particle comes from an explicit spawn_* call.
-	emitter.emitting = false
-	#Particles stay where they were spawned rather than riding the emitter.
-	emitter.local_coords = false
-	#Without a visibility_rect covering the board, 2D particles are culled and invisible.
-	emitter.visibility_rect = Rect2(Vector2.ZERO, get_viewport_rect().size)
-	return emitter
+#Ages every marker and drops the expired ones. Markers of a kind share a lifetime and are
+#appended in spawn order, so the expired ones are always at the front.
+func _process(delta: float) -> void:
+	var live := false
+	for kind in [_skulls, _money, _resource]:
+		var pops: Array = kind.pops
+		for pop in pops:
+			pop[1] += delta
+		while not pops.is_empty() and pops[0][1] >= kind.life:
+			pops.pop_front()
+		live = live or not pops.is_empty()
+	if live or _pops_visible:
+		_pop_layer.queue_redraw()
+	_pops_visible = live
+
+
+#Each marker launches upward at `speed`, accelerates at `rise`, and fades linearly from
+#`alpha` to nothing over its life - the same curve the particle version had. The textures
+#are white, so the tint carries all the colour.
+func _draw_pops() -> void:
+	for kind in [_skulls, _money, _resource]:
+		var texture: Texture2D = kind.texture
+		var half: Vector2 = texture.get_size() * 0.5
+		var life: float = kind.life
+		for pop in kind.pops:
+			var t: float = pop[1]
+			var lift: float = kind.speed * t + 0.5 * kind.rise * t * t
+			var colour := Color(kind.tint, kind.alpha * (1.0 - t / life))
+			_pop_layer.draw_texture(texture, pop[0] - half - Vector2(0.0, lift), colour)
 
 
 #The booster plume. Unlike the pop emitters this one runs continuously and is positioned
@@ -276,15 +281,16 @@ func spawn_resource_pop(cell_index: int, grid_index: int) -> void:
 	_emit_pop(_resource, cell_index, grid_index)
 
 
-func _emit_pop(emitter: GPUParticles2D, cell_index: int, grid_index: int) -> void:
+func _emit_pop(kind: Dictionary, cell_index: int, grid_index: int) -> void:
 	#_should_draw is false before the first draw and after clear() at the end of a run -
 	#either way there is no board on screen to put a marker on.
-	if emitter == null or not _should_draw:
+	if kind.is_empty() or not _should_draw:
 		return
-	emitter.emit_particle(
-			Transform2D(0.0, cell_centre(cell_index, grid_index)),
-			Vector2.ZERO, Color.WHITE, Color.WHITE,
-			GPUParticles2D.EMIT_FLAG_POSITION)
+	var pops: Array = kind.pops
+	#Past the cap the oldest makes way, so a mass die-off on autoplay can't pile up forever.
+	if pops.size() >= kind.cap:
+		pops.pop_front()
+	pops.append([cell_centre(cell_index, grid_index), 0.0])
 
 
 #--- Grid geometry. Single source of truth: _draw(), _input_event() and the skull
@@ -330,6 +336,10 @@ func cell_at(pos: Vector2, grid_index: int) -> int:
 func clear():
 	_should_draw = false
 	_hide_hint()
+	#The markers live on this autoloaded renderer, so without this the last round's skulls
+	#would keep floating over the death screen or cutscene.
+	for kind in [_skulls, _money, _resource]:
+		kind.pops.clear()
 	#The run is over and the ship is gone; the booster stops with it.
 	if _thrust != null:
 		_thrust.hide()
