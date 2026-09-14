@@ -31,5 +31,7 @@ func _spawn_pet(pet: Class) -> void:
 	var chosen_cell = GameManager.state.cells.pick_random()
 	chosen_cell.contains = pet
 	chosen_cell.contains.cell = chosen_cell
+	#The pick is part of the event, and events cannot be rewound past.
+	GameManager.init_history()
 	GameManager.renderer.redraw()
 	queue_free()

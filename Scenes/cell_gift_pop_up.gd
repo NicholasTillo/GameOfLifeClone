@@ -33,5 +33,7 @@ func _grant(id: String) -> void:
 	var chosen_cell = GameManager.state.cells.pick_random()
 	chosen_cell.contains = GameManager.id_to_class(id)
 	chosen_cell.contains.cell = chosen_cell
+	#The pick is part of the event, and events cannot be rewound past.
+	GameManager.init_history()
 	GameManager.renderer.redraw()
 	queue_free()

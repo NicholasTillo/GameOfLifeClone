@@ -71,15 +71,17 @@ var sub_ships: Array
 var result: Class
 var prev_states: Array
 
-#Rewind history: a capped circular buffer of full turn snapshots, used only for
-#rewinding. Separate from prev_states, which stays dedicated to stable-state /
-#loop detection. Oldest snapshot is dropped once we exceed MAX_HISTORY.
-const MAX_HISTORY: int = 8
+#Rewind history: full turn snapshots, used only for rewinding. Separate from prev_states,
+#which stays dedicated to stable-state / loop detection.
+#
+#The buffer's length IS the rewind rule. It holds rewind_number + 1 snapshots (the current
+#turn plus one per rewind upgrade) and the oldest falls off as the run moves forward. So
+#stepping back and then forward again re-earns the rounds you undid, but never reaches
+#further back than you could from the furthest round you got to.
+#
+#Anything the snapshot does not capture - an event's effects, a bigger grid, a new subship,
+#taxes - calls init_history() once it lands, so the board can never be rewound past it.
 var history: Array = []
-
-#Once a random event fires, rewinding is disabled for the rest of the run so the
-#player can't undo/escape the event. Reset when a new game starts.
-var rewind_blocked: bool = false
 
 var round_count: int
 var resourceAmount = 10
@@ -123,7 +125,6 @@ var birthday_rounds: int = 0
 var overheat_presses: int = 0
 #Shared budget of extra fires the Spaceship Attack outbreak may still create by spreading.
 var fire_spreads_remaining: int = 0
-var done_rewinds: int = 0
 
 
 
@@ -279,7 +280,6 @@ func do_next_round():
 
 	renderer.redraw()
 	round_count += 1
-	done_rewinds = 0
 
 	#Record this turn (board + money + resource + round_count) so it can be rewound to.
 	push_history(take_snapshot())
@@ -445,13 +445,13 @@ func seed_life() -> void:
 #The Meaning Of Life arriving on its own, outside the random pool and the 25-round cycle:
 #its popup plus the seed. Fired from do_next_round() when life_event_due() says so.
 func trigger_meaning_of_life() -> void:
-	#An event permanently changes the board this run; block rewinding past it.
-	rewind_blocked = true
 	for e in load_resources_from_folder("res://RandomEvents"):
 		if e.id == LIFE_EVENT_ID:
 			show_event_popup(e)
 			break
 	seed_life()
+	#No rewinding back past the arrival - see history.
+	init_history()
 	renderer.redraw()
 
 
@@ -474,15 +474,10 @@ func do_random_event():
 	#at random and spoil the ending. It has its own guaranteed trigger at
 	#LIFE_EVENT_ROUND in do_next_round().
 	var pool := drawable_events(list_of_events)
-	#Nothing drawable means nothing happened, so leave rewinding alone - the block below
-	#is the price of an event actually landing.
+	#Nothing drawable means nothing happened, so rewinding is left alone.
 	if pool.is_empty():
 		return
 	var chosen_event: random_event = pool.pick_random()
-
-	#An event permanently changes the board this run; block rewinding past it.
-	rewind_blocked = true
-
 
 	var event_popup = show_event_popup(chosen_event)
 
@@ -561,6 +556,11 @@ Take your pick, the contract is already paid.",
 			enemy_spaceship_attack()
 		17: #Overheating
 			overheat_presses = OVERHEAT_PRESSES
+
+	#The snapshot for this round was taken before the event hit. Restart the history from
+	#the board as the event left it, so a rewind cannot undo the event or roll a new one.
+	#Events that hand out a pick (pet store, outpost, upgrade bay) restart it again on the pick.
+	init_history()
 
 	#do_random_event() runs at the very END of do_next_round(), after that round has already
 	#redrawn. Without this every board-changing event - rocks, fires, the scramble - sat
@@ -762,19 +762,29 @@ func restore_snapshot(snap: Dictionary) -> void:
 	renderer.redraw()
 
 
-#Push a snapshot onto the history, dropping the oldest once we exceed MAX_HISTORY.
+#Push a snapshot onto the history, dropping the oldest past the rewind allowance.
 func push_history(snap: Dictionary) -> void:
 	history.append(snap)
-	if history.size() > MAX_HISTORY:
+	while history.size() > rewind_number + 1:
 		history.pop_front()
 
 
-#Start a fresh history for a new game, seeded with the current (starting) turn.
+#Start a fresh history from the current turn. Called for a new game, and whenever something
+#the snapshot does not capture changes the run, so nothing can be rewound past that point.
 func init_history() -> void:
 	history.clear()
-	done_rewinds = 0
-	rewind_blocked = false
 	push_history(take_snapshot())
+
+
+#Steps the board back one round. False when the history has nothing further back.
+func rewind() -> bool:
+	if history.size() < 2:
+		return false
+	history.pop_back()
+	#The undone round's loop-detection entry goes too, or replaying it would end the run.
+	prev_states.pop_back()
+	restore_snapshot(history.back())
+	return true
 
 
 # Reverse of hash_state: takes a hashed state string and applies the ids back

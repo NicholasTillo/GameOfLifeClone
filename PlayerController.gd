@@ -83,6 +83,8 @@ func purchase_grid_upgrade():
 		GameManager.state.full_grid_size += 1
 		
 		GameManager.state.change_money(-grid_upgrade.cost)
+		#Snapshots do not record grid size; rewinding across a resize scrambles the board.
+		GameManager.init_history()
 		GameOfLifeAudio.play_purchase()
 		return 1
 	else:
@@ -95,6 +97,7 @@ func purchase_ship_upgrade(sub_ship_upgrade_cost):
 	if GameManager.state.how_much_money() >= sub_ship_upgrade_cost:
 		GameManager.state.add_ship(5)
 		GameManager.state.change_money(-sub_ship_upgrade_cost)
+		GameManager.init_history()
 		GameManager.renderer.redraw()
 		GameOfLifeAudio.play_purchase()
 		return 1
@@ -114,6 +117,7 @@ func purchase_ship_size_upgrade(sub_ship_upgrade_cost, subship_num):
 		GameManager.state.subgrids[subship_num] = GameManager.state.resize_grid(1, GameManager.state.subgrids[subship_num], GameManager.state.subgrid_sizes[subship_num])
 		GameManager.state.subgrid_sizes[subship_num] += 1
 		sub_ship_size_upgrade_number[subship_num] += 1
+		GameManager.init_history()
 		if sub_ship_size_upgrade_number[subship_num] >= GameManager.max_number_size_upgrades:
 			#Disable Button
 			UI_controller.diable_subship_size_upgrade(subship_num)
@@ -133,6 +137,8 @@ func purchase_main_ship_taxes_upgrade(upgrade_cost):
 			
 		GameManager.money_per_alive += 0.1
 		GameManager.state.change_money(-upgrade_cost)
+		#Rewinding would refund the money but keep the taxes.
+		GameManager.init_history()
 		GameOfLifeAudio.play_purchase()
 		return 1
 	else:
@@ -140,22 +146,26 @@ func purchase_main_ship_taxes_upgrade(upgrade_cost):
 		return 0
 
 
-#Free in-run upgrades, granted by the Spaceship Upgrade Bay event.
+#Free in-run upgrades, granted by the Spaceship Upgrade Bay event. Each restarts the rewind
+#history, for the same reasons the paid versions do.
 func grant_free_grid_upgrade():
 	GameManager.state.cells = GameManager.state.resize_grid(1, GameManager.state.cells, GameManager.state.full_grid_size)
 	GameManager.state.full_grid_size += 1
+	GameManager.init_history()
 	GameManager.renderer.redraw()
 	GameOfLifeAudio.play_purchase()
 
 
 func grant_free_ship_upgrade():
 	GameManager.state.add_ship(5)
+	GameManager.init_history()
 	GameManager.renderer.redraw()
 	GameOfLifeAudio.play_purchase()
 
 
 func grant_free_ship_taxes_upgrade():
 	GameManager.money_per_alive += 0.1
+	GameManager.init_history()
 	GameOfLifeAudio.play_purchase()
 
 

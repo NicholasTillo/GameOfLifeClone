@@ -2,9 +2,10 @@
 
 [ext_resource type="FontFile" uid="uid://eeepgqptqc67" path="res://Theme/BitcountGridSingle-VariableFont_CRSV,ELSH,ELXP,slnt,wght.ttf" id="1_p3qw8"]
 [ext_resource type="FontFile" uid="uid://ml473enksho7" path="res://Theme/Anta-Regular.ttf" id="1_vhtk5"]
+[ext_resource type="StyleBox" uid="uid://cusun0tit5umo" path="res://Theme/ShopButtonStyleBox.tres" id="2_0yxvc"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dsnc"]
-bg_color = Color(0.5568281, 0.5229627, 0.22324553, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ls2wt"]
+bg_color = Color(0.71696895, 0.4349024, 0.19207397, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -20,7 +21,8 @@ Button/constants/h_separation = 4
 Button/constants/line_spacing = 2
 Button/font_sizes/font_size = 20
 Button/fonts/font = ExtResource("1_p3qw8")
-Button/styles/normal = SubResource("StyleBoxFlat_0dsnc")
+Button/styles/hover = SubResource("StyleBoxFlat_ls2wt")
+Button/styles/normal = ExtResource("2_0yxvc")
 Label/font_sizes/font_size = 18
 Label/fonts/font = ExtResource("1_vhtk5")
 RichTextLabel/fonts/bold_font = ExtResource("1_vhtk5")

@@ -18,6 +18,10 @@ var sfx_error: AudioStream = null
 var sfx_cell_born: AudioStream = null
 var sfx_cell_died: AudioStream = null
 var sfx_generation_step: AudioStream = null
+var sfx_do_one: AudioStream = load("res://Assets/DoOneButton.mp3")
+#Do One is pressed over and over, so each press lands at a slightly different pitch to keep
+#it from sounding mechanical. pitch_scale resamples, so speed shifts with it. 0.1 = +/-10%.
+const DO_ONE_PITCH_JITTER := 0.1
 var sfx_rewind: AudioStream = load("res://Assets/Rewind.mp3")
 var sfx_event_popup: AudioStream = null
 var sfx_pet_buy: AudioStream = null
@@ -104,6 +108,9 @@ func play_cell_died() -> void:
 
 func play_generation_step() -> void:
 	play_sfx(sfx_generation_step)
+
+func play_do_one() -> void:
+	play_sfx(sfx_do_one, 0.0, randf_range(1.0 - DO_ONE_PITCH_JITTER, 1.0 + DO_ONE_PITCH_JITTER))
 
 func play_rewind() -> void:
 	play_sfx(sfx_rewind)

@@ -28,8 +28,10 @@ const COST_DOCTOR := 25
 const COST_ROBOT := 30
 const COST_NUCLEAR_ENGINEER := 50
 const COST_CAPTAIN := 150
+#Money, not resource: the Mechanic is how resource gets made, so pricing it in resource
+#stranded a player on 0 resource with no way to earn any back.
+const COST_MECHANIC := 75
 const REFUND_DEAD := 10             #clearing a cell pays this back
-const COST_MECHANIC_RESOURCE := 1
 const COST_INNOVATOR_RESOURCE := 1
 
 #Every cell the player can put on the board, in build-menu order. The starter-slot picker
@@ -74,7 +76,7 @@ func _ready() -> void:
 func _set_tooltips() -> void:
 	alive_button.tooltip_text = "Alive - %d money\nA crew member. Pays you every round it survives." % COST_ALIVE
 	dead_button.tooltip_text = "Clear - refunds %d money\nEmpties the cell. Anyone there is gone." % REFUND_DEAD
-	mechanic_button.tooltip_text = "Mechanic - %d resource\nEarns +%d resource a round. Dies with no crew beside it." % [COST_MECHANIC_RESOURCE, Mechanic.PAYOUT]
+	mechanic_button.tooltip_text = "Mechanic - %d money\nEarns +%d resource a round. Dies with no crew beside it." % [COST_MECHANIC, Mechanic.PAYOUT]
 	wall_button.tooltip_text = "Wall - %d money\nNever changes. Shapes patterns and blocks fire." % COST_WALL
 	doctor_button.tooltip_text = "Doctor - %d money\nLives and earns like crew, and raises the bodies beside it." % COST_DOCTOR
 	robot_button.tooltip_text = "Robot - %d money\nCounts as crew to its neighbours, and seizes up with no Mechanic aboard." % COST_ROBOT
@@ -135,8 +137,8 @@ func _button_pressed_dead():
 		
 func _button_pressed_mechanic():
 	var cell = _get_cell()
-	if cell.contains.id  != "Mechanic" and GameManager.how_much_resource() >= COST_MECHANIC_RESOURCE:
-		GameManager.change_resource(-COST_MECHANIC_RESOURCE)
+	if cell.contains.id  != "Mechanic" and GameManager.state.how_much_money() >= COST_MECHANIC:
+		GameManager.state.change_money(-COST_MECHANIC)
 		change_parent(Mechanic.new())
 	else:
 		GameOfLifeAudio.play_ui_disabled()

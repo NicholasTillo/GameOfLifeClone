@@ -41,6 +41,7 @@ func _ready() -> void:
 	failures += _test_build_menu()
 	failures += _test_money_display()
 	failures += _test_upgrade_ids_unique()
+	failures += _test_rewind()
 	if failures == 0:
 		print("test_cells: OK")
 	else:
@@ -1037,6 +1038,55 @@ func _test_nuclear_engineer() -> int:
 # load_game() finds an upgrade by matching its id against all_upgrades and does NOT stop at
 # the first hit, so two upgrades sharing an id both get purchased from one saved entry. Any
 # new upgrade must therefore bring a free id with it.
+# Rewind reaches back rewind_number rounds from the furthest round reached, re-earns rounds
+# undone by stepping forward again, and never reaches past an event or a ship upgrade.
+func _test_rewind() -> int:
+	var failures := 0
+	GameManager.state = GameState.new()
+	GameManager.rewind_number = 3
+	GameManager.prev_states.clear()
+	GameManager.round_count = 46
+	GameManager.init_history()
+	var forward := func(rounds: int) -> void:
+		for i in range(rounds):
+			GameManager.round_count += 1
+			GameManager.prev_states.append(str(GameManager.round_count))
+			GameManager.push_history(GameManager.take_snapshot())
+
+	forward.call(4)   # round 50
+	for expected in [49, 48, 47]:
+		if not GameManager.rewind() or GameManager.round_count != expected:
+			print("FAIL rewind from 50 did not reach %d" % expected); failures += 1
+	if GameManager.rewind():
+		print("FAIL 3 rewind upgrades reached back past 47"); failures += 1
+
+	forward.call(1)   # round 48
+	if not GameManager.rewind() or GameManager.round_count != 47:
+		print("FAIL stepping 47 -> 48 did not allow rewinding to 47 again"); failures += 1
+	if GameManager.rewind():
+		print("FAIL stepping forward let rewind reach 46"); failures += 1
+
+	forward.call(2)   # round 49
+	GameManager.init_history()   # what an event does once it lands
+	if GameManager.rewind():
+		print("FAIL rewind reached past an event"); failures += 1
+
+	forward.call(1)
+	GameManager.state.moneyAmount = 1000
+	PlayerController.purchase_grid_upgrade()
+	if GameManager.rewind():
+		print("FAIL rewind reached past a grid size upgrade"); failures += 1
+
+	if GameManager.prev_states.size() != 0 and GameManager.prev_states.back() != str(GameManager.round_count):
+		print("FAIL loop detection history out of step with the round after rewinding"); failures += 1
+
+	GameManager.rewind_number = 0
+	GameManager.round_count = 0
+	GameManager.prev_states.clear()
+	GameManager.init_history()
+	return failures
+
+
 func _test_upgrade_ids_unique() -> int:
 	var failures := 0
 	var seen := {}

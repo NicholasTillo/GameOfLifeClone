@@ -49,6 +49,9 @@ const BORDER := 30.0
 #The nine-patch middle is hollow, so it gets filled with this first - otherwise the
 #gaps between cells are transparent and show whatever is behind the play area.
 const BACKGROUND_COLOR := Color.BLACK
+#The strips of that fill above and below the cells. Empty cells are black too, so on a black
+#strip there was no telling where the grid stopped and the hull began.
+const GUTTER_COLOR := Color("9badb7")
 #Radiation shielding, drawn over the cells while the grid is locked. Kept translucent on
 #purpose: opaque enough to read as "hands off", thin enough to watch the board through.
 const SHIELD_COLOR := Color(1.0, 0.72, 0.20, 0.28)
@@ -397,7 +400,16 @@ func draw_frame(offset: Vector2, grid_px: float) -> void:
 	#scaled margins, not the grid rect - the margins are uneven, so it is not symmetric.
 	var inset_tl := FRAME_TL * FRAME_SCALE
 	var inset_br := FRAME_BR * FRAME_SCALE
-	draw_rect(Rect2(rect.position + inset_tl, rect.size - inset_tl - inset_br), BACKGROUND_COLOR)
+	var inner := Rect2(rect.position + inset_tl, rect.size - inset_tl - inset_br)
+	draw_rect(inner, BACKGROUND_COLOR)
+	#Stops 1px short of the cells so a black line sits above the top row, matching the 1px
+	#gap every cell already leaves below itself (which is the line under the bottom row).
+	draw_rect(Rect2(inner.position.x, inner.position.y,
+			inner.size.x, offset.y - inner.position.y - 1.0), GUTTER_COLOR)
+	#1px taller than the hollow: at every other grid size the offset lands on a half pixel and
+	#a black row showed between this strip and the hull art. The frame draws over the extra.
+	draw_rect(Rect2(inner.position.x, offset.y + grid_px,
+			inner.size.x, inner.end.y - offset.y - grid_px + 1.0), GUTTER_COLOR)
 
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(FRAME_SCALE, FRAME_SCALE))
 	RenderingServer.canvas_item_add_nine_patch(

@@ -83,7 +83,7 @@ func _set_tooltips() -> void:
 	buy_supship_two_taxes_upgrade_button.tooltip_text = taxes_tip
 
 	do_rewind_button.tooltip_text = \
-			"Rewind - free\nSteps the board back one round. %d left this run, and none once an event has fired." \
+			"Rewind - free\nSteps the board back one round, up to %d rounds back. Events and ship upgrades cannot be rewound past." \
 			% GameManager.rewind_number
 
 func update_ui():
@@ -156,19 +156,10 @@ func buy_supship_two():
 		GameOfLifeAudio.play_ui_disabled()
 
 func do_rewind():
-	# Once an event has triggered this run, the button stays visible but does nothing.
-	if GameManager.rewind_blocked:
-		GameOfLifeAudio.play_ui_disabled()
-		return
-	# Need at least [previous, current] in the history to step back a turn.
-	if GameManager.done_rewinds < GameManager.rewind_number and GameManager.history.size() >= 2:
-		GameManager.history.pop_back()
-		GameManager.prev_states.pop_back()
-		GameManager.restore_snapshot(GameManager.history.back())  # restore the previous turn
-		GameManager.done_rewinds += 1
+	if GameManager.rewind():
 		GameOfLifeAudio.play_rewind()
-	else: 
-		GameOfLifeAudio.play_ui_disabled()	
+	else:
+		GameOfLifeAudio.play_ui_disabled()
 
 func diable_subship_size_upgrade(ship_num):
 	if ship_num == 0:

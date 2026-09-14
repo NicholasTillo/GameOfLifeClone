@@ -4,7 +4,9 @@
 [ext_resource type="Script" uid="uid://ceigq0v0cfiv6" path="res://PlayButton.gd" id="1_koqhg"]
 [ext_resource type="Script" uid="uid://dneyembw08vtv" path="res://slot_container.gd" id="2_cmrfp"]
 [ext_resource type="Shader" uid="uid://cqqah5hwno2ha" path="res://Scenes/MainMenu.gdshader" id="2_rrcx7"]
+[ext_resource type="Shader" uid="uid://b5w4ii0c1ew2f" path="res://Scenes/ShipDrift.gdshader" id="3_8e205"]
 [ext_resource type="Script" uid="uid://cs1t6odklv07x" path="res://UpgradesButton.gd" id="3_loo7a"]
+[ext_resource type="Texture2D" uid="uid://ct61ix2u5q7gq" path="res://Assets/Ship1.png" id="4_7467j"]
 [ext_resource type="Script" uid="uid://uqd8po7hjqv2" path="res://SaveButton.gd" id="4_if7li"]
 [ext_resource type="Script" uid="uid://bmssf8vt1q7ew" path="res://LoadButton.gd" id="5_rrcx7"]
 [ext_resource type="Script" uid="uid://jkihvtyurk7g" path="res://Scenes/Round_count.gd" id="6_cmrfp"]
@@ -22,6 +24,37 @@ shader_parameter/twinkle_speed = 2.5
 shader_parameter/star_color = Color(1, 1, 1, 1)
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_rrcx7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2x1g0"]
+shader = ExtResource("3_8e205")
+shader_parameter/bob_amount = 1.5
+shader_parameter/bob_speed = 0.7
+shader_parameter/sway_amount = 1.0
+shader_parameter/sway_speed = 0.43
+shader_parameter/roll_degrees = 1.5
+shader_parameter/roll_speed = 0.31
+shader_parameter/buzz_amount = 0.15
+shader_parameter/buzz_speed = 27.0
+
+[sub_resource type="Gradient" id="Gradient_jeamb"]
+colors = PackedColorArray(0.85490197, 0.6509804, 0.3137255, 1, 0.8039216, 0.14509805, 0.15686275, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_em208"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_riqfo"]
+width = 15
+height = 15
+noise = SubResource("FastNoiseLite_em208")
+color_ramp = SubResource("Gradient_jeamb")
+bump_strength = 3.2
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yxkem"]
+particle_flag_disable_z = true
+angular_velocity_min = -10.000016
+angular_velocity_max = 9.999984
+orbit_velocity_min = -0.049999908
+orbit_velocity_max = 0.050000098
+gravity = Vector3(-200, 0, 0)
 
 [sub_resource type="Gradient" id="Gradient_koqhg"]
 offsets = PackedFloat32Array(0.01183432, 0.6987952, 1)
@@ -47,6 +80,21 @@ layout_mode = 0
 offset_right = 1153.0
 offset_bottom = 647.0
 texture = SubResource("CanvasTexture_rrcx7")
+
+[node name="Ship1" type="Sprite2D" parent="Control" unique_id=695867942]
+texture_filter = 1
+material = SubResource("ShaderMaterial_2x1g0")
+position = Vector2(873, 309)
+scale = Vector2(4, 4)
+texture = ExtResource("4_7467j")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Control" unique_id=2117804623]
+position = Vector2(772, 323)
+amount_ratio = 0.1718
+texture = SubResource("NoiseTexture2D_riqfo")
+lifetime = 2.4299999999999997
+fixed_fps = 20
+process_material = SubResource("ParticleProcessMaterial_yxkem")
 
 [node name="TextureRect" type="TextureRect" parent="Control" unique_id=449179007]
 layout_mode = 0

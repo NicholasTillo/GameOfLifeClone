@@ -61,7 +61,7 @@ const EFFECTS := {
 	"max_ship_size_upgrade": "+1 to how many Size Upgrades a ship can take in a run.",
 	"starter_ship_size_upgrade": "+1 to the size every ship starts at.",
 	"unlock_cells": "Unlocks this crew type in the in-run build menu.",
-	"unlock_rewind": "+1 rewind per run, usable until an event fires.",
+	"unlock_rewind": "Rewind one round further back. Events and ship upgrades cannot be rewound past.",
 }
 
 

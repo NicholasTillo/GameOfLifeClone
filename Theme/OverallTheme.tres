@@ -1,15 +1,20 @@
 [gd_resource type="Theme" format=3 uid="uid://chl45rifasmu2"]
 
 [ext_resource type="FontFile" uid="uid://ml473enksho7" path="res://Theme/Anta-Regular.ttf" id="1_0dsnc"]
+[ext_resource type="StyleBox" uid="uid://56u4loue0qpg" path="res://Theme/BoxButtonStyle.tres" id="2_u10e0"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0dsnc"]
-bg_color = Color(0.4961214, 0.64489406, 0.51769114, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1agb"]
+bg_color = Color(0.31785196, 0.5452341, 0.25263843, 1)
 border_width_left = 1
 border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.38170323, 0.3817033, 0.38170302, 1)
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.08902431, 0.12628031, 0.02631651, 1)
 border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 expand_margin_left = 1.0
 expand_margin_top = 1.0
 expand_margin_right = 1.0
@@ -20,7 +25,8 @@ shadow_size = 1
 [resource]
 Button/constants/align_to_largest_stylebox = 1
 Button/fonts/font = ExtResource("1_0dsnc")
-Button/styles/normal = SubResource("StyleBoxFlat_0dsnc")
+Button/styles/hover = SubResource("StyleBoxFlat_g1agb")
+Button/styles/normal = ExtResource("2_u10e0")
 Label/font_sizes/font_size = 18
 Label/fonts/font = ExtResource("1_0dsnc")
 RichTextLabel/fonts/bold_font = ExtResource("1_0dsnc")

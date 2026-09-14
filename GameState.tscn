@@ -271,11 +271,12 @@ text = "Rewind
 [node name="UI_AudioChannel" type="AudioStreamPlayer" parent="UI" unique_id=1010123659]
 
 [node name="ColorRect" type="ColorRect" parent="UI" unique_id=112272859]
+z_index = -1
 layout_mode = 0
 offset_left = 730.0
-offset_top = -24.0
+offset_top = -1.0
 offset_right = 740.0
-offset_bottom = 659.0
+offset_bottom = 649.0
 color = Color(0.7666196, 0.76661956, 0.76661956, 0.88235295)
 
 [node name="BackgroundMusicPlayer" type="AudioStreamPlayer" parent="." unique_id=105109344]
