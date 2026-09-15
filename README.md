@@ -1,63 +1,26 @@
-# GameOfLifeClone
+# \# The Game Of The Meaning Of Life
 
-## Project To-Do List
+# Itch Link To Play: https://nicholastillo.itch.io/the-game-of-the-meaning-of-life
 
-### Cleanup and Organization
-- Fix the file structure and move things into the right folders
-- Reformat all the names in the editor so they're consistent
+# 
 
-### Gameplay and Mechanics
-- Create New Cell Types
-	- Add Chef - Done
-	- Pet 1 - Sandshark - 
-	- Pet 2 - Plorian - 
-	- Pet 3 - Dog - 
-	
-	- Life - Done
-	- More 
-	
-- Add new in-game upgrades:
-    - Second ship upgrade - Done
-		This is designed seperatly to the original grid, as this is optional, so I will loop 
-		Logic for creatging a ship is done, just have to add additional money and score and also add it to the hasing 05/24
-		Subship stable state checking is done. Just have to account for upgrading the subship size. 
-		Basically done, all thats left now is the additional upgrades, size upgrades are good. 
+# The fully automated Titan's Wake carries 32934 human explorers to the edge of the universe. Generations and generations pass as the human race fights against extinction, for one purpose: The search of the Meaning Of Life 
 
-    - Rewind upgrade - Done
-	
-- Events that happen every 25 - 50 generations. - Logic is done. 
-	-Event Logic and Resoruce to instatiate - Done
-	- Add more events and add to switch case in gridNode 
-	- Life Event Logic. - Done Must be above 100 round, and have seen cutscene 4. 
-	
+# 
 
-- Make it so the player cannot turn the bad cells into dead cells. - Done
+# You will take the role of the Titan's Wake, managing the populations, their professions, resources and more, upgrading the ship with every failed attempt. This is a twist on John Conway's Game Of Life, expanding on its rules, and transforming it from a 0-player game into a fully fledged sci-fi survival/arcade experience. In this game you will attempt to make it to increasingly further generations as random events cause chaos for your plans.
 
+# 
 
-### Visuals and UI
-- Design a proper title for the game
-- Create new visuals for:
-    - The main menu - Done
-    - The shop screen  
-    - The end screen
-	- Buttons - Done
-    - Unique cell types
-	- Font
-	
-- Add cutscenes that trigger when you hit specific round counts
-    - Cutscene 1 
-    - Cutscene 2 
-	- Cutscene 3 
-	- Cutscene 4 
-	- Cutscene 5
+# This is my largest project to date, with me learning aseprite to create all the assets, and setting up a full game workflow. I created all of the code, most of the assets, and did all of the designing. 
 
-### Balancing 
-- Balance Money and Resource Generation 
-- Make a Tutorial
-	Need 10 images to put in the tutorial 
+# 
 
-### Audio
-- Put in sound effects for the actual gameplay section - Done
+# Photos: 
 
+![Main menu](ItchPage/screenshot_menu.png)
 
-C:\Users\Nicholas\Desktop\DesignDocuments\GameDesignDocuments\GameOfLifeCopy.md
+![Upgrade selection](ItchPage/screenshot_upgrades.png)
+
+![Gameplay with a subship](ItchPage/screenshot_gameplay.png)
+
